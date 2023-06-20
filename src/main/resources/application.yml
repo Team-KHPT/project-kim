@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    include: oauth
+
+server:
+  port: 8090

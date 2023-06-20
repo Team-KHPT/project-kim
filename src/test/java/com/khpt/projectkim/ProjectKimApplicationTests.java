@@ -1,0 +1,13 @@
+package com.khpt.projectkim;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ProjectKimApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
