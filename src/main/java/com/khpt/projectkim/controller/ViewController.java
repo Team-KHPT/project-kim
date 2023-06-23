@@ -1,45 +1,24 @@
 package com.khpt.projectkim.controller;
 
-import org.kohsuke.github.GHUser;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import com.khpt.projectkim.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 @Controller
+@RequiredArgsConstructor
 public class ViewController {
+    private final HttpSession httpSession;
 
-    @GetMapping("/")
-    public String index(){
-        return "test";
+    @GetMapping(value = {"/", "/index"})
+    public String index(Model model) {
+        User user = (User) httpSession.getAttribute("user");
+        if(user != null){
+            model.addAttribute("userName", user.getName());
+        }
+        return "index";
     }
-
-    @GetMapping("/login")
-    public String test(){
-        return "oauthTest";
-    }
-
-    @PostMapping("/")
-    public String index(String message, Model model){
-        System.out.println(message);
-        model.addAttribute("message", message);
-        return "test";
-    }
-
-    @RequestMapping("/")
-    public String oauth() {
-        return "oauthTest";
-    }
-
 }

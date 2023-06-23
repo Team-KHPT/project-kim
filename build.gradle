@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.12'
+    id 'org.springframework.boot' version '2.6.12'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
@@ -16,12 +16,19 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: '2.4.3'
+    implementation group: 'org.webjars', name: 'jquery', version: '3.5.1'
+    implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.46'
+    implementation group: 'org.webjars', name: 'js-cookie', version: '2.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'org.kohsuke', name: 'github-api', version: '1.125'
     compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.springframework.boot:spring-boot-starter-mustache'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
