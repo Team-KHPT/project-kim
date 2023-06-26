@@ -1,5 +1,5 @@
 .idea
-application-oauth.yml
+application-secret.yml
 
 HELP.md
 .gradle

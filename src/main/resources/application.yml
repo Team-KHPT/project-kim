@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: oauth
+    include: secret
   main:
     allow-circular-references: 'true'
   datasource:
