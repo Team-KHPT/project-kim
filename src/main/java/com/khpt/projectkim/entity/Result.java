@@ -15,7 +15,7 @@ public class Result {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User userId;
+    private User user;
 
     // 회사 정보들 모두 적어 (회사명, 지역, 등등)
     private String company;  // 회사이름
