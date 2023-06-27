@@ -45,6 +45,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         source: "build/libs/*"
         target: "/home/ubuntu/project-kim"
 
@@ -54,6 +55,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           cd project-kim
           ./deploy.sh
