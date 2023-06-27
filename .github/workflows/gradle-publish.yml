@@ -48,15 +48,3 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         source: "build/libs/*"
         target: "/home/ubuntu/project-kim"
-
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }}
-        script: |
-          cd project-kim
-          chmod +x deploy.sh
-          ./deploy.sh
