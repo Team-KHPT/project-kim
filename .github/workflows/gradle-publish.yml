@@ -35,26 +35,25 @@ jobs:
           
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.HOST }}
-        ssh-key-passphrase: ${{ secrets.PASSPHRASE }}
         
     - name: Build with Gradle
       run: ./gradlew build -x test
 
-    - name: Copy files
-      run: |
-        scp build/libs/*.jar {{ secrets.USERNAME }}@${{ secrets.HOST }}:/home/ubuntu/project-kim/
+    - name: Copy Files Over SSH
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        source: "build/libs/*"
+        target: "/home/ubuntu/project-kim"
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
+        key: ${{ secrets.PRIVATE_KEY }}
         script: |
           cd project-kim
           ./deploy.sh
