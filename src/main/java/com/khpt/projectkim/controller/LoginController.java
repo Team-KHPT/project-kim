@@ -6,20 +6,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/login")
 public class LoginController {
 
+    public String url = "";
+
     @GetMapping("")
-    public String loginPage() {
+    public String loginPage(@RequestParam("redirect_url") String url) {
+        this.url = url;
         return "login";
     }
+
 
     @GetMapping("/{provider}")
     public void oauthLogin(HttpServletResponse response, @PathVariable String provider) throws IOException {
         response.sendRedirect("/oauth2/authorization/" + provider);
     }
+
 
 //    @GetMapping("/social/{provider}")
 //    public void login(HttpServletResponse response, @PathVariable String provider) throws IOException {
