@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequiredArgsConstructor
 public class ViewController {
+    private HttpSession session;
     @GetMapping(value = {"/", "/index"})
-    public String index(HttpSession session, Model model) {
+    public String index(Model model) {
         User user = (User) session.getAttribute("user");
         if(user != null){
             model.addAttribute("userName", user.getName());

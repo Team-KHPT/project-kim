@@ -2,7 +2,6 @@ package com.khpt.projectkim.oauth2;
 import com.khpt.projectkim.entity.Role;
 import com.khpt.projectkim.entity.User;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import lombok.Builder;
