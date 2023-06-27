@@ -26,10 +26,12 @@
     <!--Right Appbar contents-->
     <div class="flex space-x-5">
     {{^name}}
-      <a href="#" class="text-stone-800 font-bold cursor-pointer">로그인</a>
+      <a href="/login" class="text-stone-800 font-bold cursor-pointer">로그인</a>
       <a href="#" class="text-stone-800 font-bold cursor-pointer">회원가입</a>
     {{/name}}
+    {{#name}}
       <a href="#" class="text-stone-800 font-bold cursor-pointer underline">{{name}}</a>
+    {{/name}}
     </div>
 
   </div>
@@ -45,46 +47,24 @@
 
       <!--Chat items-->
       <div class="h-full p-5 border rounded-lg shadow-md space-y-3 overflow-y-scroll no-scrollbar">
+
         <div class="flex space-x-3">
-          <img class="w-7 h-7" src="/images/logo-rev.png" alt="logo" />
+          <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />
           <div class="w-full p-5 bg-violet-100 rounded-lg">안녕하세요. 저는 사용자님께 알맞은 취업 정보를 제공해 드릴 김비서입니다.</div>
         </div>
         <div class="flex space-x-3">
-          <img class="w-7 h-7" src="{{image}}" alt="logo" />
+          <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />
           <div class="w-full p-5 bg-pink-100 rounded-lg">안녕</div>
         </div>
         <div class="flex space-x-3">
-          <img class="w-7 h-7" src="/images/logo-rev.png" alt="logo" />
+          <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />
           <div class="w-full p-5 bg-violet-100 rounded-lg">니가 뭔데</div>
         </div>
         <div class="flex space-x-3">
-          <div class="w-7 h-7"></div>
+          <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />
           <div class="w-full p-5 bg-pink-100 rounded-lg">ㄷㄷ</div>
         </div>
-        <div class="flex space-x-3">
-          <img class="w-7 h-7" src="/images/logo-rev.png" alt="logo" />
-          <div class="w-full p-5 bg-violet-100 rounded-lg">니가 뭔데</div>
-        </div>
-        <div class="flex space-x-3">
-          <div class="w-7 h-7"></div>
-          <div class="w-full p-5 bg-pink-100 rounded-lg">ㄷㄷ</div>
-        </div>
-        <div class="flex space-x-3">
-          <img class="w-7 h-7" src="/images/logo-rev.png" alt="logo" />
-          <div class="w-full p-5 bg-violet-100 rounded-lg">니가 뭔데</div>
-        </div>
-        <div class="flex space-x-3">
-          <div class="w-7 h-7"></div>
-          <div class="w-full p-5 bg-pink-100 rounded-lg">ㄷㄷ</div>
-        </div>
-        <div class="flex space-x-3">
-          <img class="w-7 h-7" src="/images/logo-rev.png" alt="logo" />
-          <div class="w-full p-5 bg-violet-100 rounded-lg">니가 뭔데</div>
-        </div>
-        <div class="flex space-x-3">
-          <div class="w-7 h-7"></div>
-          <div class="w-full p-5 bg-pink-100 rounded-lg">ㄷㄷ</div>
-        </div>
+
       </div>
 
       <!--Chat input-->
