@@ -1,9 +1,6 @@
 package com.khpt.projectkim.entity;
 
-//import io.hypersistence.utils.hibernate.type.json.JsonType;
 import lombok.*;
-import org.hibernate.annotations.TypeDef;
-
 import javax.persistence.*;
 
 @Getter
@@ -11,7 +8,6 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 //@TypeDef(name = "json", typeClass = JsonType.class)
-@Table(name = "result")
 public class Result {
 
     @Id
