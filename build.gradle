@@ -37,10 +37,6 @@ dependencies {
     implementation group: 'org.webjars', name: 'jquery', version: '3.5.1'
 }
 
-processResources {
-    from('src/main/resources')
-}
-
 tasks.named('test') {
     useJUnitPlatform()
 }
