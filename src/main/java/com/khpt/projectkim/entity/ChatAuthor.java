@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-@AllArgsConstructor
 public enum ChatAuthor {
     SYSTEM("system"),
     ASSISTANT("assistant"),
