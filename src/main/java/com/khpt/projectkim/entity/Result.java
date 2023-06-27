@@ -1,13 +1,17 @@
 package com.khpt.projectkim.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+//import io.hypersistence.utils.hibernate.type.json.JsonType;
+import lombok.*;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
+//@TypeDef(name = "json", typeClass = JsonType.class)
+@Table(name = "result")
 public class Result {
 
     @Id
