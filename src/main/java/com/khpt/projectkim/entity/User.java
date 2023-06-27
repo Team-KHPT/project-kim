@@ -43,11 +43,15 @@ public class User implements Serializable {
         return this.role.getKey();
     }
 
-    // 현재 기록
+    // 현재 채팅 기록
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chat> chats = new ArrayList<>();
+
+    // 현재 분석기록
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Result> results = new ArrayList<>();
 
-    // 이전 기록
+    // 이전 분석기록
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Result> recentResults = new ArrayList<>();
 }
