@@ -23,7 +23,7 @@ public class ChatController {
         if (user == null){
             return "chat";
         }
-        model.addAttribute("name", user.getName());
+        model.addAttribute("name", user.getLogin());
         model.addAttribute("image", user.getPicture());
         // TODO 현재 분석결과 세션에서 불러오기
         return "chat";

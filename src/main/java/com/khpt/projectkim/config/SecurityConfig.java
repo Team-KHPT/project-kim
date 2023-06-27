@@ -1,7 +1,6 @@
 package com.khpt.projectkim.config;
 
 import com.khpt.projectkim.service.CustomOAuth2UserService;
-import com.khpt.projectkim.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;

@@ -24,7 +24,7 @@ public class User implements Serializable {
     private String email;
 
     @Column(nullable = false)
-    private String name;
+    private String login;
 
     private String picture;
 
@@ -33,7 +33,7 @@ public class User implements Serializable {
     private Role role;
 
     public User update(String name, String picture) {
-        this.name = name;
+        this.login = name;
         this.picture = picture;
 
         return this;
