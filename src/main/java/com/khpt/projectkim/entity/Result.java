@@ -11,7 +11,6 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 //@TypeDef(name = "json", typeClass = JsonType.class)
-@Table(name = "result")
 public class Result {
 
     @Id
