@@ -32,7 +32,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String registrationId = userRequest
                 .getClientRegistration()
                 .getRegistrationId();
-        System.out.println("get username attr name");
         String userNameAttributeName =
                 userRequest
                 .getClientRegistration()
@@ -40,15 +39,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
 
-        System.out.println("load attrs");
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        System.out.println("save or update");
         User user = saveOrUpdate(attributes);
 
-        System.out.println("save to session");
         httpSession.setAttribute("user", user);
-        System.out.println("session save done");
+        System.out.println(userNameAttributeName);
 
         return new CustomOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),

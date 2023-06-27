@@ -14,7 +14,7 @@ public class ViewController {
     public String index(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if(user != null){
-            model.addAttribute("userName", user.getName());
+            model.addAttribute("name", user.getName());
         }
         return "index";
     }

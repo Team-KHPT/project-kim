@@ -11,13 +11,13 @@
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-6">
-            {{#userName}}
-                Logged in as: <span id="user">{{userName}}</span>
+            {{#name}}
+                Logged in as: <span id="user">{{name}}</span>
                 <a href="/logout" class="btn btn-info active" role="button">Logout</a>
-            {{/userName}}
-            {{^userName}}
+            {{/name}}
+            {{^name}}
                 <a href="/oauth2/authorization/github" class="btn btn-secondary active" role="button">Github Login</a>
-            {{/userName}}
+            {{/name}}
         </div>
     </div>
     <br>
