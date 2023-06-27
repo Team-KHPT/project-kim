@@ -24,24 +24,38 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2UserService delegate = new DefaultOAuth2UserService();
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
+        System.out.println("load user");
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-                .getUserInfoEndpoint().getUserNameAttributeName();
+        System.out.println("get regis id");
+        String registrationId = userRequest
+                .getClientRegistration()
+                .getRegistrationId();
+        System.out.println("get username attr name");
+        String userNameAttributeName =
+                userRequest
+                .getClientRegistration()
+                .getProviderDetails()
+                .getUserInfoEndpoint()
+                .getUserNameAttributeName();
 
+        System.out.println("load attrs");
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
+        System.out.println("save or update");
         User user = saveOrUpdate(attributes);
 
-        httpSession.setAttribute("user", user);
+        System.out.println("save to session");
+        httpSession.setAttribute("user", user.getId().toString());
+        System.out.println("session save done");
 
         return new CustomOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey(),
-                attributes);
+                attributes
+        );
     }
 
 
@@ -50,7 +64,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
                 .orElse(attributes.toEntity());
 
-        System.out.println(user + "save");
+        System.out.println(user + " SAVE!!");
         return userRepository.save(user);
     }
 }
