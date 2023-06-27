@@ -26,13 +26,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**", "/login/**", "/error").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .formLogin()
+                .successHandler(new LoginSuccessHandler())
+                .and()
                 .logout().logoutSuccessUrl("/chat")
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 .and()
-                .oauth2Login().userInfoEndpoint().userService(customOAuth2UserService)
-                .and()
-                .defaultSuccessUrl("/chat");
+                .oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);
     }
 }
