@@ -8,6 +8,10 @@ spring:
     url: jdbc:mariadb://localhost:3306/project-kim?useUnicode=true&characterEncoding=utf8
     username: root
     password: 7410
+  session:
+    jdbc:
+      initialize-schema: always
+
   jpa:
     open-in-view: false
     generate-ddl: true
