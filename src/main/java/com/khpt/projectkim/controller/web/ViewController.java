@@ -20,9 +20,7 @@ public class ViewController {
     }
 
     @GetMapping("chatTest")
-    public String test(Model model) {
-        Date date = new Date();
-        model.addAttribute("date", date);
+    public String test() {
         return "chatTest";
     }
 }
