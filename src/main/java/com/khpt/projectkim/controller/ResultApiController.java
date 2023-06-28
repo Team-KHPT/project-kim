@@ -1,6 +1,6 @@
 package com.khpt.projectkim.controller;
 
-import com.khpt.projectkim.dto.ChatData;
+import com.khpt.projectkim.dto.ResultDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,11 +13,11 @@ import java.util.List;
 @RequestMapping("/result")
 public class ResultApiController {
     @GetMapping
-    public List<ChatData> getChats(HttpSession session) {
-        ChatData responseChat1 = new ChatData("assistant", "안녕하세요. 무엇을 도와드릴까요?111");
-        ChatData responseChat2 = new ChatData("assistant", "안녕하세요. 무엇을 도와드릴까요?222");
-        ChatData responseChat3 = new ChatData("assistant", "안녕하세요. 무엇을 도와드릴까요?33333");
-        List<ChatData> chats = new ArrayList<>();
+    public List<ResultDto> getChats(HttpSession session) {
+        ResultDto responseChat1 = new ResultDto("https://google.com", "comp", "제목", "지역", "대충급여", "대충형태", "대충시간", "몰?루", "경력");
+        ResultDto responseChat2 = new ResultDto("https://google.com", "comp2", "제목2", "지역2", "대충급여2", "대충형태22", "대충시간22", "몰?루22", "경력22");
+        ResultDto responseChat3 = new ResultDto("https://google.com", "comp3", "제목3", "지역3", "대충급여3", "대충형태33", "대충시간33", "몰?루33", "경력33");
+        List<ResultDto> chats = new ArrayList<>();
         chats.add(responseChat1);
         chats.add(responseChat2);
         chats.add(responseChat3);
