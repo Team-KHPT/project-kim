@@ -1,4 +1,8 @@
 application-secret.yml
+API/.idea
+API/.env
+API/venv
+API/test_main.http
 
 HELP.md
 .gradle
