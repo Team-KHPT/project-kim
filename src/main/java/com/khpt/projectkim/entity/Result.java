@@ -18,6 +18,8 @@ public class Result {
     private User user;
 
     // 회사 정보들 모두 적어 (회사명, 지역, 등등)
+    private String url;
+
     private String company;  // 회사이름
 
     private String title;  // 제목
