@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 @Controller
 public class ViewController {
@@ -16,5 +17,12 @@ public class ViewController {
             model.addAttribute("name", user.getLogin());
         }
         return "index";
+    }
+
+    @GetMapping("chatTest")
+    public String test(Model model) {
+        Date date = new Date();
+        model.addAttribute("date", date);
+        return "chatTest.mustache";
     }
 }
