@@ -1,10 +1,12 @@
 package com.khpt.projectkim.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -20,10 +22,10 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String email;
+    @CreationTimestamp
+    private Date createdAt;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String login;
 
     private String picture;
