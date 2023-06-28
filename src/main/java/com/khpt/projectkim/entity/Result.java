@@ -20,6 +20,8 @@ public class Result {
     // 회사 정보들 모두 적어 (회사명, 지역, 등등)
     private String company;  // 회사이름
 
+    private String title;  // 제목
+
     private String region; // 지역
 
     private String salary;  // 급여
