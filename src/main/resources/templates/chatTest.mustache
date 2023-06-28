@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="/src/main/resources/static/css/output.css" rel="stylesheet">
+  <link href="/css/output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
   <title>Chat</title>
 </head>
 <body>
 <!-- Modal toggle -->
   <a data-modal-target="defaultModal" data-modal-toggle="defaultModal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-    히히 클릭해보시지 못하겠지? 못하겠지? ㅋㅋ 쫄보
-      <p>{{date}}</p>
+    Click me.
   </a>
 
   <!-- Main modal -->
@@ -49,42 +48,42 @@
               <div class="flex items-center p-6 border-gray-200 rounded-b dark:border-gray-600">
                 <div class="w-1/6 flex flex-col justify-start px-1.5">
                   <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                    <img class="w-4 h-4" src="/src/main/resources/static/icons/location.png" alt="loc">
+                    <img class="w-4 h-4" src="/icons/location.png" alt="loc">
                     <span>위치</span>
                   </div>
                   <span class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
                 </div>
                 <div class="w-1/6 flex flex-col justify-start px-1.5">
                   <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                    <img class="w-4 h-4" src="/src/main/resources/static/icons/profit.png" alt="loc">
+                    <img class="w-4 h-4" src="/icons/profit.png" alt="loc">
                     <span>연봉</span>
                   </div>
                   <span class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
                 </div>
                 <div class="w-1/6 flex flex-col justify-start px-1.5">
                   <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                    <img class="w-4 h-4" src="/src/main/resources/static/icons/sales.png" alt="loc">
+                    <img class="w-4 h-4" src="/icons/sales.png" alt="loc">
                     <span>근무형태</span>
                   </div>
                   <span class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
                 </div>
                 <div class="w-1/6 flex flex-col justify-start px-1.5">
                   <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                    <img class="w-4 h-4" src="/src/main/resources/static/icons/profile.png" alt="loc">
+                    <img class="w-4 h-4" src="/icons/profile.png" alt="loc">
                     <span>학력</span>
                   </div>
                   <span class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
                 </div>
                 <div class="w-1/6 flex flex-col justify-start px-1.5">
                   <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                    <img class="w-4 h-4" src="/src/main/resources/static/icons/career.png" alt="loc">
+                    <img class="w-4 h-4" src="/icons/career.png" alt="loc">
                     <span>경력</span>
                   </div>
                   <span class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
                 </div>
                 <div class="w-1/6 flex flex-col justify-start px-1.5">
                   <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                    <img class="w-4 h-4" src="/src/main/resources/static/icons/time.png" alt="loc">
+                    <img class="w-4 h-4" src="/icons/time.png" alt="loc">
                     <span>근무시간</span>
                   </div>
                   <span class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
@@ -93,8 +92,16 @@
           </div>
       </div>
   </div>
-  <script src="/node_modules/flowbite/dist/flowbite.js"></script>
+  <script src="/js/flowbite.min.js"></script>
 </body>
 <script>
+    // function showDetail() {
+    //     fetch("/result")
+    //             .then(response => {
+    //                 return response.json();
+    //             })
+    //             .then(jsondata => console.log(jsondata));
+    // }
+
 </script>
 </html>
