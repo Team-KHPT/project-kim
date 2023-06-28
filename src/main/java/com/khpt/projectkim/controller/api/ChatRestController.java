@@ -1,4 +1,4 @@
-package com.khpt.projectkim.controller;
+package com.khpt.projectkim.controller.api;
 
 import com.khpt.projectkim.dto.ChatData;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/chat")
-public class ChatApiController {
+public class ChatRestController {
     @PostMapping
     public ChatData sendChat(HttpSession session, @RequestBody List<ChatData> chatDataList) {
         // TODO API 요청으로 responseChat 가져오기

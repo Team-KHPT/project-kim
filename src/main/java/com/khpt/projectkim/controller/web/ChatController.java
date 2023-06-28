@@ -1,9 +1,8 @@
-package com.khpt.projectkim.controller;
+package com.khpt.projectkim.controller.web;
 
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.service.ChatService;
-import com.khpt.projectkim.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +16,6 @@ import javax.servlet.http.HttpSession;
 public class ChatController {
 
     private final ChatService chatService;
-
-    private final UserService userService;
 
     @ModelAttribute
     public void addAttributes(HttpServletRequest request, Model model) {
