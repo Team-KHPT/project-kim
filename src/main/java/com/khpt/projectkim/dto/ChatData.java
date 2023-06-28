@@ -1,4 +1,4 @@
-package com.khpt.projectkim.model;
+package com.khpt.projectkim.dto;
 
 import lombok.*;
 
@@ -10,6 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatData {
-    private String author;
+    private String role;
     private String content;
 }
