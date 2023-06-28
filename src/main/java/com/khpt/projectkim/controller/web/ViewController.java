@@ -1,4 +1,4 @@
-package com.khpt.projectkim.controller;
+package com.khpt.projectkim.controller.web;
 
 import com.khpt.projectkim.entity.User;
 import org.springframework.stereotype.Controller;
@@ -23,6 +23,6 @@ public class ViewController {
     public String test(Model model) {
         Date date = new Date();
         model.addAttribute("date", date);
-        return "chatTest.mustache";
+        return "chatTest";
     }
 }

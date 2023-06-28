@@ -1,4 +1,4 @@
-package com.khpt.projectkim.controller;
+package com.khpt.projectkim.controller.web;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
