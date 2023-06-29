@@ -19,3 +19,7 @@ def simplify_job(job):
         'salary': job['salary']['name'],
         'keyword': job['keyword']
     }
+
+
+def simplify_jobs(data):
+    return {'jobs': [simplify_job(job) for job in data['jobs']['job']]}
