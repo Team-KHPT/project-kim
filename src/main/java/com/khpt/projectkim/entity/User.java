@@ -34,6 +34,14 @@ public class User implements Serializable {
     @Column(nullable = false)
     private Role role;
 
+    private String type;  // 근무 형태
+
+    private String region; // 지역
+
+    private String education;  // 학력
+
+    private String career;  // 경력
+
     public User update(String name, String picture) {
         this.login = name;
         this.picture = picture;
