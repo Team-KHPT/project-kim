@@ -40,25 +40,10 @@ public class ChatController {
         model.addAttribute("name", user.getLogin());
         model.addAttribute("image", user.getPicture());
 
-        System.out.println("model");
         model.addAttribute("recent_results", filledDto.getRecentResults());
-        System.out.println("model1");
         model.addAttribute("results", filledDto.getResults());
-        System.out.println("model2");
         model.addAttribute("chats", filledDto.getChats());
-        System.out.println("model3");
 
-//        if (filledDto.getRecentResults().size() > 0) {
-//            model.addAttribute("recent_results", user.getRecentResults());
-//        }
-//        if (filledDto.getResults().size() > 0) {
-//            model.addAttribute("results", user.getResults());
-//        }
-//        if (filledDto.getChats().size() > 0) {
-//            model.addAttribute("chats", user.getChats());
-//        }
-
-        // TODO 현재 분석결과 세션에서 불러오기
         return "chat";
     }
 }

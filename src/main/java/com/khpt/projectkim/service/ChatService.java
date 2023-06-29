@@ -20,10 +20,15 @@ public class ChatService {
 
         ExtractListFromUserDto extractListFromUserDto = new ExtractListFromUserDto();
 
+        int test = 0;
         extractListFromUserDto.setUser(user);
+        test += user.getRecentResults().size();
         extractListFromUserDto.setRecentResults(user.getRecentResults());
+        test += user.getResults().size();
         extractListFromUserDto.setResults(user.getResults());
+        test += user.getChats().size();
         extractListFromUserDto.setChats(user.getChats());
+        System.out.println("total size " + test);
 
         return extractListFromUserDto;
     }
