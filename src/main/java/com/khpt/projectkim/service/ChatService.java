@@ -1,15 +1,23 @@
 package com.khpt.projectkim.service;
 
+import com.khpt.projectkim.dto.ChatData;
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
+import com.khpt.projectkim.entity.Chat;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service("chatService")
 @RequiredArgsConstructor
+@Slf4j
 public class ChatService {
 
     private final UserRepository userRepository;
@@ -32,6 +40,26 @@ public class ChatService {
 
         return extractListFromUserDto;
     }
+
+    public User updateUserChats(Long userId, ChatData chatData) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+        List<Chat> chatList = user.getChats();
+
+        Chat chat = new Chat();
+        chat.setUser(user);
+        chat.setRole(chatData.getRole());
+        chat.setContent(chatData.getContent());
+
+        chatList.add(chat);
+
+
+        user.setChats(chatList);
+
+        return userRepository.save(user);
+    }
+
 }
 //extractListFromUserDto.setUser(user);
 //        System.out.println("recent");
