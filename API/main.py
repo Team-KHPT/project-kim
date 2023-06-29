@@ -2,9 +2,13 @@ import os
 
 from fastapi import FastAPI
 import openai
-import requests
 import json
 import dotenv
+from pydantic import BaseModel
+
+import saramin
+
+openai.api_key = os.environ['OPENAI_KEY']
 
 dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
@@ -12,152 +16,127 @@ dotenv.load_dotenv(dotenv_file)
 app = FastAPI()
 
 
-def simplify_job(job):
-    new_format = {
-        'company': job['company']['detail']['name'],
-        'position': {
-            'title': job['position']['title'],
-            'job': job['position']['job-code']['name'],
-            'experience-level': job['position']['experience-level']['name'],
-        },
-        'salary': job['salary']['name'],
-        'keyword': job['keyword']
-    }
+def get_job_info(keywords="", sort="pd"):
+    # TODO 사전 정보는 따로 가죠오고, gpt한테는 keywords, sort 파라미터만 알려주기
+    jobs = saramin.get_job_info_from_api(keywords="인공지능")
+    print("jobs: ", jobs)
 
-    max_len = 30
-    job_content = str(new_format['position']['job'])
-    if len(job_content) > max_len:
-        idx = max_len
-        while job_content[idx] != ",":
-            idx -= 1
-        job_content = job_content[:idx]
-    new_format['position']['job'] = job_content
-
-    return new_format
-
-
-def simplify_job2(job):
-    return {
-        'active': job['active'],
-        'company': job['company']['detail']['name'],
-        'position': {
-            'title': job['position']['title'],
-            'location': job['position']['location']['name'],
-            'job-type': job['position']['job-type']['name'],
-            'job-category': job['position']['job-mid-code']['name'],
-            'job': job['position']['job-code']['name'],
-            'experience-level': job['position']['experience-level']['name'],
-            'required-education-level': job['position']['required-education-level']['name'],
-        },
-        'salary': job['salary']['name'],
-        'keyword': job['keyword']
-    }
-
-
-def simplify_jobs(data):
-    return {'jobs': [simplify_job(job) for job in data['jobs']['job']]}
-
-
-def get_current_weather(location, unit="fahrenheit"):
-    """Get the current weather in a given location"""
-    weather_info = {
-        "location": location,
-        "temperature": "72",
-        "unit": unit,
-        "forecast": ["sunny", "windy"],
-    }
-    return json.dumps(weather_info)
-
-
-def get_job_info_from_api(job_codes="", job_type="", education_lvl="", location=""):
-    url = "https://oapi.saramin.co.kr/job-search"
-    params = {
-        "job_cd": job_codes,
-        "job_type": job_type,
-        "edu_lv": education_lvl,
-        "loc_mcd": location,
-        "count": "40",
-        "access-key": os.environ['SARAMIN_KEY']
-    }
-
-    response = requests.get(url, params=params)
-    jobs = json.loads(response.text)
-
-    # Simplify the data
-    simplified_data = simplify_jobs(jobs)
-
+    simplified_data = saramin.simplify_jobs(jobs)
     print(simplified_data)
     print(str(simplified_data).replace("'", ""))
-
-    # Convert back to JSON
-    simplified_json = json.dumps(simplified_data, indent=4)
-    print(simplified_json)
-    return simplified_data
+    return str(simplified_data).replace("'", "")
 
 
 def run_conversation():
-    # Step 1: send the conversation and available functions to GPT
-    messages = [{"role": "user", "content": "What's the weather like in Boston?"}]
+    messages = [{"role": "user", "content": "나는 백엔드 개발자로 취업을 하려해"}]
     functions = [
         {
-            "name": "get_current_weather",
-            "description": "Get the current weather in a given location",
+            "name": "get_job_info",
+            "description": "Search list of job posting information with given keywords.",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "location": {
+                    "keywords": {
                         "type": "string",
-                        "description": "The city and state, e.g. San Francisco, CA",
+                        "description": "The keyword to search for job posting information, e.g. 백엔드",
                     },
-                    "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                    "sort": {
+                        "type": "string",
+                        "enum": ["pd", "rc", "ac"],
+                        # "description": "pd:sort by date of publication, rc:sort by hits, ac:sort by number of applicants",
+                    },
                 },
-                "required": ["location"],
+                "required": ["keywords"],
             },
         }
     ]
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
+        model="gpt-3.5-turbo-16k-0613",
         messages=messages,
         functions=functions,
-        function_call="auto",  # auto is default, but we'll be explicit
+        function_call="auto",
     )
     response_message = response["choices"][0]["message"]
+    print(response_message)
 
     # Step 2: check if GPT wanted to call a function
     if response_message.get("function_call"):
-        # Step 3: call the function
-        # Note: the JSON response may not always be valid; be sure to handle errors
         available_functions = {
-            "get_current_weather": get_current_weather,
-        }  # only one function in this example, but you can have multiple
+            "get_job_info": get_job_info,
+        }
         function_name = response_message["function_call"]["name"]
-        fuction_to_call = available_functions[function_name]
+        function_to_call = available_functions[function_name]
         function_args = json.loads(response_message["function_call"]["arguments"])
-        function_response = fuction_to_call(
-            location=function_args.get("location"),
-            unit=function_args.get("unit"),
+        function_response = function_to_call(
+            keywords=function_args.get("keywords"),
+            sort=function_args.get("sort"),
         )
 
-        # Step 4: send the info on the function call and function response to GPT
-        messages.append(response_message)  # extend conversation with assistant's reply
+        messages.append(response_message)
         messages.append(
             {
                 "role": "function",
                 "name": function_name,
                 "content": function_response,
             }
-        )  # extend conversation with function response
+        )
         second_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0613",
+            model="gpt-3.5-turbo-16k-0613",
             messages=messages,
-        )  # get a new response from GPT where it can see the function response
+        )
         return second_response
 
 
-@app.get("/")
-async def root():
+chatting_prompts = [
+    {
+        'role': 'system',
+        'content': '''너는 취업 상담사야.
 
-    return get_job_info_from_api()
+사용자가 원하는 직무를 물어봐.
+직무를 알았다면 사용자가 원하는 근무형태를 물어봐. 상세하게 물어보지는 않아도 돼.
+근무형태를 알았다면 사용자의 학력을 물어봐.
+학력을 알았다면 취업을 원하는 지역을 물어봐.
+
+
+모두 알게 되었다면 계속 대화를 이끌어 나가며 적극적으로 상대방에게 질문해야 해.'''}
+]
+
+
+def chatting_response(messages: list) -> str:
+    messages[:0] = chatting_prompts
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-16k-0613",
+        temperature=0.4,
+        top_p=1,
+        frequency_penalty=0.9,
+        presence_penalty=0.4,
+        messages=messages
+    )
+    return completion['choices'][0]['message']['content']
+
+
+@app.get("/gpt")
+async def root():
+    return run_conversation()
+
+
+@app.get("/result")
+async def result(job_codes: str = "", job_type: str = "", education_lvl: str = "", location: str = "", keyword: str = ""):
+
+    return get_job_info()
+
+
+class ChatData(BaseModel):
+    role: str
+    content: str
+
+
+@app.post("/chat")
+async def say_hello(chats: list[ChatData]):
+    # Convert chats to dict
+    chat_dicts = [chat.dict() for chat in chats]
+    print(chat_dicts)
+    return {"role": "assistant", "content": chatting_response(chat_dicts)}
 
 
 @app.get("/hello/{name}")
