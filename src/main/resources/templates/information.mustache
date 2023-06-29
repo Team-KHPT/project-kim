@@ -56,22 +56,29 @@
                 </div>
                 <div class="mb-3">
                   <label for="education" class="block mb-1">학력</label>
-                  <input name="education" id="education" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="학력을 입력해주세요. 예)고등학교 졸업, 학사, 석사">
+                  <input name="education" id="education" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="학력을 입력해주세요. 예)고등학교 졸업, 학사, 석사" required>
                 </div>
                 <div class="mb-3">
                   <label for="career" class="block mb-1">경력</label>
-                  <input name="career" id="career" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="경력을 입력해주세요. 예)신입, 경력 3년차">
+                  <input name="career" id="career" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="경력을 입력해주세요. 예)신입, 경력 3년차" required>
                 </div>
                 <div class="mb-3">
                   <label for="region" class="block mb-1">지역</label>
-                  <input name="region" id="region" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="을 입력해주세요. 예)서울, 대전, 대구, 부산">
+                  <input name="region" id="region" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="을 입력해주세요. 예)서울, 대전, 대구, 부산" required>
                 </div>
               </form>
             </div>
             <div class="flex justify-end">
+            {{^name}}
               <a class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
                 시작하기
               </a>
+            {{/name}}
+            {{#name}}
+                <a class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
+                    <계속하기></계속하기>
+                </a>
+            {{/name}}
             </div>
           </div>
         </div>
