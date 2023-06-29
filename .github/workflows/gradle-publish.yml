@@ -2,7 +2,9 @@ name: Java CI/CD
 
 on:
   push:
-    branches: [ main ]
+    paths:
+      - src/**
+      - build.gradle
   workflow_dispatch:
 
 jobs:
