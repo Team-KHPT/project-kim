@@ -2,7 +2,10 @@ package com.khpt.projectkim.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khpt.projectkim.dto.ChatData;
+import com.khpt.projectkim.entity.Chat;
 import com.khpt.projectkim.entity.Result;
+import com.khpt.projectkim.service.ChatService;
+import com.khpt.projectkim.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,8 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatRestController {
 
+    private ChatService chatService;
+
     // (프론트에서 채팅 보내기 클릭 하면 이 함수에 모든 채팅 기록을 줌)
     @PostMapping
     public ChatData sendChat(HttpSession session, HttpServletResponse response, @RequestBody List<ChatData> chatDataList) {
@@ -26,8 +31,11 @@ public class ChatRestController {
 //            response.setStatus(HttpStatus.BAD_REQUEST.value());
 //            return null;
 //        }
-        ChatData lastItem = chatDataList.get(chatDataList.size() - 1);
-        System.out.println(lastItem);
+        ChatData lastChat = chatDataList.get(chatDataList.size() - 1);
+
+        Long userID = (Long) session.getAttribute("user");
+
+        chatService.updateUserChats(userID, lastChat);
 
         try {
             System.setProperty("https.protocols", "TLSv1.2");
@@ -35,16 +43,12 @@ public class ChatRestController {
             // List를 JSON 형태로 변환
             ObjectMapper objectMapper = new ObjectMapper();
             String json = objectMapper.writeValueAsString(chatDataList);
-            System.out.println(json);
 
             // RestTemplate 인스턴스 생성
             RestTemplate restTemplate = new RestTemplate();
 
             // ChatData 객체 생성
-            ChatData chatData = ChatData.builder()
-                    .role("assistant")
-                    .content("김비서 임다")
-                    .build();
+            ChatData chatData = chatDataList.get(0);
 
             // 요청 헤더 설정
             HttpHeaders headers = new HttpHeaders();
@@ -54,8 +58,8 @@ public class ChatRestController {
             HttpEntity<ChatData> requestEntity = new HttpEntity<>(chatData, headers);
 
             // POST 요청 보내기
-            String url = "https://localhost:8090/result";
-            ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+            String url = "http://localhost:8090/result";
+            ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
             // 응답 데이터 가져오기
             String responseBody = res.getBody();
