@@ -28,7 +28,7 @@ def get_job_info_from_api(job_codes=None, job_type=None, education_lvl=None, loc
     if not education_lvl:
         del params['edu_lv']
     if not location:
-        del params['loc-mcd']
+        del params['loc_mcd']
     if not keywords:
         del params['keywords']
 
