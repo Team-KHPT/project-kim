@@ -7,7 +7,7 @@ dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
 
 
-def get_job_info_from_api(job_codes=None, job_type=None, education_lvl=None, location=None, count="20", keywords=None):
+def get_job_info_from_api(job_codes=None, job_type=None, education_lvl=None, location=None, count="20", keywords=None, sort=None):
     url = "https://oapi.saramin.co.kr/job-search"
     header = {
         "Accept": "application/json"
@@ -19,6 +19,7 @@ def get_job_info_from_api(job_codes=None, job_type=None, education_lvl=None, loc
         "loc_mcd": location,
         "count": count,
         "keywords": keywords,
+        "sort": sort,
         "access-key": os.environ['SARAMIN_KEY']
     }
     if not job_codes:
@@ -31,6 +32,8 @@ def get_job_info_from_api(job_codes=None, job_type=None, education_lvl=None, loc
         del params['loc_mcd']
     if not keywords:
         del params['keywords']
+    if not sort:
+        del params['sort']
 
     response = requests.get(url, headers=header, params=params)
     return json.loads(response.text)
