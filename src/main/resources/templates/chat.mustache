@@ -30,7 +30,8 @@
           <a href="#" class="text-stone-800 font-bold cursor-pointer">이전 기록</a>
         {{/ recent_results }}
         {{# name }}
-          <a href="#" class="text-stone-800 font-bold cursor-pointer underline">{{ name }}</a>
+          <span href="#" class="text-stone-800 font-bold underline">{{ name }}</span>
+          <a href="/logout" class="text-stone-800 font-bold cursor-pointer">로그아웃</a>
         {{/ name }}
         </div>
 
@@ -46,24 +47,24 @@
         <div class="w-full h-full flex flex-col space-y-7 overflow-auto">
 
           <!--Chat items-->
-          <div class="h-full p-5 border rounded-lg shadow-md space-y-3 overflow-y-scroll no-scrollbar">
+          <div id="chats" class="h-full p-5 border rounded-lg shadow-md space-y-3 overflow-y-scroll no-scrollbar">
 
-            <div class="flex space-x-3">
-              <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />
-              <div class="w-full p-5 bg-violet-100 rounded-lg">안녕하세요. 저는 사용자님께 알맞은 취업 정보를 제공해 드릴 김비서입니다.</div>
-            </div>
-            <div class="flex space-x-3">
-              <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />
-              <div class="w-full p-5 bg-pink-100 rounded-lg">안녕</div>
-            </div>
-            <div class="flex space-x-3">
-              <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />
-              <div class="w-full p-5 bg-violet-100 rounded-lg">니가 뭔데</div>
-            </div>
-            <div class="flex space-x-3">
-              <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />
-              <div class="w-full p-5 bg-pink-100 rounded-lg">ㄷㄷ</div>
-            </div>
+<!--            <div class="assistant flex space-x-3">-->
+<!--              <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />-->
+<!--              <div class="w-full p-5 bg-violet-100 rounded-lg">안녕하세요. 저는 사용자님께 알맞은 취업 정보를 제공해 드릴 김비서입니다.</div>-->
+<!--            </div>-->
+<!--            <div class="user flex space-x-3">-->
+<!--              <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />-->
+<!--              <div class="w-full p-5 bg-pink-100 rounded-lg">안녕</div>-->
+<!--            </div>-->
+<!--            <div class="assistant flex space-x-3">-->
+<!--              <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />-->
+<!--              <div class="w-full p-5 bg-violet-100 rounded-lg">니가 뭔데</div>-->
+<!--            </div>-->
+<!--            <div class="user flex space-x-3">-->
+<!--              <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />-->
+<!--              <div class="w-full p-5 bg-pink-100 rounded-lg">ㄷㄷ</div>-->
+<!--            </div>-->
 
           </div>
 
@@ -180,6 +181,76 @@
     </div>
 </body>
 <script>
+    document.getElementById('chat-input').addEventListener('keydown', function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevents the addition of a new line in the input when pressing enter
+
+            var inputValue = this.value;
+            this.value = '';  // Clears the input field
+
+            // Creating new user element
+            var userChatItem = document.createElement('div');
+            userChatItem.classList.add('user', 'flex', 'space-x-3');
+
+            var userImg = document.createElement('img');
+            userImg.classList.add('w-7', 'h-7', 'rounded-lg');
+            userImg.src = "{{image}}";
+
+            var userText = document.createElement('div');
+            userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg');
+            userText.textContent = inputValue;
+
+            userChatItem.appendChild(userImg);
+            userChatItem.appendChild(userText);
+
+            document.getElementById('chats').appendChild(userChatItem);
+
+            // Collecting chat records
+            var chatItems = Array.from(document.getElementById('chats').children).map(function(chatItem) {
+                return {
+                    role: chatItem.classList.contains('assistant') ? 'assistant' : 'user',
+                    content: chatItem.querySelector('.w-full').textContent
+                };
+            });
+
+            // Sending request
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(chatItems)
+            })
+                    .then(async (response) => {
+                        if (response.status !== 200) {
+                            alert("로그인이 필요합니다.")
+                            location.href = "/login"
+                        }
+                        return await response.json()
+                    })
+                    .then(data => {
+                        // Create and append assistant chat item
+                        var assistantChatItem = document.createElement('div');
+                        assistantChatItem.classList.add('assistant', 'flex', 'space-x-3');
+
+                        var assistantImg = document.createElement('img');
+                        assistantImg.classList.add('w-7', 'h-7', 'rounded-lg');
+                        assistantImg.src = "/images/logo-rev.png";
+
+                        var assistantText = document.createElement('div');
+                        assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg');
+                        assistantText.textContent = data.content;
+
+                        assistantChatItem.appendChild(assistantImg);
+                        assistantChatItem.appendChild(assistantText);
+
+                        document.getElementById('chats').appendChild(assistantChatItem);
+                    });
+        }
+    });
+
+</script>
+<script>
   const chatInput = document.getElementById("chat-input")
 
   chatInput.oninput = () => {
@@ -191,6 +262,23 @@
     } else {
       chatBtn.setAttribute("disabled", "")
     }
+  }
+  chatInput.onkeydown = async (e) => {
+      if (e.key === 'Enter') {
+          const url = "/chat"
+          const response = await fetch(url, {
+              method: 'POST',
+              credentials: 'same-origin',
+              headers: {
+                  'Content-Type': 'application/json',
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              redirect: 'follow',
+              referrerPolicy: 'no-referrer',
+              body: JSON.stringify(data),
+          })
+
+      }
   }
 </script>
 <script>
