@@ -35,7 +35,7 @@ public class ChatRestController {
         }
         ChatData lastChat = chatDataList.get(chatDataList.size() - 1);
 
-        Long userID = (Long) session.getAttribute("user");
+        Long userID = Long.parseLong(session.getAttribute("user").toString());
 
         chatService.updateUserChats(userID, lastChat);
 
