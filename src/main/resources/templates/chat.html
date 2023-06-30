@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,44 +10,41 @@
     <div class="flex flex-col h-screen">
 
       <!--Appbar-->
-      <div class="py-5 px-14 border-b flex justify-between items-center">
+      <div class="py-3 px-14 border-b flex justify-between items-center">
 
         <!--Left Appbar contents-->
-        <div class="flex items-center space-x-16">
+        <div class="flex space-x-16 items-center">
           <div class="text-2xl font-bold">김비서</div>
-          <div class="flex space-x-5">
-            <a href="#" class="text-stone-500 font-bold cursor-pointer">사용방법</a>
-            <a href="#" class="text-violet-500 font-bold cursor-pointer">대화하기</a>
+          <div class="flex space-x-5 items-center">
+            <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="#">사용방법</a>
+            <a class="p-2 text-violet-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/new" th:if="${name != null}">새로운 채팅</a>
+            <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/recent" th:if="${recent_results != null}">이전 분석 기록</a>
           </div>
         </div>
+        <!--Left Appbar contents-->
 
         <!--Right Appbar contents-->
-        <div class="flex space-x-5">
-        {{^ name }}
-          <a href="/login?redirect={{ current_url }}" class="text-stone-800 font-bold cursor-pointer">로그인</a>
-        {{/ name }}
-        {{# recent_results }}
-          <a href="#" class="text-stone-800 font-bold cursor-pointer">이전 기록</a>
-        {{/ recent_results }}
-        {{# name }}
-          <span href="#" class="text-stone-800 font-bold underline">{{ name }}</span>
-          <a href="/logout" class="text-stone-800 font-bold cursor-pointer">로그아웃</a>
-        {{/ name }}
+        <div class="flex space-x-5 items-center">
+          <a th:if="${name == null}" th:href="|/login?redirect=${ current_url }|" class="p-2 text-stone-800 font-bold cursor-pointer hover:bg-stone-100">로그인</a>
+          <span th:if="${name != null}" class="p-2 text-violet-500 font-bold underline" th:text="${name}"></span>
+          <a th:if="${name != null}" href="/logout" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그아웃</a>
         </div>
+        <!--Right Appbar contents-->
 
       </div>
+      <!--Appbar-->
 
 
 
       <!--Body-->
-      <div class="h-full px-14 py-5 flex space-x-7 overflow-auto">
+      <div class="h-full px-14 py-5 flex space-x-4 overflow-auto">
 
 
         <!--Chat-->
-        <div class="w-full h-full flex flex-col space-y-7 overflow-auto">
+        <div class="w-full h-full p-2 flex flex-col space-y-7 overflow-auto">
 
           <!--Chat items-->
-          <div id="chats" class="h-full p-5 border rounded-lg shadow-md space-y-3 overflow-y-scroll no-scrollbar">
+          <div id="chats" class="h-full p-5 border rounded-lg shadow-lg space-y-3 overflow-y-scroll no-scrollbar">
 
 <!--            <div class="assistant flex space-x-3">-->
 <!--              <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />-->
@@ -67,13 +64,14 @@
 <!--            </div>-->
 
           </div>
+          <!--Chat-->
 
           <!--Chat input-->
           <div class="h-20">
     <!--        <label>-->
     <!--          <input type="text" name="chat" class="w-full p-3 border rounded-lg shadow-md">-->
     <!--        </label>-->
-            <div class="flex flex-col w-full pl-4 py-4 relative border border-black/10 bg-white rounded-xl shadow-md">
+            <div class="flex flex-col w-full pl-4 py-4 relative border border-black/10 bg-white rounded-xl shadow-lg">
               <textarea id="chat-input" class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus:outline-none" tabindex="0" placeholder="Send a message" style="max-height: 200px; height: 24px; overflow-y: hidden;"></textarea>
               <button id="chat-btn" class="absolute p-1 rounded-md bottom-3 md:p-2 right-3 disabled:text-gray-400 enabled:bg-violet-500 text-white transition-colors disabled:opacity-40" disabled>
                 <span data-state="closed">
@@ -84,23 +82,28 @@
               </button>
             </div>
           </div>
+          <!--Chat input-->
 
         </div>
+        <!--Chat-->
 
 
         <!--Analysis-->
-        <div class="h-full w-1/3 flex flex-col justify-stretch space-y-7 overflow-auto">
+        <div class="h-full w-1/3 p-2 flex flex-col justify-stretch space-y-7 overflow-auto">
 
           <!--Analysis items-->
-          <div id="container" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="h-full p-5 border rounded-lg shadow-md flex flex-col space-y-2 overflow-y-scroll no-scrollbar">
+          <div id="container" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="h-full p-2 border rounded-lg shadow-lg flex flex-col space-y-2 overflow-y-scroll no-scrollbar">
           </div>
+          <!--Analysis items-->
 
           <!--Info edit btn-->
           <div class="h-20">
-            <button class="w-full p-4 border rounded-lg shadow-md text-stone-500">사전 정보 수정</button>
+            <button class="w-full p-4 border rounded-lg shadow-lg text-stone-500">사전 정보 수정</button>
           </div>
+          <!--Info edit btn-->
 
         </div>
+        <!--Analysis-->
 
       </div>
 
@@ -180,13 +183,16 @@
         </div>
     </div>
 </body>
-<script>
-    document.getElementById('chat-input').addEventListener('keydown', function(event) {
+<script th:inline="javascript">
+    document.getElementById('chat-input').addEventListener('keydown', (event) => {
         if (event.key === "Enter") {
-            event.preventDefault(); // Prevents the addition of a new line in the input when pressing enter
+            event.preventDefault();
+            if (event.shiftKey) {
+
+            }
 
             var inputValue = this.value;
-            this.value = '';  // Clears the input field
+            this.value = '';
 
             // Creating new user element
             var userChatItem = document.createElement('div');
@@ -194,7 +200,7 @@
 
             var userImg = document.createElement('img');
             userImg.classList.add('w-7', 'h-7', 'rounded-lg');
-            userImg.src = "{{image}}";
+            userImg.src = [[${image}]];
 
             var userText = document.createElement('div');
             userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg');
