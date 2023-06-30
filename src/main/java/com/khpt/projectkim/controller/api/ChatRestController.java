@@ -11,8 +11,10 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,61 +27,37 @@ public class ChatRestController {
 
     // (프론트에서 채팅 보내기 클릭 하면 이 함수에 모든 채팅 기록을 줌)
     @PostMapping
-    public ChatData sendChat(HttpSession session, HttpServletResponse response, @RequestBody List<ChatData> chatDataList) {
-//        if (session.getAttribute("user") == null) {
-//            System.out.println("Send chat failed. No session");
-//            response.setStatus(HttpStatus.BAD_REQUEST.value());
-//            return null;
-//        }
+    public ChatData sendChat(HttpSession session, HttpServletRequest request, HttpServletResponse response, @RequestBody List<ChatData> chatDataList) throws IOException {
+        if (session.getAttribute("user") == null) {
+            System.out.println("Send chat failed. No session");
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return null;
+        }
         ChatData lastChat = chatDataList.get(chatDataList.size() - 1);
 
         Long userID = (Long) session.getAttribute("user");
 
         chatService.updateUserChats(userID, lastChat);
 
-        try {
-            System.setProperty("https.protocols", "TLSv1.2");
+        ObjectMapper objectMapper = new ObjectMapper();
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
 
-            // List를 JSON 형태로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
+        try {
             String json = objectMapper.writeValueAsString(chatDataList);
 
-            // RestTemplate 인스턴스 생성
-            RestTemplate restTemplate = new RestTemplate();
-
-            // ChatData 객체 생성
-            ChatData chatData = chatDataList.get(0);
-
-            // 요청 헤더 설정
-            HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            // 요청 엔티티 생성
-            HttpEntity<ChatData> requestEntity = new HttpEntity<>(chatData, headers);
+            HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
 
-            // POST 요청 보내기
-            String url = "http://localhost:8090/result";
-            ResponseEntity<String> res = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+            String url = "http://localhost:8000/chat";
+            ResponseEntity<ChatData> res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ChatData.class);
 
-            // 응답 데이터 가져오기
-            String responseBody = res.getBody();
-            System.out.println("Response: " + responseBody);
+            return res.getBody();
         } catch (Exception e) {
             e.printStackTrace();
+            return new ChatData("assistant", "ERROR");
         }
-
-        // ChatData 클래스는 채팅 하나를 의미함
-        // 여러개의 채팅이 모여 chatDataList 에 모든 채팅 내역이 순서대로 있음
-
-        // 물론 이 리스트의 마지막 아이템에 유저가 새로 입력한 채팅이 있음
-        // TODO chatDataList의 젤 마지막 아이템을 사용자 레포지토리 채팅 기록에 추가
-
-        // TODO chatDataList JSON으로 변환
-
-        // TODO 변환된 JSON을 API에 보내서 responseChat(GPT 응답) 가져오기
-
-        ChatData responseChat = new ChatData("assistant", "안녕하세요. 무엇을 도와드릴까요?");
-        return responseChat;
     }
 
     @GetMapping("/all")
