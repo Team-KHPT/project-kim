@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/login")
 public class LoginController {
     @GetMapping("")
-    public String loginPage(Model model, @RequestParam(value = "redirect", defaultValue = "") String uri) {
+    public String loginPage(Model model, @RequestParam(value = "redirect", defaultValue = "/") String uri) {
         model.addAttribute("redirect_uri", uri);
         return "login";
     }
