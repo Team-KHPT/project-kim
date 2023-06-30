@@ -30,7 +30,7 @@ public class ChatRestController {
     public ChatData sendChat(HttpSession session, HttpServletRequest request, HttpServletResponse response, @RequestBody List<ChatData> chatDataList) throws IOException {
         if (session.getAttribute("user") == null) {
             System.out.println("Send chat failed. No session");
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return null;
         }
         ChatData lastChat = chatDataList.get(chatDataList.size() - 1);
