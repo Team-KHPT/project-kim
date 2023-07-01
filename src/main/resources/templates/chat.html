@@ -10,22 +10,22 @@
     <div class="flex flex-col h-screen">
 
       <!--Appbar-->
-      <div class="py-3 px-14 border-b flex justify-between items-center">
+      <div class="py-3 px-16 border-b flex justify-between items-center shadow">
 
         <!--Left Appbar contents-->
-        <div class="flex space-x-16 items-center">
+        <div class="flex space-x-6 items-center">
           <div class="text-2xl font-bold">김비서</div>
-          <div class="flex space-x-5 items-center">
+          <div class="flex space-x-2 items-center">
             <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="#">사용방법</a>
             <a class="p-2 text-violet-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/new" th:if="${name != null}">새로운 채팅</a>
-            <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/recent" th:if="${recent_results != null}">이전 분석 기록</a>
+            <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/recent" th:if="${recent_results != null}">이전 기록</a>
           </div>
         </div>
         <!--Left Appbar contents-->
 
         <!--Right Appbar contents-->
         <div class="flex space-x-5 items-center">
-          <a th:if="${name == null}" th:href="|/login?redirect=${ current_url }|" class="p-2 text-stone-800 font-bold cursor-pointer hover:bg-stone-100">로그인</a>
+          <a th:if="${name == null}" th:href="|/login?redirect=${ current_url }|" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그인</a>
           <span th:if="${name != null}" class="p-2 text-violet-500 font-bold underline" th:text="${name}"></span>
           <a th:if="${name != null}" href="/logout" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그아웃</a>
         </div>
@@ -54,35 +54,55 @@
 <!--              <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />-->
 <!--              <div class="w-full p-5 bg-pink-100 rounded-lg">안녕</div>-->
 <!--            </div>-->
-<!--            <div class="assistant flex space-x-3">-->
-<!--              <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />-->
-<!--              <div class="w-full p-5 bg-violet-100 rounded-lg">니가 뭔데</div>-->
-<!--            </div>-->
-<!--            <div class="user flex space-x-3">-->
-<!--              <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />-->
-<!--              <div class="w-full p-5 bg-pink-100 rounded-lg">ㄷㄷ</div>-->
-<!--            </div>-->
 
           </div>
           <!--Chat-->
 
           <!--Chat input-->
           <div class="h-20">
-    <!--        <label>-->
-    <!--          <input type="text" name="chat" class="w-full p-3 border rounded-lg shadow-md">-->
-    <!--        </label>-->
-            <div class="flex flex-col w-full pl-4 py-4 relative border border-black/10 bg-white rounded-xl shadow-lg">
-              <textarea id="chat-input" class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus:outline-none" tabindex="0" placeholder="Send a message" style="max-height: 200px; height: 24px; overflow-y: hidden;"></textarea>
-              <button id="chat-btn" class="absolute p-1 rounded-md bottom-3 md:p-2 right-3 disabled:text-gray-400 enabled:bg-violet-500 text-white transition-colors disabled:opacity-40" disabled>
-                <span data-state="closed">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
-                    <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
-                  </svg>
-                </span>
-              </button>
-            </div>
+<!--            <div class="relative flex flex-col pl-4 py-4 border border-black/10 bg-white rounded-xl shadow-lg">-->
+<!--              <textarea id="chat-input" class="absolute m-0 w-full resize-none border-0 bg-transparent p-4 pr-10 focus:ring-0 focus:outline-none" tabindex="0" placeholder="Send a message" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>-->
+<!--              <button id="chat-btn" class="absolute p-1 rounded-md bottom-3 md:p-2 right-3 disabled:text-gray-400 enabled:bg-violet-500 text-white transition-colors disabled:opacity-40" disabled>-->
+<!--                <span data-state="closed">-->
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">-->
+<!--                    <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>-->
+<!--                  </svg>-->
+<!--                </span>-->
+<!--              </button>-->
+<!--            </div>-->
           </div>
           <!--Chat input-->
+
+          <div class="absolute bottom-0 left-0 w-full border-t md:border-t-0 dark:border-white/20 md:border-transparent md:dark:border-transparent md:bg-vert-light-gradient bg-white dark:bg-gray-800 md:!bg-transparent dark:md:bg-vert-dark-gradient pt-2 md:pl-2 md:w-[calc(100%-.5rem)]">
+            <form class="stretch mx-2 flex flex-row gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl">
+              <div class="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
+                <div class="">
+                  <div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
+                    <button class="btn relative btn-neutral -z-0 border-0 md:border" as="button">
+                      <div class="flex w-full gap-2 items-center justify-center">
+                        <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 flex-shrink-0" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                          <polyline points="1 4 1 10 7 10"></polyline>
+                          <polyline points="23 20 23 14 17 14"></polyline>
+                          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                        </svg>
+                        Regenerate response
+                      </div>
+                    </button>
+                  </div>
+                </div>
+                <div class="flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-white dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs">
+                  <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>
+                  <button class="absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-brand-purple text-white bottom-1.5 transition-colors disabled:opacity-40" style="background-color: rgb(25, 195, 125);">
+                      <span class="" data-state="closed">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
+                          <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
+                        </svg>
+                      </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
 
         </div>
         <!--Chat-->
@@ -184,111 +204,16 @@
     </div>
 </body>
 <script th:inline="javascript">
-    document.getElementById('chat-input').addEventListener('keydown', (event) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            if (event.shiftKey) {
-
-            }
-
-            var inputValue = this.value;
-            this.value = '';
-
-            // Creating new user element
-            var userChatItem = document.createElement('div');
-            userChatItem.classList.add('user', 'flex', 'space-x-3');
-
-            var userImg = document.createElement('img');
-            userImg.classList.add('w-7', 'h-7', 'rounded-lg');
-            userImg.src = [[${image}]];
-
-            var userText = document.createElement('div');
-            userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg');
-            userText.textContent = inputValue;
-
-            userChatItem.appendChild(userImg);
-            userChatItem.appendChild(userText);
-
-            document.getElementById('chats').appendChild(userChatItem);
-
-            // Collecting chat records
-            var chatItems = Array.from(document.getElementById('chats').children).map(function(chatItem) {
-                return {
-                    role: chatItem.classList.contains('assistant') ? 'assistant' : 'user',
-                    content: chatItem.querySelector('.w-full').textContent
-                };
-            });
-
-            // Sending request
-            fetch('/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(chatItems)
-            })
-                    .then(async (response) => {
-                        if (response.status !== 200) {
-                            alert("로그인이 필요합니다.")
-                            location.href = "/login"
-                        }
-                        return await response.json()
-                    })
-                    .then(data => {
-                        // Create and append assistant chat item
-                        var assistantChatItem = document.createElement('div');
-                        assistantChatItem.classList.add('assistant', 'flex', 'space-x-3');
-
-                        var assistantImg = document.createElement('img');
-                        assistantImg.classList.add('w-7', 'h-7', 'rounded-lg');
-                        assistantImg.src = "/images/logo-rev.png";
-
-                        var assistantText = document.createElement('div');
-                        assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg');
-                        assistantText.textContent = data.content;
-
-                        assistantChatItem.appendChild(assistantImg);
-                        assistantChatItem.appendChild(assistantText);
-
-                        document.getElementById('chats').appendChild(assistantChatItem);
-                    });
-        }
-    });
-
-</script>
-<script>
-  const chatInput = document.getElementById("chat-input")
-
-  chatInput.oninput = () => {
-    const chatInput = document.getElementById("chat-input")
-    const chatBtn = document.getElementById("chat-btn")
-
-    if (chatInput.value.length > 0) {
-      chatBtn.removeAttribute("disabled")
-    } else {
-      chatBtn.setAttribute("disabled", "")
+    function setUserImage() {
+        localStorage.setItem("user_profile_img", [[${image}]])
     }
-  }
-  chatInput.onkeydown = async (e) => {
-      if (e.key === 'Enter') {
-          const url = "/chat"
-          const response = await fetch(url, {
-              method: 'POST',
-              credentials: 'same-origin',
-              headers: {
-                  'Content-Type': 'application/json',
-                  // 'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              redirect: 'follow',
-              referrerPolicy: 'no-referrer',
-              body: JSON.stringify(data),
-          })
-
-      }
-  }
+    function getUserImage() {
+        return localStorage.getItem("user_profile_img")
+    }
 </script>
+<script src="/js/chatInput.js"></script>
 <script>
-    let data = [];
+    let data = []
 
     const refreshData = async () => {
         await fetch("/result")
@@ -298,39 +223,37 @@
                     updateData()
                 })
     }
-    refreshData();
-    setInterval(refreshData, 10000)
 
     const updateData = () => {
         console.log(data)
 
-        let container = document.getElementById('container');
+        let container = document.getElementById('container')
         container.innerHTML = ''
 
         for (const item of data) {
-            let div = document.createElement('a');
-            div.setAttribute("data-modal-target", "defaultModal");
-            div.setAttribute("data-modal-toggle","defaultModal");
-            div.className = "p-2 flex flex-col border rounded-lg space-y-2 text-stone-600 cursor-pointer";
+            let div = document.createElement('a')
+            div.setAttribute("data-modal-target", "defaultModal")
+            div.setAttribute("data-modal-toggle","defaultModal")
+            div.className = "p-2 flex flex-col border rounded-lg space-y-2 text-stone-600 cursor-pointer"
             div.addEventListener("click", () => {
                 console.log(item)
-                const modalCompany = document.getElementById("modal-company");
-                const modalTitle = document.getElementById("modal-title");
-                const modalUrl = document.getElementById("modal-url");
-                const modalRegion = document.getElementById("modal-region");
-                const modalCareer = document.getElementById("modal-career");
-                const modalTime = document.getElementById("modal-time");
-                const modalSalary = document.getElementById("modal-salary");
-                const modalType = document.getElementById("modal-type");
+                const modalCompany = document.getElementById("modal-company")
+                const modalTitle = document.getElementById("modal-title")
+                const modalUrl = document.getElementById("modal-url")
+                const modalRegion = document.getElementById("modal-region")
+                const modalCareer = document.getElementById("modal-career")
+                const modalTime = document.getElementById("modal-time")
+                const modalSalary = document.getElementById("modal-salary")
+                const modalType = document.getElementById("modal-type")
 
-                modalCompany.innerText = item.company;
-                modalTitle.innerText = item.title;
-                modalUrl.setAttribute("href", item.url);
-                modalRegion.innerText = item.region;
-                modalCareer.innerText = item.career;
-                modalTime.innerText = item.time;
-                modalSalary.innerText = item.salary;
-                modalType.innerText = item.type;
+                modalCompany.innerText = item.company
+                modalTitle.innerText = item.title
+                modalUrl.setAttribute("href", item.url)
+                modalRegion.innerText = item.region
+                modalCareer.innerText = item.career
+                modalTime.innerText = item.time
+                modalSalary.innerText = item.salary
+                modalType.innerText = item.type
             })
 
             div.innerHTML = `
@@ -350,9 +273,9 @@
                     <span class="text-xs truncate text-ellipsis">${item.career}</span>
                   </div>
                 </div>
-            `;
+            `
 
-            container.appendChild(div);
+            container.appendChild(div)
         }
     }
 </script>
