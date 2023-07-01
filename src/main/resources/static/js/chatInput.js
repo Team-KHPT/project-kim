@@ -12,8 +12,27 @@ chatInput.addEventListener('input', function() {
     }
 })
 
-chatBtn.addEventListener('click', function () {
+chatBtn.addEventListener('click', function (event) {
+    event.preventDefault()
+    sendMessage(chatInput.value)
+})
 
+chatInput.addEventListener('keydown', function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault()
+        if (event.shiftKey) {
+            if ((this.offsetHeight + 24) > 200) {
+                this.style.overflowY = ''
+            } else {
+                this.style.height = (this.offsetHeight + 24) + "px"
+            }
+            this.value = this.value += '\n'
+            return
+        }
+
+        sendMessage(this.value)
+        this.value = ''
+    }
 })
 
 function sendMessage(inputValue) {
@@ -22,7 +41,6 @@ function sendMessage(inputValue) {
 
     const userImg = document.createElement('img')
     userImg.classList.add('w-7', 'h-7', 'rounded-lg')
-
     userImg.src = getUserImage()
 
     const userText = document.createElement('div')
@@ -77,22 +95,3 @@ function sendMessage(inputValue) {
             document.getElementById('chats').appendChild(assistantChatItem)
         })
 }
-
-
-chatInput.addEventListener('keydown', function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault()
-        if (event.shiftKey) {
-            if ((this.offsetHeight + 24) > 200) {
-                this.style.overflowY = ''
-            } else {
-                this.style.height = (this.offsetHeight + 24) + "px"
-            }
-            this.value = this.value += '\n'
-            return
-        }
-
-        sendMessage(this.value)
-        this.value = ''
-    }
-})
