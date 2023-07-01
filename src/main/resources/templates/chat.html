@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="../static/css/output.css" rel="stylesheet">
+  <link href="/css/output.css" rel="stylesheet">
   <title>Chat</title>
 </head>
 <body>
@@ -52,19 +52,20 @@
             <div class="flex flex-col w-full flex-grow py-4 pl-4 relative border border-black/10 bg-stone-50 rounded-lg shadow-lg">
               <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>
               <button id="chat-btn" class="absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-violet-500 text-white bottom-1.5 transition-colors disabled:opacity-40" disabled="">
-                      <span class="" data-state="closed">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
-                          <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
-                        </svg>
-                      </span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
+                  <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
+                </svg>
               </button>
             </div>
           </div>
         </form>
-        <div class="h-7 pt-2 text-center text-stone-500 space-x-3">
-          <span class="text-xs ">Powered by <a class="text-violet-400" href="https://openai.com" target="_blank">OpenAI</a></span>
-          <span class="text-sm">|</span>
-          <span class="text-xs">Powered by <a class="text-violet-400" href="https://saramin.co.kr" target="_blank">Saramin</a></span>
+        <div class="h-7 pt-2 text-center text-stone-500 space-x-1">
+          <span class="text-xs">Powered by</span>
+          <span class="text-xs">
+            <a class="text-violet-400" href="https://openai.com" target="_blank">OpenAI</a>
+            <span class="text-sm">|</span>
+            <a class="text-violet-400" href="https://saramin.co.kr" target="_blank">Saramin</a>
+          </span>
         </div>
       </div>
     </div>
@@ -109,42 +110,42 @@
       <div class="flex items-center p-6 border-gray-200 rounded-b dark:border-gray-600">
         <div class="w-1/6 flex flex-col justify-start px-1.5">
           <div class="font-bold text-sm flex items-center justify-start space-x-3">
-            <img class="w-4 h-4" src="/icons/location.png" alt="loc">
+            <img loading="lazy" class="w-4 h-4" src="/icons/location.png" alt="loc">
             <span>위치</span>
           </div>
           <span id="modal-region" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
           <div class="font-bold text-sm flex items-center justify-start space-x-3">
-            <img class="w-4 h-4" src="/icons/profit.png" alt="loc">
+            <img loading="lazy" class="w-4 h-4" src="/icons/profit.png" alt="loc">
             <span>연봉</span>
           </div>
           <span id="modal-salary" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
           <div class="font-bold text-sm flex items-center justify-start space-x-3">
-            <img class="w-4 h-4" src="/icons/sales.png" alt="loc">
+            <img loading="lazy" class="w-4 h-4" src="/icons/sales.png" alt="loc">
             <span>근무형태</span>
           </div>
           <span id="modal-type" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
           <div class="font-bold text-sm flex items-center justify-start space-x-3">
-            <img class="w-4 h-4" src="/icons/profile.png" alt="loc">
+            <img loading="lazy" class="w-4 h-4" src="/icons/profile.png" alt="loc">
             <span>학력</span>
           </div>
           <span id="modal-education" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
           <div class="font-bold text-sm flex items-center justify-start space-x-3">
-            <img class="w-4 h-4" src="/icons/career.png" alt="loc">
+            <img loading="lazy" class="w-4 h-4" src="/icons/career.png" alt="loc">
             <span>경력</span>
           </div>
           <span id="modal-career" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
           <div class="font-bold text-sm flex items-center justify-start space-x-3">
-            <img class="w-4 h-4" src="/icons/time.png" alt="loc">
+            <img loading="lazy" class="w-4 h-4" src="/icons/time.png" alt="loc">
             <span>근무시간</span>
           </div>
           <span id="modal-time" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
@@ -159,7 +160,7 @@
         return [[${image}]]
     }
 </script>
-<script src="../static/js/chatInput.js"></script>
-<script src="../static/js/chatResult.js"></script>
-<script src="../static/js/flowbite.min.js"></script>
+<script src="/js/chatInput.js"></script>
+<script src="/js/chatResult.js"></script>
+<script src="/js/flowbite.min.js"></script>
 </html>
