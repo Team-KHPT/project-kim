@@ -3,281 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="/css/output.css" rel="stylesheet">
+  <link href="../static/css/output.css" rel="stylesheet">
   <title>Chat</title>
 </head>
 <body>
-    <div class="flex flex-col h-screen">
+<div class="flex flex-col h-screen">
 
-      <!--Appbar-->
-      <div class="py-3 px-16 border-b flex justify-between items-center shadow">
+  <!--Appbar-->
+  <div class="py-3 px-16 border-b flex justify-between items-center shadow">
 
-        <!--Left Appbar contents-->
-        <div class="flex space-x-6 items-center">
-          <div class="text-2xl font-bold">김비서</div>
-          <div class="flex space-x-2 items-center">
-            <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="#">사용방법</a>
-            <a class="p-2 text-violet-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/new" th:if="${name != null}">새로운 채팅</a>
-            <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/recent" th:if="${recent_results != null}">이전 기록</a>
-          </div>
-        </div>
-        <!--Left Appbar contents-->
-
-        <!--Right Appbar contents-->
-        <div class="flex space-x-5 items-center">
-          <a th:if="${name == null}" th:href="|/login?redirect=${ current_url }|" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그인</a>
-          <span th:if="${name != null}" class="p-2 text-violet-500 font-bold underline" th:text="${name}"></span>
-          <a th:if="${name != null}" href="/logout" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그아웃</a>
-        </div>
-        <!--Right Appbar contents-->
-
+    <!--Left Appbar contents-->
+    <div class="flex space-x-6 items-center">
+      <div class="text-2xl font-bold">김비서</div>
+      <div class="flex space-x-2 items-center">
+        <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="#">사용방법</a>
+        <a class="p-2 text-violet-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/new" th:if="${name != null}">새로운 채팅</a>
+        <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/recent" th:if="${recent_results != null}">이전 기록</a>
       </div>
-      <!--Appbar-->
+    </div>
+    <!--Left Appbar contents-->
+
+    <!--Right Appbar contents-->
+    <div class="flex space-x-5 items-center">
+      <a th:if="${name == null}" th:href="|/login?redirect=${ current_url }|" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그인</a>
+      <span th:if="${name != null}" class="p-2 text-violet-500 font-bold underline" th:text="${name}"></span>
+      <a th:if="${name != null}" href="/logout" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그아웃</a>
+    </div>
+    <!--Right Appbar contents-->
+
+  </div>
+  <!--Appbar-->
 
 
 
-      <!--Body-->
-      <div class="h-full px-14 py-5 flex space-x-4 overflow-auto">
+  <!--Body-->
+  <div class="relative h-full px-14 pt-7 grid grid-rows-6 grid-cols-4 gap-7 overflow-auto">
 
+    <div id="chats" class="col-span-3 row-span-5 p-5 border rounded-lg shadow-lg space-y-3 overflow-y-scroll no-scrollbar">
+    </div>
 
-        <!--Chat-->
-        <div class="w-full h-full p-2 flex flex-col space-y-7 overflow-auto">
+    <div id="container" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="row-span-5 h-full p-2 border rounded-lg shadow-lg flex flex-col space-y-2 overflow-y-scroll no-scrollbar">
+    </div>
 
-          <!--Chat items-->
-          <div id="chats" class="h-full p-5 border rounded-lg shadow-lg space-y-3 overflow-y-scroll no-scrollbar">
-
-<!--            <div class="assistant flex space-x-3">-->
-<!--              <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png" alt="" />-->
-<!--              <div class="w-full p-5 bg-violet-100 rounded-lg">안녕하세요. 저는 사용자님께 알맞은 취업 정보를 제공해 드릴 김비서입니다.</div>-->
-<!--            </div>-->
-<!--            <div class="user flex space-x-3">-->
-<!--              <img class="w-7 h-7 rounded-lg" src="{{image}}" alt="" />-->
-<!--              <div class="w-full p-5 bg-pink-100 rounded-lg">안녕</div>-->
-<!--            </div>-->
-
-          </div>
-          <!--Chat-->
-
-          <!--Chat input-->
-          <div class="h-20">
-<!--            <div class="relative flex flex-col pl-4 py-4 border border-black/10 bg-white rounded-xl shadow-lg">-->
-<!--              <textarea id="chat-input" class="absolute m-0 w-full resize-none border-0 bg-transparent p-4 pr-10 focus:ring-0 focus:outline-none" tabindex="0" placeholder="Send a message" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>-->
-<!--              <button id="chat-btn" class="absolute p-1 rounded-md bottom-3 md:p-2 right-3 disabled:text-gray-400 enabled:bg-violet-500 text-white transition-colors disabled:opacity-40" disabled>-->
-<!--                <span data-state="closed">-->
-<!--                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">-->
-<!--                    <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>-->
-<!--                  </svg>-->
-<!--                </span>-->
-<!--              </button>-->
-<!--            </div>-->
-          </div>
-          <!--Chat input-->
-
-          <div class="absolute bottom-0 left-0 w-full border-t md:border-t-0 dark:border-white/20 md:border-transparent md:dark:border-transparent md:bg-vert-light-gradient bg-white dark:bg-gray-800 md:!bg-transparent dark:md:bg-vert-dark-gradient pt-2 md:pl-2 md:w-[calc(100%-.5rem)]">
-            <form class="stretch mx-2 flex flex-row gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl">
-              <div class="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
-                <div class="">
-                  <div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
-                    <button class="btn relative btn-neutral -z-0 border-0 md:border" as="button">
-                      <div class="flex w-full gap-2 items-center justify-center">
-                        <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 flex-shrink-0" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                          <polyline points="1 4 1 10 7 10"></polyline>
-                          <polyline points="23 20 23 14 17 14"></polyline>
-                          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
-                        </svg>
-                        Regenerate response
-                      </div>
-                    </button>
-                  </div>
-                </div>
-                <div class="flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-white dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs">
-                  <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>
-                  <button class="absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-brand-purple text-white bottom-1.5 transition-colors disabled:opacity-40" style="background-color: rgb(25, 195, 125);">
+    <div class="col-span-3 relative h-24">
+      <div class="absolute bottom-0 left-0 w-full bg-white">
+        <form class="stretch flex flex-row">
+          <div class="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
+            <div class="flex flex-col w-full flex-grow py-4 pl-4 relative border border-black/10 bg-stone-50 rounded-lg shadow-lg">
+              <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>
+              <button id="chat-btn" class="absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-violet-500 text-white bottom-1.5 transition-colors disabled:opacity-40" disabled="">
                       <span class="" data-state="closed">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
                           <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
                         </svg>
                       </span>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-
-        </div>
-        <!--Chat-->
-
-
-        <!--Analysis-->
-        <div class="h-full w-1/3 p-2 flex flex-col justify-stretch space-y-7 overflow-auto">
-
-          <!--Analysis items-->
-          <div id="container" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="h-full p-2 border rounded-lg shadow-lg flex flex-col space-y-2 overflow-y-scroll no-scrollbar">
-          </div>
-          <!--Analysis items-->
-
-          <!--Info edit btn-->
-          <div class="h-20">
-            <button class="w-full p-4 border rounded-lg shadow-lg text-stone-500">사전 정보 수정</button>
-          </div>
-          <!--Info edit btn-->
-
-        </div>
-        <!--Analysis-->
-
-      </div>
-
-    </div>
-    <div id="defaultModal" tabindex="-1" aria-hidden="true" class="font-noto absolute top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative w-full max-w-5xl max-h-full shadow-lg">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between px-4 py-1 border-b rounded-t dark:border-gray-300 bg-stone-100">
-                    <div class="flex space-x-2">
-                        <div class="w-2 h-2 bg-red-500 rounded-3xl"></div>
-                        <div class="w-2 h-2 bg-amber-500 rounded-3xl"></div>
-                        <div class="w-2 h-2 bg-green-500 rounded-3xl"></div>
-                    </div>
-                    <button type="button" class="text-gray-400 bg-transparent hover:text-gray-600 rounded-lg text-xs p-1.5 ml-auto inline-flex items-center" data-modal-hide="defaultModal">
-                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <div class="p-6 space-x-2 flex items-center justify-between">
-                    <div class="flex space-x-12">
-                        <p id="modal-company" class=" font-bold"></p>
-                        <p id="modal-title" class="dark:text-gray-400 font-extrabold"></p>
-                    </div>
-                    <a id="modal-url" class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
-                        보러가기
-                    </a>
-                </div>
-                <!-- Modal footer -->
-                <div class="flex items-center p-6 border-gray-200 rounded-b dark:border-gray-600">
-                    <div class="w-1/6 flex flex-col justify-start px-1.5">
-                        <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                            <img class="w-4 h-4" src="/icons/location.png" alt="loc">
-                            <span>위치</span>
-                        </div>
-                        <span id="modal-region" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
-                    </div>
-                    <div class="w-1/6 flex flex-col justify-start px-1.5">
-                        <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                            <img class="w-4 h-4" src="/icons/profit.png" alt="loc">
-                            <span>연봉</span>
-                        </div>
-                        <span id="modal-salary" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
-                    </div>
-                    <div class="w-1/6 flex flex-col justify-start px-1.5">
-                        <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                            <img class="w-4 h-4" src="/icons/sales.png" alt="loc">
-                            <span>근무형태</span>
-                        </div>
-                        <span id="modal-type" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
-                    </div>
-                    <div class="w-1/6 flex flex-col justify-start px-1.5">
-                        <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                            <img class="w-4 h-4" src="/icons/profile.png" alt="loc">
-                            <span>학력</span>
-                        </div>
-                        <span id="modal-education" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
-                    </div>
-                    <div class="w-1/6 flex flex-col justify-start px-1.5">
-                        <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                            <img class="w-4 h-4" src="/icons/career.png" alt="loc">
-                            <span>경력</span>
-                        </div>
-                        <span id="modal-career" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
-                    </div>
-                    <div class="w-1/6 flex flex-col justify-start px-1.5">
-                        <div class="font-bold text-sm flex items-center justify-start space-x-3">
-                            <img class="w-4 h-4" src="/icons/time.png" alt="loc">
-                            <span>근무시간</span>
-                        </div>
-                        <span id="modal-time" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
-                    </div>
-                </div>
+              </button>
             </div>
+          </div>
+        </form>
+        <div class="h-7 pt-2 text-center text-stone-500 space-x-3">
+          <span class="text-xs ">Powered by <a class="text-violet-400" href="https://openai.com" target="_blank">OpenAI</a></span>
+          <span class="text-sm">|</span>
+          <span class="text-xs">Powered by <a class="text-violet-400" href="https://saramin.co.kr" target="_blank">Saramin</a></span>
         </div>
+      </div>
     </div>
+
+    <div class="row-span-1 relative h-24">
+      <div class="absolute bottom-0 w-full">
+        <button class="top-0 w-full p-4 border rounded-lg shadow-lg text-stone-500">사전 정보 수정</button>
+        <div class="h-7"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<div id="defaultModal" tabindex="-1" aria-hidden="true" class="font-noto absolute top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative w-full max-w-5xl max-h-full shadow-lg">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-4 py-1 border-b rounded-t dark:border-gray-300 bg-stone-100">
+        <div class="flex space-x-2">
+          <div class="w-2 h-2 bg-red-500 rounded-3xl"></div>
+          <div class="w-2 h-2 bg-amber-500 rounded-3xl"></div>
+          <div class="w-2 h-2 bg-green-500 rounded-3xl"></div>
+        </div>
+        <button type="button" class="text-gray-400 bg-transparent hover:text-gray-600 rounded-lg text-xs p-1.5 ml-auto inline-flex items-center" data-modal-hide="defaultModal">
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-6 space-x-2 flex items-center justify-between">
+        <div class="flex space-x-12">
+          <p id="modal-company" class=" font-bold"></p>
+          <p id="modal-title" class="dark:text-gray-400 font-extrabold"></p>
+        </div>
+        <a id="modal-url" class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
+          보러가기
+        </a>
+      </div>
+      <!-- Modal footer -->
+      <div class="flex items-center p-6 border-gray-200 rounded-b dark:border-gray-600">
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+            <img class="w-4 h-4" src="/icons/location.png" alt="loc">
+            <span>위치</span>
+          </div>
+          <span id="modal-region" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+            <img class="w-4 h-4" src="/icons/profit.png" alt="loc">
+            <span>연봉</span>
+          </div>
+          <span id="modal-salary" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+            <img class="w-4 h-4" src="/icons/sales.png" alt="loc">
+            <span>근무형태</span>
+          </div>
+          <span id="modal-type" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+            <img class="w-4 h-4" src="/icons/profile.png" alt="loc">
+            <span>학력</span>
+          </div>
+          <span id="modal-education" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+            <img class="w-4 h-4" src="/icons/career.png" alt="loc">
+            <span>경력</span>
+          </div>
+          <span id="modal-career" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+            <img class="w-4 h-4" src="/icons/time.png" alt="loc">
+            <span>근무시간</span>
+          </div>
+          <span id="modal-time" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 <script th:inline="javascript">
-    function setUserImage() {
-        localStorage.setItem("user_profile_img", [[${image}]])
-    }
     function getUserImage() {
-        return localStorage.getItem("user_profile_img")
+        return [[${image}]]
     }
 </script>
-<script src="/js/chatInput.js"></script>
-<script>
-    let data = []
-
-    const refreshData = async () => {
-        await fetch("/result")
-                .then(async (res) => {
-                    data = await res.json()
-                    console.log(data)
-                    updateData()
-                })
-    }
-
-    const updateData = () => {
-        console.log(data)
-
-        let container = document.getElementById('container')
-        container.innerHTML = ''
-
-        for (const item of data) {
-            let div = document.createElement('a')
-            div.setAttribute("data-modal-target", "defaultModal")
-            div.setAttribute("data-modal-toggle","defaultModal")
-            div.className = "p-2 flex flex-col border rounded-lg space-y-2 text-stone-600 cursor-pointer"
-            div.addEventListener("click", () => {
-                console.log(item)
-                const modalCompany = document.getElementById("modal-company")
-                const modalTitle = document.getElementById("modal-title")
-                const modalUrl = document.getElementById("modal-url")
-                const modalRegion = document.getElementById("modal-region")
-                const modalCareer = document.getElementById("modal-career")
-                const modalTime = document.getElementById("modal-time")
-                const modalSalary = document.getElementById("modal-salary")
-                const modalType = document.getElementById("modal-type")
-
-                modalCompany.innerText = item.company
-                modalTitle.innerText = item.title
-                modalUrl.setAttribute("href", item.url)
-                modalRegion.innerText = item.region
-                modalCareer.innerText = item.career
-                modalTime.innerText = item.time
-                modalSalary.innerText = item.salary
-                modalType.innerText = item.type
-            })
-
-            div.innerHTML = `
-                <div class="text-xs truncate text-ellipsis">${item.company}</div>
-                <div class="text-black font-bold truncate text-ellipsis">${item.title}</div>
-                <div class="flex justify-between">
-                  <div class="w-1/3 flex justify-start">
-                    <img class="w-4 h-4" src="/icons/location.png" alt="loc">
-                    <span class="w-full text-xs truncate text-ellipsis">${item.region}</span>
-                  </div>
-                  <div class="w-1/3 flex justify-start">
-                    <img class="w-4 h-4" src="/icons/profile.png" alt="edu">
-                    <span class="text-xs truncate text-ellipsis">${item.education}</span>
-                  </div>
-                  <div class="w-1/3 flex justify-start">
-                    <img class="w-4 h-4" src="/icons/approval.png" alt="years">
-                    <span class="text-xs truncate text-ellipsis">${item.career}</span>
-                  </div>
-                </div>
-            `
-
-            container.appendChild(div)
-        }
-    }
-</script>
-<script src="/js/flowbite.min.js"></script>
+<script src="../static/js/chatInput.js"></script>
+<script src="../static/js/chatResult.js"></script>
+<script src="../static/js/flowbite.min.js"></script>
 </html>
