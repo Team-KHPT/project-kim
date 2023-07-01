@@ -2,11 +2,8 @@ package com.khpt.projectkim.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khpt.projectkim.dto.ChatData;
-import com.khpt.projectkim.entity.Chat;
-import com.khpt.projectkim.entity.Result;
 import com.khpt.projectkim.service.ChatService;
-import com.khpt.projectkim.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -16,14 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/chat")
+@RequiredArgsConstructor
 public class ChatRestController {
 
-    private ChatService chatService;
+    private final ChatService chatService;
 
     // (프론트에서 채팅 보내기 클릭 하면 이 함수에 모든 채팅 기록을 줌)
     @PostMapping
@@ -33,11 +30,16 @@ public class ChatRestController {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return null;
         }
-        ChatData lastChat = chatDataList.get(chatDataList.size() - 1);
 
-        Long userID = Long.parseLong(session.getAttribute("user").toString());
+        String userId = session.getAttribute("user").toString();
 
-        chatService.updateUserChats(userID, lastChat);
+        if (chatDataList.size() > 1) {
+            ChatData lastAssistantChat = chatDataList.get(chatDataList.size() - 2);
+            chatService.addUserChats(userId, lastAssistantChat);
+        }
+
+        ChatData lastUserChat = chatDataList.get(chatDataList.size() - 1);
+        chatService.addUserChats(userId, lastUserChat);
 
         ObjectMapper objectMapper = new ObjectMapper();
         RestTemplate restTemplate = new RestTemplate();
