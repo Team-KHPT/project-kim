@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="/src/main/resources/static/css/output.css" rel="stylesheet">
+  <link href="../static/css/output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
   <title>Chat</title>
 </head>
@@ -69,21 +69,12 @@
               </form>
             </div>
             <div class="flex justify-end">
-            {{^name}}
-              <a class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
-                시작하기
-              </a>
-            {{/name}}
-            {{#name}}
-                <a class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
-                    <계속하기></계속하기>
-                </a>
-            {{/name}}
+              <a class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">계속하기</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-  <script src="/src/main/resources/static/js/flowbite.min.js"></script>
+  <script src="../static/js/flowbite.min.js"></script>
 </body>
 </html>
