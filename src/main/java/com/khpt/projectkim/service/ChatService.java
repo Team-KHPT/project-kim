@@ -8,12 +8,9 @@ import com.khpt.projectkim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service("chatService")
 @RequiredArgsConstructor
@@ -23,8 +20,9 @@ public class ChatService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ExtractListFromUserDto getListFromUser(String userid) {
-        User user = userRepository.findById(Long.parseLong(userid)).orElseThrow();
+    public ExtractListFromUserDto getListFromUser(String userId) {
+        User user = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 
         ExtractListFromUserDto extractListFromUserDto = new ExtractListFromUserDto();
 
@@ -41,23 +39,21 @@ public class ChatService {
         return extractListFromUserDto;
     }
 
-    public User updateUserChats(Long userId, ChatData chatData) {
-        User user = userRepository.findById(userId)
+    @Transactional
+    public void addUserChats(String userId, ChatData chatData) {
+        User user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
-
-        List<Chat> chatList = user.getChats();
 
         Chat chat = new Chat();
         chat.setUser(user);
         chat.setRole(chatData.getRole());
         chat.setContent(chatData.getContent());
 
+        List<Chat> chatList = user.getChats();
         chatList.add(chat);
-
-
         user.setChats(chatList);
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
 }
