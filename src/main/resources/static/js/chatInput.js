@@ -36,19 +36,7 @@ chatInput.addEventListener('keydown', function(event) {
 })
 
 function sendMessage(inputValue) {
-    const userChatItem = document.createElement('div')
-    userChatItem.classList.add('user', 'flex', 'space-x-3')
-
-    const userImg = document.createElement('img')
-    userImg.classList.add('w-7', 'h-7', 'rounded-lg')
-    userImg.src = getUserImage()
-
-    const userText = document.createElement('div')
-    userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg')
-    userText.textContent = inputValue
-
-    userChatItem.appendChild(userImg)
-    userChatItem.appendChild(userText)
+    const userChatItem = makeUserChatItem(inputValue)
 
     document.getElementById('chats').appendChild(userChatItem)
 
@@ -78,20 +66,44 @@ function sendMessage(inputValue) {
             }
             const data = await response.json()
 
-            const assistantChatItem = document.createElement('div')
-            assistantChatItem.classList.add('assistant', 'flex', 'space-x-3')
-
-            const assistantImg = document.createElement('img')
-            assistantImg.classList.add('w-7', 'h-7', 'rounded-lg')
-            assistantImg.src = "/images/logo-rev.png"
-
-            const assistantText = document.createElement('div')
-            assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg')
-            assistantText.textContent = data.content
-
-            assistantChatItem.appendChild(assistantImg)
-            assistantChatItem.appendChild(assistantText)
+            const assistantChatItem = makeAssistantChatItem(data.content)
 
             document.getElementById('chats').appendChild(assistantChatItem)
         })
+}
+
+function makeUserChatItem(chat) {
+    const userChatItem = document.createElement('div')
+    userChatItem.classList.add('user', 'flex', 'space-x-3')
+
+    const userImg = document.createElement('img')
+    userImg.classList.add('w-7', 'h-7', 'rounded-lg')
+    userImg.src = getUserImage()
+
+    const userText = document.createElement('div')
+    userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg')
+    userText.textContent = chat
+
+    userChatItem.appendChild(userImg)
+    userChatItem.appendChild(userText)
+
+    return userChatItem
+}
+
+function makeAssistantChatItem(chat) {
+    const assistantChatItem = document.createElement('div')
+    assistantChatItem.classList.add('assistant', 'flex', 'space-x-3')
+
+    const assistantImg = document.createElement('img')
+    assistantImg.classList.add('w-7', 'h-7', 'rounded-lg')
+    assistantImg.src = "/images/logo-rev.png"
+
+    const assistantText = document.createElement('div')
+    assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg')
+    assistantText.textContent = chat
+
+    assistantChatItem.appendChild(assistantImg)
+    assistantChatItem.appendChild(assistantText)
+
+    return assistantChatItem
 }
