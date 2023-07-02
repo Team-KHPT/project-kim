@@ -1,7 +1,6 @@
 package com.khpt.projectkim.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.khpt.projectkim.dto.ChatData;
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
 import com.khpt.projectkim.entity.Chat;
 import com.khpt.projectkim.entity.User;
@@ -25,22 +24,22 @@ public class ChatService {
 
     private final UserRepository userRepository;
 
-    public ChatData getChatGptResponse(List<ChatData> chatDataList) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        try {
-            String url = "http://localhost:8000/chat";
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            String json = objectMapper.writeValueAsString(chatDataList);
-            HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
-            ResponseEntity<ChatData> res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ChatData.class);
-            return res.getBody();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    public ChatData getChatGptResponse(List<ChatData> chatDataList) {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        try {
+//            String url = "http://localhost:8000/chat";
+//            headers.setContentType(MediaType.APPLICATION_JSON);
+//            String json = objectMapper.writeValueAsString(chatDataList);
+//            HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
+//            ResponseEntity<ChatData> res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ChatData.class);
+//            return res.getBody();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
     @Transactional
     public ExtractListFromUserDto getListFromUser(String userId) {
