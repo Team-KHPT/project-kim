@@ -2,6 +2,7 @@ package com.khpt.projectkim.controller.web;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-    @GetMapping("")
-    public String loginPage(Model model, @RequestParam(value = "redirect", defaultValue = "/") String uri) {
+    @GetMapping
+    public String loginPage(HttpSession session, HttpServletResponse response, Model model, @RequestParam(value = "redirect", defaultValue = "/") String uri) throws IOException {
+        if (session.getAttribute("user") != null) {
+            response.sendRedirect("/");
+        }
+
         model.addAttribute("redirect_uri", uri);
         return "login";
     }
