@@ -1,6 +1,8 @@
 const chatInput = document.getElementById("chat-input")
 const chatBtn = document.getElementById("chat-btn")
 
+
+
 chatInput.addEventListener('input', function() {
     this.innerText = this.value
     this.style.height = (this.value.split("\n").length * 24) + "px"
@@ -40,19 +42,23 @@ function sendMessage(inputValue) {
 
     document.getElementById('chats').appendChild(userChatItem)
 
-    const chatItems = Array.from(document.getElementById('chats').children).map(function(chatItem) {
-        return {
-            role: chatItem.classList.contains('assistant') ? 'assistant' : 'user',
-            content: chatItem.querySelector('.w-full').textContent
-        }
-    })
+    // const chatItems = Array.from(document.getElementById('chats').children).map(function(chatItem) {
+    //     return {
+    //         role: chatItem.classList.contains('assistant') ? 'assistant' : 'user',
+    //         content: chatItem.querySelector('.w-full').textContent
+    //     }
+    // })
+    const chatItem = {
+        role: "user",
+        content: inputValue
+    }
 
     fetch('/chat', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(chatItems)
+        body: JSON.stringify(chatItem)
     })
         .then(async (response) => {
             if (response.status === 401) {
@@ -64,11 +70,27 @@ function sendMessage(inputValue) {
                 alert("ERROR")
                 return
             }
-            const data = await response.json()
 
-            const assistantChatItem = makeAssistantChatItem(data.content)
+            const assistantChatItem = makeAssistantChatItem("")
 
             document.getElementById('chats').appendChild(assistantChatItem)
+
+            const eventSource = new EventSource("/chat/events")
+            eventSource.addEventListener('message', function(event) {
+                // console.log(event.data)
+                assistantChatItem.lastChild.textContent = assistantChatItem.lastChild.textContent + event.data.toString().replaceAll("%20", " ")
+            })
+            eventSource.addEventListener('complete', function(event) {
+                eventSource.close();
+            })
+            eventSource.onerror = function(error) {
+                console.log('Error: ', error);
+            }
+            // const data = await response.json()
+            //
+            // const assistantChatItem = makeAssistantChatItem(data.content)
+            //
+            // document.getElementById('chats').appendChild(assistantChatItem)
         })
 }
 
