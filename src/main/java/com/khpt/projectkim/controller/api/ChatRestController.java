@@ -111,15 +111,11 @@ public class ChatRestController {
                         .build();
                 // TODO Save GPT response to DB
 
-                List<String> allContents = new ArrayList<>();
-                List<ChatMessage> allMessages = new ArrayList<>();
-
                 ChatFunctionCall functionCall = new ChatFunctionCall(null, null);
                 ChatMessage accumulatedMessage = new ChatMessage(ChatMessageRole.ASSISTANT.value(), null);
 
                 Flowable<ChatCompletionChunk> chunkFlowable = openAiService.streamChatCompletion(chatCompletionRequest);
                 Disposable subscription = chunkFlowable.subscribe(
-                        // onNext
                         chunk -> {
                             try {
                                 ChatMessage messageChunk = chunk.getChoices().get(0).getMessage();
@@ -144,14 +140,11 @@ public class ChatRestController {
                                     }
                                 }
 
-
-
-
                                 ChatMessage message = chunk.getChoices().get(0).getMessage();
-                                allMessages.add(message);
                                 if (message.getContent() != null) {
-                                    allContents.add(message.getContent());
                                     emitter.send(SseEmitter.event().name("message").data(message.getContent().replaceAll(" ", "%20")));
+                                } else if (message.getFunctionCall() != null) {
+                                    emitter.send(SseEmitter.event().name("function").data("prepare"));
                                 }
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
@@ -161,34 +154,22 @@ public class ChatRestController {
                         emitter::completeWithError,
                         // onComplete
                         () -> {
-                            System.out.println(accumulatedMessage);
                             try {
-                                StringBuilder functionName = new StringBuilder();
-                                for (ChatMessage message : allMessages) {
-                                    if (message != null)
-                                        if (message.getFunctionCall() != null)
-                                            if (message.getFunctionCall().getName() != null)
-                                                functionName.append(message.getFunctionCall().getName());
-                                }
-                                if (functionName.length() > 0) {
-                                    List<String> functionArgsFragments = new ArrayList<>();
-                                    for (ChatMessage message : allMessages) {
-                                        if (message != null)
-                                            if (message.getFunctionCall() != null)
-                                                functionArgsFragments.add(message.getFunctionCall().getArguments().toString().substring(1, message.getFunctionCall().getArguments().toString().length() - 1));
-                                    }
-                                    String jsonString = String.join("", functionArgsFragments).replaceAll("\\s+","");
-                                    jsonString = jsonString.replace("\\\"", "\"").replace("\\n", "");
-                                    ObjectMapper mapper = new ObjectMapper();
-                                    JsonNode jsonNode = mapper.readTree(jsonString);
+                                System.out.println(accumulatedMessage);
+                                System.out.println(accumulatedMessage.getRole());
+                                System.out.println(accumulatedMessage.getContent());
+                                System.out.println(accumulatedMessage.getFunctionCall());
 
+                                if (accumulatedMessage.getFunctionCall() != null) {
                                     emitter.send(SseEmitter.event().name("function").data("processing"));
 
-//                                    JsonNode jsonFunctionExecutionResponse = functionExecutor.executeAndConvertToJson(.getFunctionCall());
+                                    // TODO process function
+
+                                } else {
+                                    chatService.addUserChats(userId, accumulatedMessage);
                                 }
 
-                                String msg = String.join("", allContents);
-                                chatService.addUserChats(userId, new ChatMessage(ChatMessageRole.ASSISTANT.value(), msg));
+
                                 emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
                                 emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
                                 emitter.complete();

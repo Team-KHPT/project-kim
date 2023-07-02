@@ -77,8 +77,10 @@ function sendMessage(inputValue) {
 
             const eventSource = new EventSource("/chat/events")
             eventSource.addEventListener('message', function(event) {
-                // console.log(event.data)
                 assistantChatItem.lastChild.textContent = assistantChatItem.lastChild.textContent + event.data.toString().replaceAll("%20", " ")
+            })
+            eventSource.addEventListener('function', function(event) {
+                console.log(event.data)
             })
             eventSource.addEventListener('complete', function(event) {
                 eventSource.close();
