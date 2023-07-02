@@ -79,7 +79,7 @@ public class ChatService {
 
         Chat chat = new Chat();
         chat.setUser(user);
-        chat.setRole(ChatMessageRole.valueOf(chatMessage.getRole()));
+        chat.setRole(ChatMessageRole.valueOf(chatMessage.getRole().toUpperCase()));
         chat.setContent(chatMessage.getContent());
 
         List<Chat> chatList = user.getChats();

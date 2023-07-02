@@ -86,12 +86,12 @@ public class ChatRestController {
                         .description("Search list of job posting information with given keywords.")
                         .executor(ApiRequest.JobData.class, w -> {
                             Map<String, String> params = new HashMap<>();
-                            params.put("keyword", w.getKeyword());
-                            params.put("sort", String.valueOf(w.getSort()));
-                            params.put("job_cd", "TODO gpt should add this params");  // TODO
-                            params.put("job_type", user.getType());
-                            params.put("edu_lv", user.getEducation());
-                            params.put("loc_mcd", user.getRegion());
+                            if (w.getKeyword() != null) params.put("keywords", w.getKeyword());
+                            if (w.getSort() != null) params.put("sort", String.valueOf(w.getSort()));
+                            if (w.getCodes()!= null) params.put("job_cd", w.getCodes());  // TODO
+                            if (user.getType() != null) params.put("job_type", user.getType());
+                            if (user.getEducation() != null) params.put("edu_lv", user.getEducation());
+                            if (user.getRegion() != null) params.put("loc_mcd", user.getRegion());
                             params.put("count", "20");
                             params.put("access-key", saramin_key);
 
@@ -109,7 +109,6 @@ public class ChatRestController {
                         .functions(functionExecutor.getFunctions())
                         .logitBias(new HashMap<>())
                         .build();
-                // TODO Save GPT response to DB
 
                 ChatFunctionCall functionCall = new ChatFunctionCall(null, null);
                 ChatMessage accumulatedMessage = new ChatMessage(ChatMessageRole.ASSISTANT.value(), null);
@@ -163,16 +162,90 @@ public class ChatRestController {
                                 if (accumulatedMessage.getFunctionCall() != null) {
                                     emitter.send(SseEmitter.event().name("function").data("processing"));
 
-                                    // TODO process function
+                                    ChatMessage callResponse = functionExecutor.executeAndConvertToMessageHandlingExceptions(accumulatedMessage.getFunctionCall());
+                                    if (callResponse.getName().equals("error")) {
+                                        emitter.send(SseEmitter.event().name("function").data("error"));
+                                        emitter.send(SseEmitter.event().name("complete").data("error executing function"));
+                                        emitter.complete();
+                                    }
+
+                                    JsonNode jobDataResponse = functionExecutor.executeAndConvertToJson(accumulatedMessage.getFunctionCall());
+                                    System.out.println(jobDataResponse);
+
+                                    // TODO add job codes table
+
+                                    chatMessages.add(accumulatedMessage);
+                                    chatMessages.add(callResponse);
+
+                                    ChatCompletionRequest chatCompletionRequest2 = ChatCompletionRequest
+                                            .builder()
+                                            .model("gpt-3.5-turbo-16k-0613")
+                                            .messages(chatMessages)
+                                            .functions(functionExecutor.getFunctions())
+                                            .logitBias(new HashMap<>())
+                                            .build();
+
+                                    ChatFunctionCall functionCall2 = new ChatFunctionCall(null, null);
+                                    ChatMessage accumulatedMessage2 = new ChatMessage(ChatMessageRole.ASSISTANT.value(), null);
+
+                                    Flowable<ChatCompletionChunk> chunkFlowable2 = openAiService.streamChatCompletion(chatCompletionRequest2);
+                                    Disposable subscription2 = chunkFlowable2.subscribe(
+                                            chunk -> {
+                                                try {
+                                                    ChatMessage messageChunk = chunk.getChoices().get(0).getMessage();
+                                                    if (messageChunk.getFunctionCall() != null) {
+                                                        if (messageChunk.getFunctionCall().getName() != null) {
+                                                            String namePart = messageChunk.getFunctionCall().getName();
+                                                            functionCall2.setName((functionCall2.getName() == null ? "" : functionCall2.getName()) + namePart);
+                                                        }
+                                                        if (messageChunk.getFunctionCall().getArguments() != null) {
+                                                            String argumentsPart = messageChunk.getFunctionCall().getArguments() == null ? "" : messageChunk.getFunctionCall().getArguments().asText();
+                                                            functionCall2.setArguments(new TextNode((functionCall2.getArguments() == null ? "" : functionCall2.getArguments().asText()) + argumentsPart));
+                                                        }
+                                                        accumulatedMessage2.setFunctionCall(functionCall2);
+                                                    } else {
+                                                        accumulatedMessage2.setContent((accumulatedMessage2.getContent() == null ? "" : accumulatedMessage2.getContent()) + (messageChunk.getContent() == null ? "" : messageChunk.getContent()));
+                                                    }
+
+                                                    if (chunk.getChoices().get(0).getFinishReason() != null) { // last
+                                                        if (functionCall2.getArguments() != null) {
+                                                            functionCall2.setArguments(mapper.readTree(functionCall2.getArguments().asText()));
+                                                            accumulatedMessage2.setFunctionCall(functionCall2);
+                                                        }
+                                                    }
+
+                                                    ChatMessage message = chunk.getChoices().get(0).getMessage();
+                                                    if (message.getContent() != null) {
+                                                        emitter.send(SseEmitter.event().name("message").data(message.getContent().replaceAll(" ", "%20")));
+                                                    }
+                                                } catch (IOException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            },
+                                            // onError
+                                            emitter::completeWithError,
+                                            // onComplete
+                                            () -> {
+                                                try {
+                                                    chatService.addUserChats(userId, accumulatedMessage2);
+
+                                                    emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
+                                                    emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
+                                                    emitter.complete();
+                                                } catch (IOException e) {
+                                                    emitter.completeWithError(e);
+                                                }
+                                            }
+                                    );
+
 
                                 } else {
+                                    // Save GPT response to DB
                                     chatService.addUserChats(userId, accumulatedMessage);
+                                    emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
+                                    emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
+                                    emitter.complete();
                                 }
-
-
-                                emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
-                                emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
-                                emitter.complete();
                             } catch (IOException e) {
                                 emitter.completeWithError(e);
                             }
