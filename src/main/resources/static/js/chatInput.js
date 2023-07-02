@@ -82,6 +82,9 @@ function sendMessage(inputValue) {
             eventSource.addEventListener('function', function(event) {
                 console.log(event.data)
             })
+            eventSource.addEventListener('error', function (event) {
+                alert(event.data)
+            })
             eventSource.addEventListener('complete', function(event) {
                 eventSource.close();
             })
