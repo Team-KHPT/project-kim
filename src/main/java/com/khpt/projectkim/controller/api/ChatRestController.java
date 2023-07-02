@@ -1,10 +1,15 @@
 package com.khpt.projectkim.controller.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.khpt.projectkim.entity.User;
+import com.khpt.projectkim.functions.ApiRequest;
+import com.khpt.projectkim.service.ApiRequestService;
 import com.khpt.projectkim.service.ChatService;
-import com.theokanning.openai.completion.chat.ChatCompletionChunk;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.completion.chat.ChatMessageRole;
+import com.khpt.projectkim.service.UserService;
+import com.theokanning.openai.completion.chat.*;
+import com.theokanning.openai.service.FunctionExecutor;
 import com.theokanning.openai.service.OpenAiService;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
@@ -19,7 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+
+import static com.theokanning.openai.service.OpenAiService.defaultObjectMapper;
 
 @RestController
 @RequestMapping("/chat")
@@ -28,8 +35,18 @@ public class ChatRestController {
 
     private final ChatService chatService;
 
+    private final ApiRequestService apiRequestService;
+
+    private final UserService userService;
+
+    private static final ObjectMapper mapper = defaultObjectMapper();
+
+
     @Value("${openai.key}")
     private String token;
+
+    @Value("${saramin.key}")
+    private String saramin_key;
 
     private OpenAiService openAiService;
 
@@ -56,24 +73,86 @@ public class ChatRestController {
         ChatMessage chatMessage = new ChatMessage(ChatMessageRole.USER.value(), chat);
         chatMessages.add(chatMessage);
 
+        User user = userService.getUserByStringId(userId);
+
         final SseEmitter emitter = new SseEmitter();
 
         new Thread(() -> {
             try {
                 emitter.send(SseEmitter.event().name("info").data("Processing ChatGPT request..."));
 
+                final List<ChatFunction> functions = Collections.singletonList(ChatFunction.builder()
+                        .name("get_job_info")
+                        .description("Search list of job posting information with given keywords.")
+                        .executor(ApiRequest.JobData.class, w -> {
+                            Map<String, String> params = new HashMap<>();
+                            params.put("keyword", w.getKeyword());
+                            params.put("sort", String.valueOf(w.getSort()));
+                            params.put("job_cd", "TODO gpt should add this params");  // TODO
+                            params.put("job_type", user.getType());
+                            params.put("edu_lv", user.getEducation());
+                            params.put("loc_mcd", user.getRegion());
+                            params.put("count", "20");
+                            params.put("access-key", saramin_key);
+
+                            return apiRequestService.getApiResponseAsString("https://oapi.saramin.co.kr/job-search", params);
+                            // TODO 요청 100개중 커리어가 맞는거 20개 고르기
+                        })
+                        .build());
+                final FunctionExecutor functionExecutor = new FunctionExecutor(functions);
+
                 ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
                         .builder()
                         .model("gpt-3.5-turbo-16k-0613")
                         .messages(chatMessages)
-                        .stream(true)
+                        .n(1)
+                        .functions(functionExecutor.getFunctions())
+                        .logitBias(new HashMap<>())
                         .build();
+                // TODO Save GPT response to DB
+
+                List<String> allContents = new ArrayList<>();
+                List<ChatMessage> allMessages = new ArrayList<>();
+
+                ChatFunctionCall functionCall = new ChatFunctionCall(null, null);
+                ChatMessage accumulatedMessage = new ChatMessage(ChatMessageRole.ASSISTANT.value(), null);
+
                 Flowable<ChatCompletionChunk> chunkFlowable = openAiService.streamChatCompletion(chatCompletionRequest);
                 Disposable subscription = chunkFlowable.subscribe(
                         // onNext
                         chunk -> {
                             try {
-                                emitter.send(SseEmitter.event().name("message").data(chunk.getChoices().get(0).getMessage().getContent().replaceAll(" ", "%20")));
+                                ChatMessage messageChunk = chunk.getChoices().get(0).getMessage();
+                                if (messageChunk.getFunctionCall() != null) {
+                                    if (messageChunk.getFunctionCall().getName() != null) {
+                                        String namePart = messageChunk.getFunctionCall().getName();
+                                        functionCall.setName((functionCall.getName() == null ? "" : functionCall.getName()) + namePart);
+                                    }
+                                    if (messageChunk.getFunctionCall().getArguments() != null) {
+                                        String argumentsPart = messageChunk.getFunctionCall().getArguments() == null ? "" : messageChunk.getFunctionCall().getArguments().asText();
+                                        functionCall.setArguments(new TextNode((functionCall.getArguments() == null ? "" : functionCall.getArguments().asText()) + argumentsPart));
+                                    }
+                                    accumulatedMessage.setFunctionCall(functionCall);
+                                } else {
+                                    accumulatedMessage.setContent((accumulatedMessage.getContent() == null ? "" : accumulatedMessage.getContent()) + (messageChunk.getContent() == null ? "" : messageChunk.getContent()));
+                                }
+
+                                if (chunk.getChoices().get(0).getFinishReason() != null) { // last
+                                    if (functionCall.getArguments() != null) {
+                                        functionCall.setArguments(mapper.readTree(functionCall.getArguments().asText()));
+                                        accumulatedMessage.setFunctionCall(functionCall);
+                                    }
+                                }
+
+
+
+
+                                ChatMessage message = chunk.getChoices().get(0).getMessage();
+                                allMessages.add(message);
+                                if (message.getContent() != null) {
+                                    allContents.add(message.getContent());
+                                    emitter.send(SseEmitter.event().name("message").data(message.getContent().replaceAll(" ", "%20")));
+                                }
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -82,8 +161,35 @@ public class ChatRestController {
                         emitter::completeWithError,
                         // onComplete
                         () -> {
+                            System.out.println(accumulatedMessage);
                             try {
-                                emitter.send(SseEmitter.event().name("message").data("ChatGPT processing complete."));
+                                StringBuilder functionName = new StringBuilder();
+                                for (ChatMessage message : allMessages) {
+                                    if (message != null)
+                                        if (message.getFunctionCall() != null)
+                                            if (message.getFunctionCall().getName() != null)
+                                                functionName.append(message.getFunctionCall().getName());
+                                }
+                                if (functionName.length() > 0) {
+                                    List<String> functionArgsFragments = new ArrayList<>();
+                                    for (ChatMessage message : allMessages) {
+                                        if (message != null)
+                                            if (message.getFunctionCall() != null)
+                                                functionArgsFragments.add(message.getFunctionCall().getArguments().toString().substring(1, message.getFunctionCall().getArguments().toString().length() - 1));
+                                    }
+                                    String jsonString = String.join("", functionArgsFragments).replaceAll("\\s+","");
+                                    jsonString = jsonString.replace("\\\"", "\"").replace("\\n", "");
+                                    ObjectMapper mapper = new ObjectMapper();
+                                    JsonNode jsonNode = mapper.readTree(jsonString);
+
+                                    emitter.send(SseEmitter.event().name("function").data("processing"));
+
+//                                    JsonNode jsonFunctionExecutionResponse = functionExecutor.executeAndConvertToJson(.getFunctionCall());
+                                }
+
+                                String msg = String.join("", allContents);
+                                chatService.addUserChats(userId, new ChatMessage(ChatMessageRole.ASSISTANT.value(), msg));
+                                emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
                                 emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
                                 emitter.complete();
                             } catch (IOException e) {
@@ -107,20 +213,15 @@ public class ChatRestController {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        System.out.println(chatMessage.getContent());
+        System.out.println(chatMessage.getRole() + chatMessage.getContent());
 
+        String userId = session.getAttribute("user").toString();
+        chatService.addUserChats(userId, chatMessage);
         session.setAttribute("chat", chatMessage.getContent());
-
         return new ResponseEntity<>(HttpStatus.OK);
-//        String userId = session.getAttribute("user").toString();
-//
-//        if (chatDataList.size() > 1) {
-//            ChatData lastAssistantChat = chatDataList.get(chatDataList.size() - 2);
-//            chatService.addUserChats(userId, lastAssistantChat);
-//        }
+
 //        ChatData lastUserChat = chatDataList.get(chatDataList.size() - 1);
 //        chatService.addUserChats(userId, lastUserChat);
-
     }
 
     @GetMapping("/all")
@@ -132,5 +233,13 @@ public class ChatRestController {
         }
         String userId = session.getAttribute("user").toString();
         return chatService.getUserChats(userId);
+    }
+
+    @GetMapping("/new")
+    public String newChat(HttpSession session) {
+        // TODO remove chats in user
+        // TODO move results to recentResults and empty results
+
+        return "chat";
     }
 }
