@@ -1,5 +1,6 @@
 package com.khpt.projectkim.entity;
 
+import com.theokanning.openai.completion.chat.ChatMessageRole;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,9 +21,9 @@ public class Chat {
     private User user;
 
     // system or assistant or user
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role;
+    private ChatMessageRole role;
 
     // chat messages
     @Column(nullable = false)
