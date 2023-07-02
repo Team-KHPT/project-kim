@@ -1,6 +1,5 @@
 package com.khpt.projectkim.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
 import com.khpt.projectkim.entity.Chat;
 import com.khpt.projectkim.entity.User;
@@ -9,9 +8,7 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
