@@ -44,14 +44,12 @@ public class User implements Serializable {
 
     private String category;  // 직업 카테고리
 
-    public User updatePrevData(String type, String region, String education, String career, String category) {
+    public void updatePrevData(String type, String region, String education, String career, String category) {
         this.type = type;
         this.region = region;
         this.education = education;
         this.career = career;
         this.category = category;
-
-        return this;
     }
 
     public User update(String name, String picture) {
