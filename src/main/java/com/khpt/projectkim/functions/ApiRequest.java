@@ -7,7 +7,7 @@ import lombok.Getter;
 public class ApiRequest {
 
     public enum Sort {
-        PD, RC, AC;
+        PD, RC, AC
     }
 
     @Getter
