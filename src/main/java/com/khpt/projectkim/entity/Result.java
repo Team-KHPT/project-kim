@@ -4,7 +4,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 //@TypeDef(name = "json", typeClass = JsonType.class)
