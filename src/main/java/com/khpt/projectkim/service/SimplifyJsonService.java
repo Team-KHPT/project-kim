@@ -32,7 +32,7 @@ public class SimplifyJsonService {
         simplifiedJob.put("title", job.position.title);
         simplifiedJob.put("job", cutToLength(job.position.jobCode.name, MAX_LENGTH));
         simplifiedJob.put("experience_level", job.position.experienceLevel.name);
-        simplifiedJob.put("experience_level_code", job.position.experienceLevel.name);
+        simplifiedJob.put("experience_level_code", job.position.experienceLevel.code);
         simplifiedJob.put("salary", job.salary.name);
         simplifiedJob.put("keyword", job.keyword);
 
@@ -46,7 +46,7 @@ public class SimplifyJsonService {
         for (Job job : root.jobs.job) {
             Map<String, Object> objectMap = simplifyJob(job);
             if (experience_lvl_list.contains(objectMap.get("experience_level_code").toString())) {
-                simplifiedJobs.add(simplifyJob(job));
+                simplifiedJobs.add(objectMap);
             }
             if (simplifiedJobs.size() >= maxSize) {
                 break;
