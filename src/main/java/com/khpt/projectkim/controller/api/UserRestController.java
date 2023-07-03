@@ -24,13 +24,18 @@ public class UserRestController {
             System.out.println("Set prev data failed. No session");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        System.out.println(userPrevData.getType());
+        System.out.println(userPrevData.getCategory());
+        System.out.println(userPrevData.getEducation());
+        System.out.println(userPrevData.getRegion());
+
         String userId = session.getAttribute("user").toString();
         userService.setUserPrevData(userId, userPrevData);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("prev")
+    @GetMapping("/prev")
     public UserPrevData getPrevData(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
             System.out.println("Get prev data failed. No session");
