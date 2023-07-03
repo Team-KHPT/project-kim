@@ -41,7 +41,7 @@ public class SimplifyJsonService {
         return simplifiedJob;
     }
 
-    public static Map<String, List<Map<String, Object>>> simplifyJobs(Root root, String experience_lvl) {
+    public static Map<String, List<Map<String, Object>>> simplifyJobs(Root root, String experience_lvl, int maxSize) {
         List<String> experience_lvl_list = List.of(experience_lvl.split(","));
 
         List<Map<String, Object>> simplifiedJobs = new ArrayList<>();
@@ -49,6 +49,9 @@ public class SimplifyJsonService {
             Map<String, Object> objectMap = simplifyJob(job);
             if (experience_lvl_list.contains(objectMap.get("experience_level_code").toString())) {
                 simplifiedJobs.add(simplifyJob(job));
+            }
+            if (simplifiedJobs.size() >= maxSize) {
+                break;
             }
         }
 
@@ -75,7 +78,7 @@ public class SimplifyJsonService {
         return simplifiedJob;
     }
 
-    public static Map<String, List<Map<String, Object>>> simplifyJobs2(Root root, String experience_lvl) {
+    public static Map<String, List<Map<String, Object>>> simplifyJobs2(Root root, String experience_lvl, int maxSize) {
         List<String> experience_lvl_list = List.of(experience_lvl.split(","));
 
         List<Map<String, Object>> simplifiedJobs = new ArrayList<>();
@@ -83,6 +86,9 @@ public class SimplifyJsonService {
             Map<String, Object> objectMap = simplifyJob2(job);
             if (experience_lvl_list.contains(objectMap.get("experience_level_code").toString())) {
                 simplifiedJobs.add(objectMap);
+            }
+            if (simplifiedJobs.size() >= maxSize) {
+                break;
             }
         }
 
