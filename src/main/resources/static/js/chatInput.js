@@ -75,12 +75,20 @@ function sendMessage(inputValue) {
 
             document.getElementById('chats').appendChild(assistantChatItem)
 
+
             const eventSource = new EventSource("/chat/events")
             eventSource.addEventListener('message', function(event) {
-                assistantChatItem.lastChild.textContent = assistantChatItem.lastChild.textContent + event.data.toString().replaceAll("%20", " ")
+                assistantChatItem.lastChild.textContent = assistantChatItem.lastChild.textContent + event.data.toString().replaceAll("%20", " ").replaceAll("%0A", "\n")
             })
             eventSource.addEventListener('function', function(event) {
                 console.log(event.data)
+            })
+            eventSource.addEventListener('result', function(event) {
+                console.log(event.data)
+                const obj = JSON.parse(event.data)
+                console.log(obj)
+                data = obj.jobs
+                updateData()
             })
             eventSource.addEventListener('error', function (event) {
                 alert(event.data)
@@ -109,6 +117,7 @@ function makeUserChatItem(chat) {
 
     const userText = document.createElement('pre')
     userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg')
+    userText.style.whiteSpace = "pre-wrap"
     userText.textContent = chat
 
     userChatItem.appendChild(userImg)
@@ -127,6 +136,7 @@ function makeAssistantChatItem(chat) {
 
     const assistantText = document.createElement('pre')
     assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg')
+    assistantText.style.whiteSpace = 'pre-wrap'
     assistantText.textContent = chat
 
     assistantChatItem.appendChild(assistantImg)
@@ -134,3 +144,16 @@ function makeAssistantChatItem(chat) {
 
     return assistantChatItem
 }
+
+window.addEventListener("load", async (event) => {
+    const res = await fetch("/chat/all")
+    const chats = await res.json()
+    console.log(chats)
+    for (const chat of chats) {
+        if (chat.role === "user") {
+            document.getElementById('chats').appendChild(makeUserChatItem(chat.content))
+        } else {
+            document.getElementById('chats').appendChild(makeAssistantChatItem(chat.content))
+        }
+    }
+})
