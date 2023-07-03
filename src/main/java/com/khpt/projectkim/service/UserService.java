@@ -179,18 +179,15 @@ public class UserService {
         return finalResult;
     }
 
-
-
     public void setUserPrevData(String id, UserPrevData userPrevData) {
         User user = getUserByStringId(id);
 
-        String type = userPrevData.getType();
-        String region = userPrevData.getRegion();
-        String education = userPrevData.getEducation();
-        String career = userPrevData.getCareer();
-        String category = userPrevData.getCategory();
+        user.setType(userPrevData.getType());
+        user.setRegion(userPrevData.getRegion());
+        user.setEducation(userPrevData.getEducation());
+        user.setCategory(userPrevData.getCategory());
 
-        user.updatePrevData(type, region, education, career, category);
+        userRepository.save(user);
     }
 
     public UserPrevData getUserPrevData(String id) {
@@ -200,7 +197,6 @@ public class UserService {
         userPrevData.setType(user.getType());
         userPrevData.setRegion(user.getRegion());
         userPrevData.setEducation(user.getEducation());
-        userPrevData.setCareer(user.getCareer());
         userPrevData.setCategory(user.getCategory());
 
         return userPrevData;
