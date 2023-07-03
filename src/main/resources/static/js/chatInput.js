@@ -86,16 +86,19 @@ function sendMessage(inputValue) {
                 console.log(event.data)
             })
             eventSource.addEventListener('result', function(event) {
+                // console.log(event.data)
+                // const obj = JSON.parse(event.data)
+                // console.log(obj)
+                // data = obj.jobs
+                // updateData()
                 console.log(event.data)
-                const obj = JSON.parse(event.data)
-                console.log(obj)
-                data = obj.jobs
-                updateData()
+                refreshData()
             })
             eventSource.addEventListener('error', function (event) {
                 alert(event.data)
             })
             eventSource.addEventListener('complete', function(event) {
+                console.log(event.data)
                 eventSource.close();
             })
             eventSource.onerror = function(error) {
