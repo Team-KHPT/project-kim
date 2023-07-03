@@ -20,8 +20,6 @@ public class ResultDto {
 
     private String type;  // 근무 형태
 
-    private String time;  // 근무시간
-
     private String education;  // 학력
 
     private String career;  // 경력
