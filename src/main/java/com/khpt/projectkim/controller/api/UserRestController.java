@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/user")
@@ -30,10 +31,10 @@ public class UserRestController {
     }
 
     @GetMapping("prev")
-    public UserPrevData sgtPrevData(HttpSession session, HttpServletResponse response) {
+    public UserPrevData getPrevData(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
-            System.out.println("Set prev data failed. No session");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            System.out.println("Get prev data failed. No session");
+            response.sendRedirect("/");
             return null;
         }
         String userId = session.getAttribute("user").toString();
