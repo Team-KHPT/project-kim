@@ -1,6 +1,7 @@
 package com.khpt.projectkim.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.khpt.projectkim.dto.ResultDto;
 import com.khpt.projectkim.dto.UserPrevData;
 import com.khpt.projectkim.entity.Result;
 import com.khpt.projectkim.entity.User;
@@ -43,6 +44,32 @@ public class UserService {
 
         user.setResults(saveResults);
         userRepository.save(user);
+    }
+
+    public List<ResultDto> getUserResultsAsDto(String id) {
+        // Get the user
+        User user = getUserByStringId(id);
+
+        // Get the user's results
+        List<Result> results = user.getResults();
+
+        // Convert the results to a list of ResultDto
+        List<ResultDto> resultDtos = results.stream().map(result -> {
+            ResultDto dto = new ResultDto();
+            dto.setCompany(result.getCompany());
+            dto.setEducation(result.getEducation());
+            dto.setRegion(result.getRegion());
+            dto.setSalary(result.getSalary());
+            dto.setTitle(result.getTitle());
+            dto.setType(result.getType());
+            dto.setUrl(result.getUrl());
+            // Assuming you have a getCareer method in your Result class
+            dto.setCareer(result.getCareer());
+            return dto;
+        }).collect(Collectors.toList());
+
+        // Return the list of ResultDto objects
+        return resultDtos;
     }
 
     public String getUserResultsAsString(String id) {
