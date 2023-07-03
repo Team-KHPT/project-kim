@@ -57,6 +57,7 @@ public class SimplifyJsonService {
 
         simplifiedJob.put("company", job.company.detail.name);
         simplifiedJob.put("title", job.position.title);
+        simplifiedJob.put("url", job.url);
         simplifiedJob.put("location", job.position.location.name);
         simplifiedJob.put("salary", job.salary.name);
         simplifiedJob.put("type", job.position.jobType.name);
