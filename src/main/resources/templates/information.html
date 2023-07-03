@@ -102,38 +102,34 @@
         <div class="modal space-y-3 mb-10">
           <form method="post" action="">
             <div class="mb-3">
-              <label for="workType" class="block mb-1">근무 형태</label>
-              <div id="workType">
+              <label for="workTypeSelect" class="block mb-1">근무 형태</label>
+              <div>
                 <div id="workType" class="flex space-x-2">
                   <select
                           name="workType"
-                          id="workType"
+                          id="workTypeSelect"
                           class="block w-full border-stone-500 rounded"
                   >
-                    <option value="4">인턴직</option>
                     <option value="2">계약직</option>
+                    <option value="4">인턴직</option>
                     <option value="6">파견직</option>
                     <option value="3">병역특례</option>
                     <option value="9">프리랜서</option>
                     <option value="5">아르바이트</option>
                   </select>
-                  <a
-                          class="plus flex justify-center items-center w-12 block border-2 text-green-500 p-2 rounded-lg text-2xl"
-                  >+</a
-                  >
                 </div>
-                <div id="workType">
+                <div id="workTypePlus">
                   <div class="plusField flex"></div>
                 </div>
               </div>
             </div>
             <div class="mb-3">
-              <label for="education" class="block mb-1">학력</label>
-              <div id="education">
+              <label for="educationSelect" class="block mb-1">학력</label>
+              <div>
                 <div id="education" class="flex space-x-2">
                   <select
                           name="education"
-                          id="education"
+                          id="educationSelect"
                           class="block w-full border-stone-500 rounded"
                   >
                     <option value="1">고등학교졸업</option>
@@ -142,25 +138,17 @@
                     <option value="4">석사 졸업</option>
                     <option value="5">박사 졸업</option>
                   </select>
-                  <a
-                          class="plus flex justify-center items-center w-12 block border-2 text-green-500 p-2 rounded-lg text-2xl"
-                  >+</a
-                  >
                 </div>
-                <div id="education">
+                <div id="educationPlus">
                   <div class="plusField flex"></div>
                 </div>
               </div>
             </div>
             <div class="mb-3">
-              <label for="career" class="block mb-1">직무</label>
-              <div id="career">
-                <div id="career" class="flex space-x-2">
-                  <select
-                          name="career"
-                          id="career"
-                          class="block w-full border-stone-500 rounded"
-                  >
+              <label for="categorySelect" class="block mb-1">직무</label>
+              <div>
+                <div id="category" class="flex space-x-2">
+                  <select name="category" id="categorySelect" class="category block w-full border-stone-500 rounded">
                     <option value="16">기획·전략</option>
                     <option value="14">마케팅·홍보</option>
                     <option value="3">회계·재무</option>
@@ -172,23 +160,19 @@
                     <option value="11">생산</option>
                     <option value="19">교육</option>
                   </select>
-                  <a
-                          class="plus flex justify-center items-center w-12 block border-2 text-green-500 p-2 rounded-lg text-2xl"
-                  >+</a
-                  >
                 </div>
-                <div id="career">
+                <div id="categoryPlus">
                   <div class="plusField flex"></div>
                 </div>
               </div>
             </div>
             <div class="mb-3">
-              <label for="region" class="block mb-1">지역</label>
-              <div id="region">
+              <label for="regionSelect" class="block mb-1">지역</label>
+              <div>
                 <div id="region" class="flex space-x-2">
                   <select
                           name="region"
-                          id="region"
+                          id="regionSelect"
                           class="block w-full border-stone-500 rounded"
                   >
                     <option value="101000">서울</option>
@@ -208,12 +192,8 @@
                     <option value="115000">충남</option>
                     <option value="116000">제주</option>
                   </select>
-                  <a
-                          class="plus flex justify-center items-center w-12 block border-2 text-green-500 p-2 rounded-lg text-2xl"
-                  >+</a
-                  >
                 </div>
-                <div id="region">
+                <div id="regionPlus">
                   <div class="plusField flex"></div>
                 </div>
               </div>
@@ -221,10 +201,6 @@
           </form>
         </div>
         <div class="flex justify-end">
-          <a
-                  class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs"
-          >계속하기</a
-          >
         </div>
       </div>
     </div>
@@ -235,79 +211,103 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    var plusButtons = document.querySelectorAll(".plus");
+    let selectTags = document.querySelectorAll("select");
 
-    plusButtons.forEach(function (plusButton) {
-      plusButton.addEventListener("click", function () {
-        // 'plus' 버튼이 속해있는 div의 아이디를 가져옴
-        var parentDivId = this.parentElement.id;
+    // 배열 선언
+    let selectValues = {
+      workTypeSelect: [],
+      educationSelect: [],
+      categorySelect: [],
+      regionSelect: []
+    };
 
-        // div id와 같은 id를 가지고 있는 select 태그를 찾음
-        var selectTag = document.querySelector("#" + parentDivId).children[0]
-                .children[0];
+    // 각 select 태그에 대한 이벤트 리스너를 등록합니다.
+    selectTags.forEach(function(select) {
+      select.addEventListener("change", function(event) {
+        let selectedValue = event.target.value;
+        let selectId = event.target.id;
 
-        var plusField = document.querySelector("#" + parentDivId).children[1]
-                .children[0];
+        // 숫자가 없다면 -1 반환
+        if (selectValues[selectId].findIndex(v => v === selectedValue) !== -1) {
 
-        // 선택된 정보 가져오기
-        var selectedOption = selectTag.options[selectTag.selectedIndex].text;
+        } else {
+          // 선택된 값을 해당 select 태그와 동일한 이름을 가진 배열에 추가합니다.
+          selectValues[selectId].push(selectedValue);
+          console.log(selectValues);
 
-        // 새 div 생성
-        var newDiv = document.createElement("div");
-        newDiv.className =
-                "font-noto w-40 h-10 bg-stone-200 mt-5 mb-10 mr-2 px-3 py-5 flex items-center justify-between rounded-lg space-x-2 text-gray-600";
+          // 'plus' 버튼이 속해있는 div의 아이디를 가져옴
+          let parentDivId = this.parentElement.id;
 
-        // 선택된 정보를 div의 innerText로 추가
-        newDiv.innerText = selectedOption;
+          // div id와 같은 id를 가지고 있는 select 태그를 찾음
+          let eventSelectTag = event.target;
 
-        // 엑스 버튼 생성
-        var deleteButton = document.createElement("button");
-        deleteButton.className =
-                "text-gray-400 bg-transparent hover:text-red-500 rounded-lg text-xs ml-auto inline-flex items-center";
+          let plusField = document.querySelector("#" + parentDivId + "Plus").children[0];
 
-        // SVG 태그 생성
-        const svg = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "svg"
-        );
+          // 선택된 정보 가져오기
+          let selectedOption = eventSelectTag.options[eventSelectTag.selectedIndex].text;
 
-        // SVG 속성 추가
-        svg.setAttribute("class", "w-5 h-5");
-        svg.setAttribute("fill", "currentColor");
-        svg.setAttribute("viewBox", "0 0 20 20");
-        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          // 새 div 생성
+          let newDiv = document.createElement("div");
+          newDiv.id = selectedValue;
+          newDiv.className =
+                  "font-noto w-40 h-10 bg-stone-200 mt-5 mb-10 mr-2 px-3 py-5 flex items-center justify-between rounded-lg space-x-2 text-gray-600";
 
-        // Path 태그 생성
-        const path = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "path"
-        );
+          // 선택된 정보를 div의 innerText로 추가
+          newDiv.innerText = selectedOption;
 
-        // Path 속성 추가
-        path.setAttribute("fill-rule", "evenodd");
-        path.setAttribute(
-                "d",
-                "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-        );
-        path.setAttribute("clip-rule", "evenodd");
+          // 엑스 버튼 생성
+          let deleteButton = document.createElement("button");
+          deleteButton.className =
+                  "text-gray-400 bg-transparent hover:text-red-500 rounded-lg text-xs ml-auto inline-flex items-center";
 
-        // Path 태그를 SVG 태그에 추가
-        svg.appendChild(path);
+          // SVG 태그 생성
+          const svg = document.createElementNS(
+                  "http://www.w3.org/2000/svg",
+                  "svg"
+          );
 
-        // SVG 태그를 원하는 곳에 삽입
-        deleteButton.appendChild(svg);
+          // SVG 속성 추가
+          svg.setAttribute("class", "w-5 h-5");
+          svg.setAttribute("fill", "currentColor");
+          svg.setAttribute("viewBox", "0 0 20 20");
+          svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 
-        // 엑스 버튼을 누르면 해당 div 삭제
-        deleteButton.addEventListener("click", function (e) {
-          e.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되는 것을 막음
-          newDiv.remove();
-        });
+          // Path 태그 생성
+          const path = document.createElementNS(
+                  "http://www.w3.org/2000/svg",
+                  "path"
+          );
 
-        // div에 엑스 버튼 추가
-        newDiv.appendChild(deleteButton);
+          // Path 속성 추가
+          path.setAttribute("fill-rule", "evenodd");
+          path.setAttribute(
+                  "d",
+                  "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+          );
+          path.setAttribute("clip-rule", "evenodd");
 
-        // 생성된 div를 plusField에 추가
-        plusField.appendChild(newDiv);
+          // Path 태그를 SVG 태그에 추가
+          svg.appendChild(path);
+
+          // SVG 태그를 버튼에 삽입
+          deleteButton.appendChild(svg);
+
+
+          // 엑스 버튼을 누르면 해당 div 삭제
+          deleteButton.addEventListener("click", function (e) {
+            e.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되는 것을 막음
+            // selectValues.splice(newDiv.id, 1);
+            selectValues[selectId].splice(selectValues[selectId].findIndex(v => v === newDiv.id), 1);
+            console.log(selectValues);
+            newDiv.remove();
+          });
+
+          // div에 엑스 버튼 추가
+          newDiv.appendChild(deleteButton);
+
+          // 생성된 div를 plusField에 추가
+          plusField.appendChild(newDiv);
+        }
       });
     });
   });
