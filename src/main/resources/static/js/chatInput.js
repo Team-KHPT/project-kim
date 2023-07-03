@@ -107,7 +107,7 @@ function makeUserChatItem(chat) {
     userImg.classList.add('w-7', 'h-7', 'rounded-lg')
     userImg.src = getUserImage()
 
-    const userText = document.createElement('div')
+    const userText = document.createElement('pre')
     userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg')
     userText.textContent = chat
 
@@ -125,7 +125,7 @@ function makeAssistantChatItem(chat) {
     assistantImg.classList.add('w-7', 'h-7', 'rounded-lg')
     assistantImg.src = "/images/logo-rev.png"
 
-    const assistantText = document.createElement('div')
+    const assistantText = document.createElement('pre')
     assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg')
     assistantText.textContent = chat
 
