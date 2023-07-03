@@ -40,6 +40,8 @@ public class User implements Serializable {
 
     private String education;  // 학력
 
+    private String career;  // 경력
+
     private String category;  // 직업 카테고리
 
     public User update(String name, String picture) {
