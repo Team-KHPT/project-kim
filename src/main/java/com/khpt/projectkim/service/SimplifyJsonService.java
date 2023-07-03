@@ -34,16 +34,22 @@ public class SimplifyJsonService {
         simplifiedJob.put("title", job.position.title);
         simplifiedJob.put("job", cutToLength(job.position.jobCode.name, MAX_LENGTH));
         simplifiedJob.put("experience_level", job.position.experienceLevel.name);
+        simplifiedJob.put("experience_level_code", job.position.experienceLevel.name);
         simplifiedJob.put("salary", job.salary.name);
         simplifiedJob.put("keyword", job.keyword);
 
         return simplifiedJob;
     }
 
-    public static Map<String, List<Map<String, Object>>> simplifyJobs(Root root) {
+    public static Map<String, List<Map<String, Object>>> simplifyJobs(Root root, String experience_lvl) {
+        List<String> experience_lvl_list = List.of(experience_lvl.split(","));
+
         List<Map<String, Object>> simplifiedJobs = new ArrayList<>();
         for (Job job : root.jobs.job) {
-            simplifiedJobs.add(simplifyJob(job));
+            Map<String, Object> objectMap = simplifyJob(job);
+            if (experience_lvl_list.contains(objectMap.get("experience_level_code").toString())) {
+                simplifiedJobs.add(simplifyJob(job));
+            }
         }
 
         Map<String, List<Map<String, Object>>> result = new HashMap<>();
@@ -63,15 +69,21 @@ public class SimplifyJsonService {
         simplifiedJob.put("type", job.position.jobType.name);
         simplifiedJob.put("education", job.position.requiredEducationLevel.name);
         simplifiedJob.put("experience_level", job.position.experienceLevel.name);
+        simplifiedJob.put("experience_level_code", job.position.experienceLevel.code);
         simplifiedJob.put("keyword", job.keyword);
 
         return simplifiedJob;
     }
 
-    public static Map<String, List<Map<String, Object>>> simplifyJobs2(Root root) {
+    public static Map<String, List<Map<String, Object>>> simplifyJobs2(Root root, String experience_lvl) {
+        List<String> experience_lvl_list = List.of(experience_lvl.split(","));
+
         List<Map<String, Object>> simplifiedJobs = new ArrayList<>();
         for (Job job : root.jobs.job) {
-            simplifiedJobs.add(simplifyJob2(job));
+            Map<String, Object> objectMap = simplifyJob2(job);
+            if (experience_lvl_list.contains(objectMap.get("experience_level_code").toString())) {
+                simplifiedJobs.add(objectMap);
+            }
         }
 
         Map<String, List<Map<String, Object>>> result = new HashMap<>();
