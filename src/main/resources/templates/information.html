@@ -200,7 +200,7 @@
           </div>
           <div class="flex justify-end">
             <a id="sendInfoButton" class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
-              수정하기
+              계속하기
             </a>
           </div>
         </div>
@@ -211,12 +211,11 @@
   </div>
 </div>
 <script src="/js/flowbite.min.js"></script>
-</body>x
+</body>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const selectTags = document.querySelectorAll("select");
     const sendButton = document.getElementById("sendInfoButton");
-    console.log(sendButton)
 
     // 배열 선언
     let selectValues = {
@@ -237,23 +236,34 @@
 
               const modalButton = document.getElementById('modalOpenButton');
               modalButton.addEventListener('click',  function () {
-                for(let i=0; i<category.length; i++) {
-                  addList('category',category[i]);
+                if(category.length === 0) {
+                  addList('category', document.getElementById('categorySelect').value);
+                } else {
+                  for(let i=0; i<category.length; i++) {
+                    addList('category',category[i]);
+                  }
                 }
-                for(let i=0; i<region.length; i++) {
-                  addList('region',region[i]);
+                if(region.length === 0) {
+                  addList('region', document.getElementById('regionSelect').value);
+                } else {
+                  for(let i=0; i<region.length; i++) {
+                    addList('region',region[i]);
+                  }
                 }
-                for(let i=0; i<education.length; i++) {
-                  addList('education',education[i]);
+                if(education.length === 0) {
+                  addList('education', document.getElementById('educationSelect').value);
+                } else {
+                  for(let i=0; i<education.length; i++) {
+                    addList('education',education[i]);
+                  }
                 }
-                for(let i=0; i<workType.length; i++) {
-                  addList('workType',workType[i]);
+                if(workType.length === 0) {
+                  addList('workType', document.getElementById('workTypeSelect').value);
+                } else {
+                  for(let i=0; i<workType.length; i++) {
+                    addList('workType',workType[i]);
+                  }
                 }
-
-                addList('workType', document.getElementById('workTypeSelect').value);
-                addList('education', document.getElementById('educationSelect').value);
-                addList('category', document.getElementById('categorySelect').value);
-                addList('region', document.getElementById('regionSelect').value);
               });
             })
 
@@ -268,7 +278,7 @@
         selectValues[selectId].push(selectValue);
         console.log(selectValues)
 
-        let selectText = document.querySelector(`[value="${selectValue}"]`).innerText;
+        let selectText = selectTag.querySelector(`[value="${selectValue}"]`).innerText;
         let plusField = document.getElementById(selectId + "Plus").children[0];
 
         // 새 div 생성
@@ -342,6 +352,24 @@
       let categoryArr = selectValues.category.join();
       let regionArr = selectValues.region.join();
       let educationArr = selectValues.education.join();
+
+      let object = `{"type":"${workTypeArr}","category":"${categoryArr}","region":"${regionArr}","education":"${educationArr}"}`
+      let result = JSON.parse(object);
+      console.log(result);
+      fetch('/user/prev', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(result)
+      })
+              .then(async (res) => {
+                if (res.status === 200) {
+                  console.log('success')
+                } else {
+                  console.log('error')
+                }
+              })
     });
   });
 </script>
