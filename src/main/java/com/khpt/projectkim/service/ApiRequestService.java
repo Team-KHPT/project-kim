@@ -1,33 +1,51 @@
 package com.khpt.projectkim.service;
 
-import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
+import static com.khpt.projectkim.service.SimplifyJsonService.simplifyJobs;
 
 @Service
 public class ApiRequestService {
 
-    public String getApiResponseAsString(String url, Map<String, String> params) {
+    public String getApiResponseAsString(String url, Map<String, String> params) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
+
+        // Set request headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // Create URI with parameters
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+        params.forEach(builder::queryParam);
+        URI uri = builder.build().encode().toUri();
 
-        // Add the parameters to the request
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            builder.queryParam(entry.getKey(), entry.getValue());
-        }
+        // Build the request
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        ResponseEntity<String> response = restTemplate.getForEntity(builder.toUriString(), String.class);
-        System.out.println(builder.toUriString());
+        // Send the request as GET
+        ResponseEntity<String> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                entity,
+                String.class
+        );
+
+        System.out.println("response:");
+        System.out.println(response.getBody());
+        System.out.println(response.getHeaders());
 
 
-        if (response.getStatusCodeValue() == 200) {
-            return response.getBody();
-        } else {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusCodeValue());
-        }
+        return response.getBody();
     }
 
     public String testService() {

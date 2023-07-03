@@ -1,5 +1,6 @@
 let data = []
 
+
 const refreshData = async () => {
     await fetch("/result")
         .then(async (res) => {
@@ -24,6 +25,7 @@ const updateData = () => {
             const modalTitle = document.getElementById("modal-title")
             const modalUrl = document.getElementById("modal-url")
             const modalRegion = document.getElementById("modal-region")
+            const modalEducation = document.getElementById("modal-education")
             const modalCareer = document.getElementById("modal-career")
             const modalTime = document.getElementById("modal-time")
             const modalSalary = document.getElementById("modal-salary")
@@ -32,8 +34,9 @@ const updateData = () => {
             modalCompany.innerText = item.company
             modalTitle.innerText = item.title
             modalUrl.setAttribute("href", item.url)
-            modalRegion.innerText = item.region
-            modalCareer.innerText = item.career
+            modalRegion.innerHTML = item.location
+            modalEducation.innerText = item.education
+            modalCareer.innerText = item.experience_level
             modalTime.innerText = item.time
             modalSalary.innerText = item.salary
             modalType.innerText = item.type
@@ -45,7 +48,7 @@ const updateData = () => {
                 <div class="flex justify-between">
                   <div class="w-1/3 flex justify-start">
                     <img class="w-4 h-4" src="/icons/location.png" alt="loc">
-                    <span class="w-full text-xs truncate text-ellipsis">${item.region}</span>
+                    <span class="w-full text-xs truncate text-ellipsis">${item.location}</span>
                   </div>
                   <div class="w-1/3 flex justify-start">
                     <img class="w-4 h-4" src="/icons/profile.png" alt="edu">
@@ -53,7 +56,7 @@ const updateData = () => {
                   </div>
                   <div class="w-1/3 flex justify-start">
                     <img class="w-4 h-4" src="/icons/approval.png" alt="years">
-                    <span class="text-xs truncate text-ellipsis">${item.career}</span>
+                    <span class="text-xs truncate text-ellipsis">${item.experience_level}</span>
                   </div>
                 </div>
             `
