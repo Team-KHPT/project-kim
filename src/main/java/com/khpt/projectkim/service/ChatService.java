@@ -21,23 +21,6 @@ public class ChatService {
 
     private final UserRepository userRepository;
 
-//    public ChatData getChatGptResponse(List<ChatData> chatDataList) {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders headers = new HttpHeaders();
-//        try {
-//            String url = "http://localhost:8000/chat";
-//            headers.setContentType(MediaType.APPLICATION_JSON);
-//            String json = objectMapper.writeValueAsString(chatDataList);
-//            HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
-//            ResponseEntity<ChatData> res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ChatData.class);
-//            return res.getBody();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
     @Transactional
     public ExtractListFromUserDto getListFromUser(String userId) {
         User user = userRepository.findById(Long.parseLong(userId))
@@ -90,13 +73,3 @@ public class ChatService {
     }
 
 }
-//extractListFromUserDto.setUser(user);
-//        System.out.println("recent");
-////        System.out.println(user.getRecentResults());
-//        extractListFromUserDto.setRecentResults(user.getRecentResults());
-//        System.out.println("result");
-////        System.out.println(user.getResults());
-//        extractListFromUserDto.setResults(user.getResults());
-//        System.out.println("chat");
-////        System.out.println(user.getChats());
-//        extractListFromUserDto.setChats(user.getChats());

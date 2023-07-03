@@ -3,19 +3,28 @@ package com.khpt.projectkim.controller.web;
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.service.ChatService;
+import com.khpt.projectkim.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Controller
+@RequestMapping("/chat")
 @RequiredArgsConstructor
 public class ChatController {
 
     private final ChatService chatService;
+
+    private final UserService userService;
+
+    // TODO add examples. Add html code, with js
 
     @ModelAttribute
     public void addAttributes(HttpServletRequest request, Model model) {
@@ -23,7 +32,25 @@ public class ChatController {
         model.addAttribute("image", "/icons/black.png");
     }
 
-    @GetMapping("/chat")
+    @GetMapping("/new")
+    public String newChat(HttpSession session, HttpServletResponse response) throws IOException {
+        if (session.getAttribute("user") == null) {
+            System.out.println("Create new chat failed. No session");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return null;
+        }
+        // TODO remove chats in user
+        String userId = session.getAttribute("user").toString();
+        userService.clearChats(userId);
+
+        // TODO move results to recentResults and empty results
+        userService.copyResultsToRecentResultsAndClearResults(userId);
+
+        response.sendRedirect("/chat");
+        return null;
+    }
+
+    @GetMapping
     public String chat(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
             System.out.println("userid is null");

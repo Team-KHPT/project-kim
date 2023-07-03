@@ -1,6 +1,5 @@
 package com.khpt.projectkim.controller.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.khpt.projectkim.csv.CsvReader;
@@ -70,11 +69,12 @@ public class ChatRestController {
             return null;
         }
         String userId = session.getAttribute("user").toString();
-        List<ChatMessage> chatMessages =  chatService.getUserChats(userId);
+
         String chat = session.getAttribute("chat").toString();
         session.removeAttribute("chat");
-        ChatMessage chatMessage = new ChatMessage(ChatMessageRole.USER.value(), chat);
-        chatMessages.add(chatMessage);
+
+        List<ChatMessage> chatMessages =  chatService.getUserChats(userId);
+        chatMessages.add(new ChatMessage(ChatMessageRole.USER.value(), chat));
 
         User user = userService.getUserByStringId(userId);
 
@@ -84,7 +84,7 @@ public class ChatRestController {
             try {
                 emitter.send(SseEmitter.event().name("info").data("Processing ChatGPT request..."));
 
-                List<String> apiResponseRecord = new ArrayList<>();
+//                List<String> apiResponseRecord = new ArrayList<>();
 
                 final List<ChatFunction> functions = Collections.singletonList(ChatFunction.builder()
                         .name("get_job_info")
@@ -93,7 +93,8 @@ public class ChatRestController {
                             Map<String, String> params = new HashMap<>();
                             if (w.getKeyword() != null) params.put("keywords", w.getKeyword());
                             if (w.getSort() != null) params.put("sort", String.valueOf(w.getSort()));
-                            if (w.getCodes()!= null) params.put("job_cd", w.getCodes());  // TODO
+                            if (w.getCodes() != null) params.put("job-cd", w.getCodes());  // TODO
+                            if (user.getCategory() != null) params.put("job-mid-cd", user.getCategory());
                             if (user.getType() != null) params.put("job_type", user.getType());
                             if (user.getEducation() != null) params.put("edu_lv", user.getEducation());
                             if (user.getRegion() != null) params.put("loc_mcd", user.getRegion());
@@ -106,15 +107,19 @@ public class ChatRestController {
                                 ObjectMapper mapper = new ObjectMapper();
                                 SimplifyJsonService.Root root = mapper.readValue(apiResponse, SimplifyJsonService.Root.class);
 
-                                Map<String, List<Map<String, Object>>> simplifiedJobs = simplifyJobs(root);
+                                Map<String, List<Map<String, Object>>> simplifiedJobs = simplifyJobs(root, user.getCareer(), 15);
                                 System.out.println("api res:");
                                 System.out.println(apiResponse);
-
-                                apiResponseRecord.add(apiResponse);
-
                                 System.out.println(simplifiedJobs);
+
+//                                apiResponseRecord.add(apiResponse);
+                                Map<String, List<Map<String, Object>>> simplifiedJobs2 = simplifyJobs2(root, user.getCareer(), 15);
+//                                String jobDataResponse = mapper.writeValueAsString(simplifiedJobs2);
+                                emitter.send(SseEmitter.event().name("result").data("result ready"));
+                                userService.setUserResults(userId, simplifiedJobs2);
+
                                 return mapper.writeValueAsString(simplifiedJobs);
-                            } catch (JsonProcessingException e) {
+                            } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
                             // TODO 요청 100개중 커리어가 맞는거 20개 고르기
@@ -168,6 +173,8 @@ public class ChatRestController {
                                     emitter.send(SseEmitter.event().name("function").data("prepare"));
                                 }
                             } catch (IOException e) {
+                                emitter.send(SseEmitter.event().name("error").data("ChatGPT 응답중 에러"));
+                                emitter.completeWithError(e);
                                 throw new RuntimeException(e);
                             }
                         },
@@ -200,15 +207,19 @@ public class ChatRestController {
                                     }
 
                                     // send result
-                                    ObjectMapper mapper = new ObjectMapper();
-                                    SimplifyJsonService.Root root = mapper.readValue(apiResponseRecord.get(0), SimplifyJsonService.Root.class);
-                                    Map<String, List<Map<String, Object>>> simplifiedJobs = simplifyJobs2(root);
-                                    String jobDataResponse = mapper.writeValueAsString(simplifiedJobs);
-                                    emitter.send(SseEmitter.event().name("result").data(jobDataResponse));
-                                    userService.setUserResults(userId, simplifiedJobs);
+//                                    ObjectMapper mapper = new ObjectMapper();
+//                                    SimplifyJsonService.Root root = mapper.readValue(apiResponseRecord.get(0), SimplifyJsonService.Root.class);
+//                                    Map<String, List<Map<String, Object>>> simplifiedJobs = simplifyJobs2(root, user.getCareer());
+//                                    String jobDataResponse = mapper.writeValueAsString(simplifiedJobs);
+//                                    emitter.send(SseEmitter.event().name("result").data(jobDataResponse));
+//                                    userService.setUserResults(userId, simplifiedJobs);
 
 
                                     // TODO add job codes table
+                                    chatMessages.add(new ChatMessage(
+                                            ChatMessageRole.SYSTEM.value(),
+                                            "Below is job_code_table."
+                                    ));
                                     chatMessages.add(new ChatMessage(
                                             ChatMessageRole.SYSTEM.value(),
                                             CsvReader.getDetailedJobCode(user.getCategory())
@@ -260,6 +271,8 @@ public class ChatRestController {
                                                         emitter.send(SseEmitter.event().name("message").data(message.getContent().replaceAll(" ", "%20").replaceAll("\n", "%0A")));
                                                     }
                                                 } catch (IOException e) {
+                                                    emitter.send(SseEmitter.event().name("error").data("ChatGPT functions 응답중 에러"));
+                                                    emitter.completeWithError(e);
                                                     throw new RuntimeException(e);
                                                 }
                                             },
@@ -274,7 +287,10 @@ public class ChatRestController {
                                                     emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
                                                     emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
                                                     emitter.complete();
+                                                    System.out.println("Save chat with functions");
                                                 } catch (IOException e) {
+                                                    System.out.println("complete error3");
+                                                    emitter.send(SseEmitter.event().name("error").data("채팅 저장중 에러"));
                                                     emitter.completeWithError(e);
                                                 }
                                             }
@@ -287,17 +303,22 @@ public class ChatRestController {
                                     emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
                                     emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
                                     emitter.complete();
+                                    System.out.println("Save chat without functions");
                                 }
                             } catch (IOException e) {
+                                System.out.println("complete error2");
+                                emitter.send(SseEmitter.event().name("error").data("ChatGPT 응답 처리 중 에러"));
                                 emitter.completeWithError(e);
                             }
                         }
                 );
             } catch (IOException e) {
+                System.out.println("complete error1");
                 emitter.completeWithError(e);
             }
         }).start();
 
+        System.out.println("return emitter");
         return emitter;
     }
 
@@ -321,22 +342,14 @@ public class ChatRestController {
     }
 
     @GetMapping("/all")
-    public List<ChatMessage> getChats(HttpSession session, HttpServletResponse response) {
+    public List<ChatMessage> getChats(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
             System.out.println("Get chat failed. No session");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendRedirect("/");
             return null;
         }
         String userId = session.getAttribute("user").toString();
         return chatService.getUserChats(userId);
-    }
-
-    @GetMapping("/new")
-    public String newChat(HttpSession session) {
-        // TODO remove chats in user
-        // TODO move results to recentResults and empty results
-
-        return "chat";
     }
 
     @GetMapping("/test")
