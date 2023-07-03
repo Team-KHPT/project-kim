@@ -14,7 +14,7 @@ public class ResultDto {
 
     private String title;  // 제목
 
-    private String region; // 지역
+    private String location; // 지역
 
     private String salary;  // 급여
 
@@ -22,5 +22,5 @@ public class ResultDto {
 
     private String education;  // 학력
 
-    private String career;  // 경력
+    private String experience_level;  // 경력
 }

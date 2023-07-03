@@ -79,6 +79,8 @@ function sendMessage(inputValue) {
             const eventSource = new EventSource("/chat/events")
             eventSource.addEventListener('message', function(event) {
                 assistantChatItem.lastChild.textContent = assistantChatItem.lastChild.textContent + event.data.toString().replaceAll("%20", " ").replaceAll("%0A", "\n")
+                const chats = document.getElementById('chats')
+                chats.scrollTo(0, chats.scrollHeight)
             })
             eventSource.addEventListener('function', function(event) {
                 console.log(event.data)
@@ -156,4 +158,5 @@ window.addEventListener("load", async (event) => {
             document.getElementById('chats').appendChild(makeAssistantChatItem(chat.content))
         }
     }
+    await refreshData()
 })

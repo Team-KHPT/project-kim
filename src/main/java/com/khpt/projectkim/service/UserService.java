@@ -9,6 +9,7 @@ import com.khpt.projectkim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,45 @@ public class UserService {
 
     public User getUserByStringId(String id) {
         return userRepository.findById(Long.parseLong(id)).orElseThrow();
+    }
+
+    @Transactional
+    public void copyResultsToRecentResultsAndClearResults(String id) {
+        User user = getUserByStringId(id);
+
+        // Make a copy of the results
+        List<Result> resultsCopy = new ArrayList<>(user.getResults());
+        System.out.println("results size: " + resultsCopy.size());
+
+        if (resultsCopy.size() > 0) {
+            // Clear the recentResults and add the copied results
+            user.getRecentResults().clear();
+            user.getRecentResults().addAll(resultsCopy);
+
+            // Clear the results
+            user.getResults().clear();
+
+            // Save the user back to the database
+            userRepository.save(user);
+
+//            user.setRecentResults(resultsCopy);
+//
+//            user.getResults().clear();
+//
+//            userRepository.save(user);
+        }
+    }
+
+    @Transactional
+    public void clearChats(String id) {
+        User user = getUserByStringId(id);
+
+        System.out.println("chats size: " + user.getChats().size());
+        if (user.getChats().size() > 0) {
+            user.getChats().clear();
+
+            userRepository.save(user);
+        }
     }
 
 
@@ -38,6 +78,7 @@ public class UserService {
             result.setTitle(r.get("title").toString());
             result.setType(r.get("type").toString());
             result.setUrl(r.get("url").toString());
+            result.setCareer(r.get("experience_level").toString());
             result.setUser(user);
             saveResults.add(result);
         }
@@ -46,6 +87,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public List<ResultDto> getUserResultsAsDto(String id) {
         // Get the user
         User user = getUserByStringId(id);
@@ -58,15 +100,16 @@ public class UserService {
             ResultDto dto = new ResultDto();
             dto.setCompany(result.getCompany());
             dto.setEducation(result.getEducation());
-            dto.setRegion(result.getRegion());
+            dto.setLocation(result.getRegion());
             dto.setSalary(result.getSalary());
             dto.setTitle(result.getTitle());
             dto.setType(result.getType());
             dto.setUrl(result.getUrl());
-            // Assuming you have a getCareer method in your Result class
-            dto.setCareer(result.getCareer());
+            dto.setExperience_level(result.getCareer());
             return dto;
         }).collect(Collectors.toList());
+
+        System.out.println("result length: " + resultDtos.size());
 
         // Return the list of ResultDto objects
         return resultDtos;
