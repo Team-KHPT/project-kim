@@ -19,7 +19,7 @@ public class ApiRequest {
         @JsonProperty(defaultValue = "pd")
         public Sort sort;
 
-        @JsonPropertyDescription("A list of job_code in job_code_table separated by comma. example 1) 1,2,3,4 example 2) 43,7,12,56,12,78,45,23,2")
+        @JsonPropertyDescription("A list of code in job_code_table separated by comma. Select all the code that is related to user. example 1) 1,2,3,4 example 2) 43,7,12,56,12,78,45,23,2")
         public String codes;
 
 //        @JsonProperty(value = "job_cd", required = true)
