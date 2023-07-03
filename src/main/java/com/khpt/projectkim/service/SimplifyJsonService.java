@@ -33,7 +33,7 @@ public class SimplifyJsonService {
         simplifiedJob.put("company", job.company.detail.name);
         simplifiedJob.put("title", job.position.title);
         simplifiedJob.put("job", cutToLength(job.position.jobCode.name, MAX_LENGTH));
-        simplifiedJob.put("experience-level", job.position.experienceLevel.name);
+        simplifiedJob.put("experience_level", job.position.experienceLevel.name);
         simplifiedJob.put("salary", job.salary.name);
         simplifiedJob.put("keyword", job.keyword);
 
@@ -44,6 +44,33 @@ public class SimplifyJsonService {
         List<Map<String, Object>> simplifiedJobs = new ArrayList<>();
         for (Job job : root.jobs.job) {
             simplifiedJobs.add(simplifyJob(job));
+        }
+
+        Map<String, List<Map<String, Object>>> result = new HashMap<>();
+        result.put("jobs", simplifiedJobs);
+
+        return result;
+    }
+
+    private static Map<String, Object> simplifyJob2(Job job) {
+        Map<String, Object> simplifiedJob = new HashMap<>();
+
+        simplifiedJob.put("company", job.company.detail.name);
+        simplifiedJob.put("title", job.position.title);
+        simplifiedJob.put("location", job.position.location.name);
+        simplifiedJob.put("salary", job.salary.name);
+        simplifiedJob.put("type", job.position.jobType.name);
+        simplifiedJob.put("education", job.position.requiredEducationLevel.name);
+        simplifiedJob.put("experience_level", job.position.experienceLevel.name);
+        simplifiedJob.put("keyword", job.keyword);
+
+        return simplifiedJob;
+    }
+
+    public static Map<String, List<Map<String, Object>>> simplifyJobs2(Root root) {
+        List<Map<String, Object>> simplifiedJobs = new ArrayList<>();
+        for (Job job : root.jobs.job) {
+            simplifiedJobs.add(simplifyJob2(job));
         }
 
         Map<String, List<Map<String, Object>>> result = new HashMap<>();
