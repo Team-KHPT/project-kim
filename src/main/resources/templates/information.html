@@ -1,80 +1,315 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="../static/css/output.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="../static/css/output.css" rel="stylesheet" />
+  <link
+          href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap"
+          rel="stylesheet"
+  />
   <title>Chat</title>
 </head>
 <body>
 <!-- Modal toggle -->
-  <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-    Click me.
-  </a>
+<a
+        data-modal-target="informationModal"
+        data-modal-toggle="informationModal"
+        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button"
+>
+  Click me.
+</a>
 
-  <!-- Main modal -->
-  <div id="informationModal" tabindex="-1" aria-hidden="true" class="font-noto fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative w-full max-w-5xl shadow-lg">
-      <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-          <!-- Modal header -->
-          <div class="flex items-center justify-between px-4 py-1 border-b rounded-t dark:border-gray-300 bg-stone-100">
-              <div class="flex space-x-2">
-                <div class="w-3.5 h-3.5 bg-red-500 rounded-3xl flex items-center justify-center cursor-pointer hover:border hover:border-red-600" data-modal-hide="informationModal">
-                  <!-- <svg aria-hidden="true" class="w-2.5 h-2.5" fill="#331111" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg> -->
-                </div>
+<div
+        class="font-noto w-40 h-10 bg-stone-200 mt-5 mb-10 mr-2 px-3 py-5 flex items-center justify-between rounded-lg space-x-2 text-gray-600"
+>
+  인턴직
+  <button
+          type="button"
+          class="text-gray-400 bg-transparent hover:text-red-500 rounded-lg text-xs ml-auto inline-flex items-center"
+  >
+    <svg
+            class="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+      ></path>
+    </svg>
+    <span class="sr-only">Close modal</span>
+  </button>
+</div>
 
-                <div class="w-3.5 h-3.5 bg-amber-500 rounded-3xl"></div>
-                <div class="w-3.5 h-3.5 bg-green-500 rounded-3xl"></div>
-              </div>
-              <button type="button" class="text-gray-400 bg-transparent hover:text-gray-600 rounded-lg text-xs p-1.5 ml-auto inline-flex items-center" data-modal-hide="informationModal">
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                  <span class="sr-only">Close modal</span>
-              </button>
+<!-- Main modal -->
+<div
+        id="informationModal"
+        tabindex="-1"
+        aria-hidden="true"
+        class="font-noto fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+>
+  <div class="relative w-full max-w-5xl shadow-lg">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div
+              class="flex items-center justify-between px-4 py-1 border-b rounded-t dark:border-gray-300 bg-stone-100"
+      >
+        <div class="flex space-x-2">
+          <div
+                  class="w-3.5 h-3.5 bg-red-500 rounded-3xl flex items-center justify-center cursor-pointer hover:border hover:border-red-600"
+                  data-modal-hide="informationModal"
+          >
+            <!-- <svg aria-hidden="true" class="w-2.5 h-2.5" fill="#331111" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg> -->
           </div>
-          <!-- Modal body -->
-          <div class="p-6 space-x-2 flex items-center justify-between">
-            <p class="font-bold">
-              사전 정보 수집
-            </p>
-          </div>
-          <!-- Modal footer -->
-          <div class="w-full px-6 pb-6 border-gray-200 rounded-b dark:border-gray-600">
-            <div class="space-y-3 mb-10">
-              <form method="post" action="">
-                <div class="mb-3">
-                  <label for="workType" class="block mb-1">근무 형태</label>
-                  <select name="workType" id="workType" class="block w-full border-stone-500 rounded">
-                    <option value="인턴직">인턴직</option>
-                    <option value="계약직">계약직</option>
-                    <option value="파견직">파견직</option>
-                    <option value="병역특례">병역특례</option>
-                    <option value="프리랜서">프리랜서</option>
-                    <option value="아르바이트">아르바이트</option>
+
+          <div class="w-3.5 h-3.5 bg-amber-500 rounded-3xl"></div>
+          <div class="w-3.5 h-3.5 bg-green-500 rounded-3xl"></div>
+        </div>
+        <button
+                type="button"
+                class="text-gray-400 bg-transparent hover:text-gray-600 rounded-lg text-xs p-1.5 ml-auto inline-flex items-center"
+                data-modal-hide="informationModal"
+        >
+          <svg
+                  aria-hidden="true"
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+            ></path>
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-6 space-x-2 flex items-center justify-between">
+        <p class="font-bold">사전 정보 수집</p>
+      </div>
+      <!-- Modal footer -->
+      <div
+              class="w-full px-6 pb-6 border-gray-200 rounded-b dark:border-gray-600"
+      >
+        <div class="modal space-y-3 mb-10">
+          <form method="post" action="">
+            <div class="mb-3">
+              <label for="workType" class="block mb-1">근무 형태</label>
+              <div id="workType">
+                <div id="workType" class="flex space-x-2">
+                  <select
+                          name="workType"
+                          id="workType"
+                          class="block w-full border-stone-500 rounded"
+                  >
+                    <option value="4">인턴직</option>
+                    <option value="2">계약직</option>
+                    <option value="6">파견직</option>
+                    <option value="3">병역특례</option>
+                    <option value="9">프리랜서</option>
+                    <option value="5">아르바이트</option>
                   </select>
+                  <a
+                          class="plus flex justify-center items-center w-12 block border-2 text-green-500 p-2 rounded-lg text-2xl"
+                  >+</a
+                  >
                 </div>
-                <div class="mb-3">
-                  <label for="education" class="block mb-1">학력</label>
-                  <input name="education" id="education" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="학력을 입력해주세요. 예)고등학교 졸업, 학사, 석사" required>
+                <div id="workType">
+                  <div class="plusField flex"></div>
                 </div>
-                <div class="mb-3">
-                  <label for="career" class="block mb-1">경력</label>
-                  <input name="career" id="career" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="경력을 입력해주세요. 예)신입, 경력 3년차" required>
-                </div>
-                <div class="mb-3">
-                  <label for="region" class="block mb-1">지역</label>
-                  <input name="region" id="region" type="text" class="block w-full border-stone-500 rounded text-xs h-10" placeholder="을 입력해주세요. 예)서울, 대전, 대구, 부산" required>
-                </div>
-              </form>
+              </div>
             </div>
-            <div class="flex justify-end">
-              <a class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">계속하기</a>
+            <div class="mb-3">
+              <label for="education" class="block mb-1">학력</label>
+              <div id="education">
+                <div id="education" class="flex space-x-2">
+                  <select
+                          name="education"
+                          id="education"
+                          class="block w-full border-stone-500 rounded"
+                  >
+                    <option value="1">고등학교졸업</option>
+                    <option value="2">전문대학졸업</option>
+                    <option value="3">대학교 졸업</option>
+                    <option value="4">석사 졸업</option>
+                    <option value="5">박사 졸업</option>
+                  </select>
+                  <a
+                          class="plus flex justify-center items-center w-12 block border-2 text-green-500 p-2 rounded-lg text-2xl"
+                  >+</a
+                  >
+                </div>
+                <div id="education">
+                  <div class="plusField flex"></div>
+                </div>
+              </div>
             </div>
-          </div>
+            <div class="mb-3">
+              <label for="career" class="block mb-1">직무</label>
+              <div id="career">
+                <div id="career" class="flex space-x-2">
+                  <select
+                          name="career"
+                          id="career"
+                          class="block w-full border-stone-500 rounded"
+                  >
+                    <option value="16">기획·전략</option>
+                    <option value="14">마케팅·홍보</option>
+                    <option value="3">회계·재무</option>
+                    <option value="2">IT개발·데이터</option>
+                    <option value="12">상품기획·MD</option>
+                    <option value="15">디자인</option>
+                    <option value="6">의료</option>
+                    <option value="10">서비스</option>
+                    <option value="11">생산</option>
+                    <option value="19">교육</option>
+                  </select>
+                  <a
+                          class="plus flex justify-center items-center w-12 block border-2 text-green-500 p-2 rounded-lg text-2xl"
+                  >+</a
+                  >
+                </div>
+                <div id="career">
+                  <div class="plusField flex"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="region" class="block mb-1">지역</label>
+              <div id="region">
+                <div id="region" class="flex space-x-2">
+                  <select
+                          name="region"
+                          id="region"
+                          class="block w-full border-stone-500 rounded"
+                  >
+                    <option value="101000">서울</option>
+                    <option value="102000">경기</option>
+                    <option value="103000">광주</option>
+                    <option value="104000">대구</option>
+                    <option value="105000">대전</option>
+                    <option value="106000">부산</option>
+                    <option value="107000">울산</option>
+                    <option value="108000">인천</option>
+                    <option value="109000">강원</option>
+                    <option value="110000">경남</option>
+                    <option value="111000">경북</option>
+                    <option value="112000">전남</option>
+                    <option value="113000">전북</option>
+                    <option value="114000">충북</option>
+                    <option value="115000">충남</option>
+                    <option value="116000">제주</option>
+                  </select>
+                  <a
+                          class="plus flex justify-center items-center w-12 block border-2 text-green-500 p-2 rounded-lg text-2xl"
+                  >+</a
+                  >
+                </div>
+                <div id="region">
+                  <div class="plusField flex"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="flex justify-end">
+          <a
+                  class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs"
+          >계속하기</a
+          >
         </div>
       </div>
     </div>
-  <script src="../static/js/flowbite.min.js"></script>
+  </div>
+</div>
+<script src="../static/js/flowbite.min.js"></script>
 </body>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var plusButtons = document.querySelectorAll(".plus");
+
+    plusButtons.forEach(function (plusButton) {
+      plusButton.addEventListener("click", function () {
+        // 'plus' 버튼이 속해있는 div의 아이디를 가져옴
+        var parentDivId = this.parentElement.id;
+
+        // div id와 같은 id를 가지고 있는 select 태그를 찾음
+        var selectTag = document.querySelector("#" + parentDivId).children[0]
+                .children[0];
+
+        var plusField = document.querySelector("#" + parentDivId).children[1]
+                .children[0];
+
+        // 선택된 정보 가져오기
+        var selectedOption = selectTag.options[selectTag.selectedIndex].text;
+
+        // 새 div 생성
+        var newDiv = document.createElement("div");
+        newDiv.className =
+                "font-noto w-40 h-10 bg-stone-200 mt-5 mb-10 mr-2 px-3 py-5 flex items-center justify-between rounded-lg space-x-2 text-gray-600";
+
+        // 선택된 정보를 div의 innerText로 추가
+        newDiv.innerText = selectedOption;
+
+        // 엑스 버튼 생성
+        var deleteButton = document.createElement("button");
+        deleteButton.className =
+                "text-gray-400 bg-transparent hover:text-red-500 rounded-lg text-xs ml-auto inline-flex items-center";
+
+        // SVG 태그 생성
+        const svg = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "svg"
+        );
+
+        // SVG 속성 추가
+        svg.setAttribute("class", "w-5 h-5");
+        svg.setAttribute("fill", "currentColor");
+        svg.setAttribute("viewBox", "0 0 20 20");
+        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+        // Path 태그 생성
+        const path = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path"
+        );
+
+        // Path 속성 추가
+        path.setAttribute("fill-rule", "evenodd");
+        path.setAttribute(
+                "d",
+                "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+        );
+        path.setAttribute("clip-rule", "evenodd");
+
+        // Path 태그를 SVG 태그에 추가
+        svg.appendChild(path);
+
+        // SVG 태그를 원하는 곳에 삽입
+        deleteButton.appendChild(svg);
+
+        // 엑스 버튼을 누르면 해당 div 삭제
+        deleteButton.addEventListener("click", function (e) {
+          e.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되는 것을 막음
+          newDiv.remove();
+        });
+
+        // div에 엑스 버튼 추가
+        newDiv.appendChild(deleteButton);
+
+        // 생성된 div를 plusField에 추가
+        plusField.appendChild(newDiv);
+      });
+    });
+  });
+</script>
 </html>
