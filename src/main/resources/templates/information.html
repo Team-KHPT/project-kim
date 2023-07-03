@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="../static/css/output.css" rel="stylesheet" />
+  <link href="/css/output.css" rel="stylesheet" />
   <link
           href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap"
           rel="stylesheet"
@@ -100,106 +100,109 @@
       <div
               class="w-full px-6 pb-6 border-gray-200 rounded-b dark:border-gray-600"
       >
-        <div class="modal space-y-3 mb-10">
-          <form method="post" action="">
-            <div class="mb-3">
-              <label for="workTypeSelect" class="block mb-1">근무 형태</label>
-              <div>
-                <div id="workType" class="flex space-x-2">
-                  <select
-                          name="workType"
-                          id="workTypeSelect"
-                          class="block w-full border-stone-500 rounded"
-                  >
-                    <option value="2">계약직</option>
-                    <option value="4">인턴직</option>
-                    <option value="6">파견직</option>
-                    <option value="3">병역특례</option>
-                    <option value="9">프리랜서</option>
-                    <option value="5">아르바이트</option>
-                  </select>
-                </div>
-                <div id="workTypePlus">
-                  <div class="plusField flex"></div>
-                </div>
+        <div class="modal space-y-3 mb-5">
+          <div class="mb-3">
+            <label for="workTypeSelect" class="block mb-1">근무 형태</label>
+            <div>
+              <div id="workType" class="flex space-x-2">
+                <select
+                        name="workType"
+                        id="workTypeSelect"
+                        class="block w-full border-stone-500 rounded"
+                >
+                  <option value="2">계약직</option>
+                  <option value="4">인턴직</option>
+                  <option value="6">파견직</option>
+                  <option value="3">병역특례</option>
+                  <option value="9">프리랜서</option>
+                  <option value="5">아르바이트</option>
+                </select>
+              </div>
+              <div id="workTypePlus">
+                <div class="plusField flex"></div>
               </div>
             </div>
-            <div class="mb-3">
-              <label for="educationSelect" class="block mb-1">학력</label>
-              <div>
-                <div id="education" class="flex space-x-2">
-                  <select
-                          name="education"
-                          id="educationSelect"
-                          class="block w-full border-stone-500 rounded"
-                  >
-                    <option value="1">고등학교졸업</option>
-                    <option value="2">전문대학졸업</option>
-                    <option value="3">대학교 졸업</option>
-                    <option value="4">석사 졸업</option>
-                    <option value="5">박사 졸업</option>
-                  </select>
-                </div>
-                <div id="educationPlus">
-                  <div class="plusField flex"></div>
-                </div>
+          </div>
+          <div class="mb-3">
+            <label for="educationSelect" class="block mb-1">학력</label>
+            <div>
+              <div id="education" class="flex space-x-2">
+                <select
+                        name="education"
+                        id="educationSelect"
+                        class="block w-full border-stone-500 rounded"
+                >
+                  <option value="1">고등학교졸업</option>
+                  <option value="2">전문대학졸업</option>
+                  <option value="3">대학교 졸업</option>
+                  <option value="4">석사 졸업</option>
+                  <option value="5">박사 졸업</option>
+                </select>
+              </div>
+              <div id="educationPlus">
+                <div class="plusField flex"></div>
               </div>
             </div>
-            <div class="mb-3">
-              <label for="categorySelect" class="block mb-1">직무</label>
-              <div>
-                <div id="category" class="flex space-x-2">
-                  <select name="category" id="categorySelect" class="category block w-full border-stone-500 rounded">
-                    <option value="16">기획·전략</option>
-                    <option value="14">마케팅·홍보</option>
-                    <option value="3">회계·재무</option>
-                    <option value="2">IT개발·데이터</option>
-                    <option value="12">상품기획·MD</option>
-                    <option value="15">디자인</option>
-                    <option value="6">의료</option>
-                    <option value="10">서비스</option>
-                    <option value="11">생산</option>
-                    <option value="19">교육</option>
-                  </select>
-                </div>
-                <div id="categoryPlus">
-                  <div class="plusField flex"></div>
-                </div>
+          </div>
+          <div class="mb-3">
+            <label for="categorySelect" class="block mb-1">직무</label>
+            <div>
+              <div id="category" class="flex space-x-2">
+                <select name="category" id="categorySelect" class="category block w-full border-stone-500 rounded">
+                  <option value="16">기획·전략</option>
+                  <option value="14">마케팅·홍보</option>
+                  <option value="3">회계·재무</option>
+                  <option value="2">IT개발·데이터</option>
+                  <option value="12">상품기획·MD</option>
+                  <option value="15">디자인</option>
+                  <option value="6">의료</option>
+                  <option value="10">서비스</option>
+                  <option value="11">생산</option>
+                  <option value="19">교육</option>
+                </select>
+              </div>
+              <div id="categoryPlus">
+                <div class="plusField flex"></div>
               </div>
             </div>
-            <div class="mb-3">
-              <label for="regionSelect" class="block mb-1">지역</label>
-              <div>
-                <div id="region" class="flex space-x-2">
-                  <select
-                          name="region"
-                          id="regionSelect"
-                          class="block w-full border-stone-500 rounded"
-                  >
-                    <option value="101000">서울</option>
-                    <option value="102000">경기</option>
-                    <option value="103000">광주</option>
-                    <option value="104000">대구</option>
-                    <option value="105000">대전</option>
-                    <option value="106000">부산</option>
-                    <option value="107000">울산</option>
-                    <option value="108000">인천</option>
-                    <option value="109000">강원</option>
-                    <option value="110000">경남</option>
-                    <option value="111000">경북</option>
-                    <option value="112000">전남</option>
-                    <option value="113000">전북</option>
-                    <option value="114000">충북</option>
-                    <option value="115000">충남</option>
-                    <option value="116000">제주</option>
-                  </select>
-                </div>
-                <div id="regionPlus">
-                  <div class="plusField flex"></div>
-                </div>
+          </div>
+          <div class="mb-3">
+            <label for="regionSelect" class="block mb-1">지역</label>
+            <div>
+              <div id="region" class="flex space-x-2">
+                <select
+                        name="region"
+                        id="regionSelect"
+                        class="block w-full border-stone-500 rounded"
+                >
+                  <option value="101000">서울</option>
+                  <option value="102000">경기</option>
+                  <option value="103000">광주</option>
+                  <option value="104000">대구</option>
+                  <option value="105000">대전</option>
+                  <option value="106000">부산</option>
+                  <option value="107000">울산</option>
+                  <option value="108000">인천</option>
+                  <option value="109000">강원</option>
+                  <option value="110000">경남</option>
+                  <option value="111000">경북</option>
+                  <option value="112000">전남</option>
+                  <option value="113000">전북</option>
+                  <option value="114000">충북</option>
+                  <option value="115000">충남</option>
+                  <option value="116000">제주</option>
+                </select>
+              </div>
+              <div id="regionPlus">
+                <div class="plusField flex"></div>
               </div>
             </div>
-          </form>
+          </div>
+          <div class="flex justify-end">
+            <a id="sendInfoButton" class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
+              수정하기
+            </a>
+          </div>
         </div>
         <div class="flex justify-end">
         </div>
@@ -207,25 +210,13 @@
     </div>
   </div>
 </div>
-<script src="../static/js/flowbite.min.js"></script>
-</body>
-
+<script src="/js/flowbite.min.js"></script>
+</body>x
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    // fetch("http://localhost:8090/user/prev")
-    //         .then(async (response) => {
-    //           const res = await response.json()
-    //           console.log(res)
-    //
-    //           const category = res.category.split(",");
-    //           const region = res.region.split(",");
-    //           const education = res.education.split(",");
-    //           const workType = res.type.split(",");
-    //
-    //           console.log(selectValues);
-    //         })
-
-    let selectTags = document.querySelectorAll("select");
+    const selectTags = document.querySelectorAll("select");
+    const sendButton = document.getElementById("sendInfoButton");
+    console.log(sendButton)
 
     // 배열 선언
     let selectValues = {
@@ -234,6 +225,37 @@
       category: [],
       region: []
     };
+
+    fetch("/user/prev")
+            .then(async (response) => {
+              const res = await response.json()
+
+              const category = res.category.split(",");
+              const region = res.region.split(",");
+              const education = res.education.split(",");
+              const workType = res.type.split(",");
+
+              const modalButton = document.getElementById('modalOpenButton');
+              modalButton.addEventListener('click',  function () {
+                for(let i=0; i<category.length; i++) {
+                  addList('category',category[i]);
+                }
+                for(let i=0; i<region.length; i++) {
+                  addList('region',region[i]);
+                }
+                for(let i=0; i<education.length; i++) {
+                  addList('education',education[i]);
+                }
+                for(let i=0; i<workType.length; i++) {
+                  addList('workType',workType[i]);
+                }
+
+                addList('workType', document.getElementById('workTypeSelect').value);
+                addList('education', document.getElementById('educationSelect').value);
+                addList('category', document.getElementById('categorySelect').value);
+                addList('region', document.getElementById('regionSelect').value);
+              });
+            })
 
     // 배열 Id, 배열에 넣을 값
     const addList = (selectId, selectValue) => {
@@ -307,33 +329,19 @@
 
         // 생성된 div를 plusField에 추가
         plusField.appendChild(newDiv);
-        console.log()
-
-        // let plusField = document.querySelector("#" + parentDivId + "Plus").children[0];
-        // let selectedOption = document.getElementById(parentDivId).children[0].options[event.selectedIndex].text;
-        // console.log()
       }
     }
 
     selectTags.forEach(function(select) {
       select.addEventListener("change", function(event) {
-        // 숫자가 없다면 -1 반환
-        // if (selectValues[selectId].findIndex(v => v === selectedValue) !== -1)
           addList(event.target.parentElement.id, event.target.value);
       });
     });
-
-    const modalButton = document.getElementById('modalOpenButton');
-    modalButton.addEventListener('click',  function () {
-      // let workTypeSelect = document.getElementById('workTypeSelect');
-      // let educationSelect = document.getElementById('educationSelect');
-      // let categorySelect = document.getElementById('categorySelect');
-      // let regionSelect = document.getElementById('regionSelect');
-
-      addList('workType', document.getElementById('workTypeSelect').value);
-      addList('education', document.getElementById('educationSelect').value);
-      addList('category', document.getElementById('categorySelect').value);
-      addList('region', document.getElementById('regionSelect').value);
+    sendButton.addEventListener('click', function() {
+      let workTypeArr = selectValues.workType.join();
+      let categoryArr = selectValues.category.join();
+      let regionArr = selectValues.region.join();
+      let educationArr = selectValues.education.join();
     });
   });
 </script>
