@@ -14,5 +14,7 @@ public class UserPrevData {
 
     private String education;  // 학력
 
+    private String career;
+
     private String category;  // 직업 카테고리
 }

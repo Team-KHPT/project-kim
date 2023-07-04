@@ -185,6 +185,7 @@ public class UserService {
         user.setType(userPrevData.getType());
         user.setRegion(userPrevData.getRegion());
         user.setEducation(userPrevData.getEducation());
+        user.setCareer(userPrevData.getCareer());
         user.setCategory(userPrevData.getCategory());
 
         userRepository.save(user);
@@ -197,6 +198,7 @@ public class UserService {
         userPrevData.setType(user.getType());
         userPrevData.setRegion(user.getRegion());
         userPrevData.setEducation(user.getEducation());
+        userPrevData.setCareer(user.getCareer());
         userPrevData.setCategory(user.getCategory());
 
         return userPrevData;

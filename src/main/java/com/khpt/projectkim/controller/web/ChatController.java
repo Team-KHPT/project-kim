@@ -24,22 +24,26 @@ public class ChatController {
 
     private final UserService userService;
 
+    // TODO check if prev data exist
+    // TODO add design if no prev data is provided
     // TODO add examples. Add html code, with js
 
     @ModelAttribute
     public void addAttributes(HttpServletRequest request, Model model) {
-        model.addAttribute("current_url", request.getRequestURL().toString());
+        model.addAttribute("current_url", request.getRequestURL().toString().split("8090")[1]);
         model.addAttribute("image", "/icons/black.png");
     }
+
+    // TODO 이전 기록 가져오기 메소드
 
     @GetMapping("/new")
     public String newChat(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
             System.out.println("Create new chat failed. No session");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendRedirect("/");
             return null;
         }
-        // TODO remove chats in user
+        // remove chats in user
         String userId = session.getAttribute("user").toString();
         userService.clearChats(userId);
 
