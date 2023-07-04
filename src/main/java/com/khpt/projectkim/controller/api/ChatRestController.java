@@ -59,6 +59,12 @@ public class ChatRestController {
 
     @GetMapping("/events")
     public SseEmitter getChatEvents(HttpSession session, HttpServletResponse response) {
+        // TODO 프로세스 확인
+
+        // TODO 프롬프트 엔지니어링
+
+        // TODO 예시 페이지 만들기
+
         if (session.getAttribute("user") == null) {
             System.out.println("Get chat events failed. No session");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -74,6 +80,7 @@ public class ChatRestController {
         session.removeAttribute("chat");
 
         List<ChatMessage> chatMessages =  chatService.getUserChats(userId);
+        chatMessages.add(0, new ChatMessage(ChatMessageRole.SYSTEM.value(), "너는 취업 상담사야. 사용자에게 취업 상담을 해주고. 그에 맞는 채용정보를 제공해주면 돼. 채용 정보는 사용자의 화면 오른쪽에 보이게 될거니 너가 직접 언급하지 않아도 돼. 너는 그 정보를 요약해서 알려주는 역할이야"));
         chatMessages.add(new ChatMessage(ChatMessageRole.USER.value(), chat));
 
         User user = userService.getUserByStringId(userId);
@@ -93,12 +100,12 @@ public class ChatRestController {
                             Map<String, String> params = new HashMap<>();
                             if (w.getKeyword() != null) params.put("keywords", w.getKeyword());
                             if (w.getSort() != null) params.put("sort", String.valueOf(w.getSort()));
-                            if (w.getCodes() != null) params.put("job-cd", w.getCodes());  // TODO
+                            if (w.getCodes() != null) params.put("job-cd", w.getCodes());  // TODO 작동 하는지 확인
                             if (user.getCategory() != null) params.put("job-mid-cd", user.getCategory());
                             if (user.getType() != null) params.put("job_type", user.getType());
                             if (user.getEducation() != null) params.put("edu_lv", user.getEducation());
                             if (user.getRegion() != null) params.put("loc_mcd", user.getRegion());
-                            params.put("count", "1");
+                            params.put("count", "100");
                             params.put("access-key", saramin_key);
 
                             String apiResponse;
@@ -108,21 +115,19 @@ public class ChatRestController {
                                 SimplifyJsonService.Root root = mapper.readValue(apiResponse, SimplifyJsonService.Root.class);
 
                                 Map<String, List<Map<String, Object>>> simplifiedJobs = simplifyJobs(root, user.getCareer(), 15);
-                                System.out.println("api res:");
-                                System.out.println(apiResponse);
-                                System.out.println(simplifiedJobs);
+                                System.out.print("Jobs found with API: ");
+                                System.out.println(root.jobs.job.size());
+                                System.out.print("Simplified job count: ");
+                                System.out.println(simplifiedJobs.get("jobs").size());
 
-//                                apiResponseRecord.add(apiResponse);
                                 Map<String, List<Map<String, Object>>> simplifiedJobs2 = simplifyJobs2(root, user.getCareer(), 15);
-//                                String jobDataResponse = mapper.writeValueAsString(simplifiedJobs2);
-                                emitter.send(SseEmitter.event().name("result").data("result ready"));
                                 userService.setUserResults(userId, simplifiedJobs2);
 
                                 return mapper.writeValueAsString(simplifiedJobs);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
-                            // TODO 요청 100개중 커리어가 맞는거 20개 고르기
+                            // 요청 100개중 커리어가 맞는거 15개 고르기
                         })
                         .build());
                 final FunctionExecutor functionExecutor = new FunctionExecutor(functions);
@@ -170,10 +175,10 @@ public class ChatRestController {
                                 if (message.getContent() != null) {
                                     emitter.send(SseEmitter.event().name("message").data(message.getContent().replaceAll(" ", "%20").replaceAll("\n", "%0A")));
                                 } else if (message.getFunctionCall() != null) {
-                                    emitter.send(SseEmitter.event().name("function").data("prepare"));
+                                    emitter.send(SseEmitter.event().name("process").data("Preparing API request"));
                                 }
                             } catch (IOException e) {
-                                emitter.send(SseEmitter.event().name("error").data("ChatGPT 응답중 에러"));
+                                emitter.send(SseEmitter.event().name("err").data("ChatGPT 응답중 에러"));
                                 emitter.completeWithError(e);
                                 throw new RuntimeException(e);
                             }
@@ -189,31 +194,27 @@ public class ChatRestController {
                                 System.out.println(accumulatedMessage.getFunctionCall());
 
                                 if (accumulatedMessage.getFunctionCall() != null) {
-                                    emitter.send(SseEmitter.event().name("function").data("processing"));
+                                    emitter.send(SseEmitter.event().name("process").data("Processing API request"));
 
                                     if (!(user.getType() != null && user.getRegion() != null && user.getEducation() != null && user.getCategory() != null)) {
-                                        emitter.send(SseEmitter.event().name("error").data("사전정보를 입력해주세요"));  // TODO add prev error msg to front
+                                        emitter.send(SseEmitter.event().name("err").data("사전정보를 입력해주세요"));  // TODO add prev error msg to front
                                         emitter.send(SseEmitter.event().name("complete").data("error executing function"));
+                                        emitter.send(SseEmitter.event().name("process").data("Error"));
                                         emitter.complete();
                                         return;
                                     }
 
                                     ChatMessage callResponse = functionExecutor.executeAndConvertToMessageHandlingExceptions(accumulatedMessage.getFunctionCall());
                                     if (callResponse.getName().equals("error")) {
-                                        emitter.send(SseEmitter.event().name("error").data("사람인 API 요청을 실패하였습니다."));
+                                        emitter.send(SseEmitter.event().name("err").data("사람인 API 요청을 실패하였습니다."));
                                         emitter.send(SseEmitter.event().name("complete").data("error executing function"));
+                                        emitter.send(SseEmitter.event().name("process").data("Error"));
                                         emitter.complete();
                                         return;
                                     }
 
-                                    // send result
-//                                    ObjectMapper mapper = new ObjectMapper();
-//                                    SimplifyJsonService.Root root = mapper.readValue(apiResponseRecord.get(0), SimplifyJsonService.Root.class);
-//                                    Map<String, List<Map<String, Object>>> simplifiedJobs = simplifyJobs2(root, user.getCareer());
-//                                    String jobDataResponse = mapper.writeValueAsString(simplifiedJobs);
-//                                    emitter.send(SseEmitter.event().name("result").data(jobDataResponse));
-//                                    userService.setUserResults(userId, simplifiedJobs);
-
+                                    emitter.send(SseEmitter.event().name("process").data("fine"));
+                                    emitter.send(SseEmitter.event().name("result").data("result ready"));
 
                                     // TODO add job codes table
                                     chatMessages.add(new ChatMessage(
@@ -231,8 +232,9 @@ public class ChatRestController {
                                     ChatCompletionRequest chatCompletionRequest2 = ChatCompletionRequest
                                             .builder()
                                             .model("gpt-3.5-turbo-16k-0613")
+//                                            .model("gpt-4")
                                             .messages(chatMessages)
-                                            .maxTokens(512)
+                                            .maxTokens(1024)
                                             .functions(functionExecutor.getFunctions())
                                             .logitBias(new HashMap<>())
                                             .build();
@@ -271,7 +273,7 @@ public class ChatRestController {
                                                         emitter.send(SseEmitter.event().name("message").data(message.getContent().replaceAll(" ", "%20").replaceAll("\n", "%0A")));
                                                     }
                                                 } catch (IOException e) {
-                                                    emitter.send(SseEmitter.event().name("error").data("ChatGPT functions 응답중 에러"));
+                                                    emitter.send(SseEmitter.event().name("err").data("ChatGPT functions 응답중 에러"));
                                                     emitter.completeWithError(e);
                                                     throw new RuntimeException(e);
                                                 }
@@ -290,7 +292,7 @@ public class ChatRestController {
                                                     System.out.println("Save chat with functions");
                                                 } catch (IOException e) {
                                                     System.out.println("complete error3");
-                                                    emitter.send(SseEmitter.event().name("error").data("채팅 저장중 에러"));
+                                                    emitter.send(SseEmitter.event().name("err").data("채팅 저장중 에러"));
                                                     emitter.completeWithError(e);
                                                 }
                                             }
@@ -307,7 +309,7 @@ public class ChatRestController {
                                 }
                             } catch (IOException e) {
                                 System.out.println("complete error2");
-                                emitter.send(SseEmitter.event().name("error").data("ChatGPT 응답 처리 중 에러"));
+                                emitter.send(SseEmitter.event().name("err").data("ChatGPT 응답 처리 중 에러"));
                                 emitter.completeWithError(e);
                             }
                         }
