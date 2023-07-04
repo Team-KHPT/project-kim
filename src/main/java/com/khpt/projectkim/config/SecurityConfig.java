@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     @Override
                     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                         String redirectUrl = request.getSession().getAttribute("redirect").toString();
-                        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+//                        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
                     }
                 });
     }
