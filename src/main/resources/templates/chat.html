@@ -232,6 +232,7 @@
                         id="educationSelect"
                         class="block w-full border-stone-500 rounded"
                 >
+                  <option value="0">학력무관</option>
                   <option value="1">고등학교졸업</option>
                   <option value="2">전문대학졸업</option>
                   <option value="3">대학교 졸업</option>
@@ -339,7 +340,8 @@
               const workType = res.type.split(",");
 
               const modalButton = document.getElementById('modalOpenButton');
-              modalButton.addEventListener('click',  function () {
+              modalButton.addEventListener("click", function () {
+                console.log(selectValues);
                 if(category.length === 0) {
                   addList('category', document.getElementById('categorySelect').value);
                 } else {
