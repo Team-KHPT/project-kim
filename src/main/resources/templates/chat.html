@@ -462,7 +462,11 @@
 
       let object = `{"type":"${workTypeArr}","category":"${categoryArr}","region":"${regionArr}","education":"${educationArr}"}`
       let result = JSON.parse(object);
-      console.log(result);
+
+      selectValues.workType = [];
+      selectValues.category = [];
+      selectValues.region = [];
+      selectValues.education = [];
       fetch('/user/prev', {
         method: 'POST',
         headers: {
