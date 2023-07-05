@@ -390,6 +390,7 @@
 
         // 새 div 생성
         let newDiv = document.createElement("div");
+        newDiv.id = selectValue;
         newDiv.className =
                 "info-div font-noto w-40 h-10 bg-stone-200 mt-2 mb-4 mr-2 px-3 py-5 flex items-center justify-between rounded-lg space-x-2 text-gray-600";
 
@@ -436,7 +437,6 @@
         // 엑스 버튼을 누르면 해당 div 삭제
         deleteButton.addEventListener("click", function (e) {
           e.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되는 것을 막음
-          // selectValues.splice(newDiv.id, 1);
           selectValues[selectId].splice(selectValues[selectId].findIndex(v => v === newDiv.id), 1);
           newDiv.remove();
         });
@@ -462,7 +462,11 @@
 
       let object = `{"type":"${workTypeArr}","category":"${categoryArr}","region":"${regionArr}","education":"${educationArr}"}`
       let result = JSON.parse(object);
-      console.log(result);
+
+      selectValues.workType = [];
+      selectValues.category = [];
+      selectValues.region = [];
+      selectValues.education = [];
       fetch('/user/prev', {
         method: 'POST',
         headers: {
