@@ -71,6 +71,7 @@ public class ChatRestController {
             return null;
         }
         if (session.getAttribute("chat") == null) {
+            System.out.println("event is found, but no chat");
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
@@ -80,7 +81,8 @@ public class ChatRestController {
         session.removeAttribute("chat");
 
         List<ChatMessage> chatMessages =  chatService.getUserChats(userId);
-        chatMessages.add(0, new ChatMessage(ChatMessageRole.SYSTEM.value(), "너는 취업 상담사야. 사용자에게 취업 상담을 해주고. 그에 맞는 채용정보를 제공해주면 돼. 채용 정보는 사용자의 화면 오른쪽에 보이게 될거니 너가 직접 언급하지 않아도 돼. 너는 그 정보를 요약해서 알려주는 역할이야"));
+        chatMessages.add(0, Prompts.CHAT_PROMPT.message());
+        chatMessages.add(1, Prompts.CHAT_PROMPT2.message());
         chatMessages.add(new ChatMessage(ChatMessageRole.USER.value(), chat));
 
         User user = userService.getUserByStringId(userId);
@@ -90,8 +92,6 @@ public class ChatRestController {
         new Thread(() -> {
             try {
                 emitter.send(SseEmitter.event().name("info").data("Processing ChatGPT request..."));
-
-//                List<String> apiResponseRecord = new ArrayList<>();
 
                 final List<ChatFunction> functions = Collections.singletonList(ChatFunction.builder()
                         .name("get_job_info")
@@ -127,7 +127,6 @@ public class ChatRestController {
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
-                            // 요청 100개중 커리어가 맞는거 15개 고르기
                         })
                         .build());
                 final FunctionExecutor functionExecutor = new FunctionExecutor(functions);
@@ -228,11 +227,11 @@ public class ChatRestController {
 
                                     chatMessages.add(accumulatedMessage);
                                     chatMessages.add(callResponse);
+                                    chatMessages.add(Prompts.FUNCTIONS_PROMPT.message());
 
                                     ChatCompletionRequest chatCompletionRequest2 = ChatCompletionRequest
                                             .builder()
                                             .model("gpt-3.5-turbo-16k-0613")
-//                                            .model("gpt-4")
                                             .messages(chatMessages)
                                             .maxTokens(1024)
                                             .functions(functionExecutor.getFunctions())
@@ -337,10 +336,8 @@ public class ChatRestController {
         String userId = session.getAttribute("user").toString();
         chatService.addUserChats(userId, chatMessage);
         session.setAttribute("chat", chatMessage.getContent());
-        return new ResponseEntity<>(HttpStatus.OK);
 
-//        ChatData lastUserChat = chatDataList.get(chatDataList.size() - 1);
-//        chatService.addUserChats(userId, lastUserChat);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/all")
