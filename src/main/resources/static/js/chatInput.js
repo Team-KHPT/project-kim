@@ -4,11 +4,11 @@ const chatBtn = document.getElementById("chat-btn")
 let inputAvailable = true
 
 
-chatInput.addEventListener('input', function() {
-    this.innerText = this.value
-    this.style.height = (this.value.split("\n").length * 24) + "px"
+function inputHandler(inp) {
+    inp.innerText = inp.value
+    inp.style.height = (inp.value.split("\n").length * 24) + "px"
 
-    if (this.value.length > 0) {
+    if (inp.value.length > 0) {
         if (!inputAvailable) {
             return
         }
@@ -16,6 +16,11 @@ chatInput.addEventListener('input', function() {
     } else {
         chatBtn.setAttribute("disabled", "")
     }
+}
+
+
+chatInput.addEventListener('input', function() {
+    inputHandler(this)
 })
 
 chatBtn.addEventListener('click', function (event) {
@@ -24,6 +29,7 @@ chatBtn.addEventListener('click', function (event) {
         return
     }
     sendMessage(chatInput.value)
+    chatInput.value = ''
 })
 
 chatInput.addEventListener('keydown', function(event) {
