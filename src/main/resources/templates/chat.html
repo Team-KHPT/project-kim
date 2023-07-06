@@ -44,7 +44,7 @@
         <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
         <div class="w-full p-5 bg-violet-100 rounded-lg">
           <span style="white-space: pre-wrap;">안녕하세요, 김비서님! 제가 직업 상담을 도와드리겠습니다.</span>
-          <div th:each="question : ${questions}">
+          <div class="question-field" th:each="question : ${questions}">
             <a th:text="${question}" class="w-fit bg-white text-violet-400 px-4 py-2 rounded-3xl text-sm flex items-center justify-center mt-3 cursor-pointer">나는 문어가 되고 싶어.나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어</a>
           </div>
         </div>
@@ -348,4 +348,5 @@
 <script src="/js/chatResult.js"></script>
 <script src="/js/flowbite.min.js"></script>
 <script src="/js/infomation.js"></script>
+<script src="/js/question.js"></script>
 </html>
