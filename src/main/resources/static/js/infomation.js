@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const modalButton = document.getElementById('modalOpenButton');
             modalButton.addEventListener("click", function () {
-                console.log(selectValues);
                 if(category.length === 0) {
                     addList('category', document.getElementById('categorySelect').value);
                 } else {
