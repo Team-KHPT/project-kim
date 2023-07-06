@@ -4,11 +4,17 @@ const chatBtn = document.getElementById("chat-btn")
 let inputAvailable = true
 
 
-function inputHandler(inp) {
-    inp.innerText = inp.value
-    inp.style.height = (inp.value.split("\n").length * 24) + "px"
+function removeExampleChat() {
+    const exampleChatElem = document.getElementById("example-chat")
+    if (exampleChatElem != null) exampleChatElem.remove()
+}
 
-    if (inp.value.length > 0) {
+
+function inputHandler() {
+    chatInput.innerText = chatInput.value
+    chatInput.style.height = (chatInput.value.split("\n").length * 24) + "px"
+
+    if (chatInput.value.length > 0) {
         if (!inputAvailable) {
             return
         }
@@ -20,10 +26,11 @@ function inputHandler(inp) {
 
 
 chatInput.addEventListener('input', function() {
-    inputHandler(this)
+    inputHandler()
 })
 
 chatBtn.addEventListener('click', function (event) {
+    inputHandler()
     event.preventDefault()
     if (!inputAvailable) {
         return
@@ -59,6 +66,8 @@ function createCustomElement(text) {
 }
 
 function sendMessage(inputValue) {
+    removeExampleChat()
+
     inputAvailable = false
 
     const userChatItem = makeUserChatItem(inputValue)
@@ -117,7 +126,7 @@ function sendMessage(inputValue) {
                 } else {
                     processElem.textContent = event.data
                 }
-
+                // TODO 로딩 element 수정
             })
             eventSource.addEventListener('result', function(event) {
                 console.log(event.data)
@@ -133,6 +142,7 @@ function sendMessage(inputValue) {
                 inputAvailable = true
             })
             eventSource.onerror = function(error) {
+                eventSource.close()
                 console.log('Error: ', error);
                 inputAvailable = true
             }
