@@ -1,6 +1,7 @@
 package com.khpt.projectkim.controller.web;
 
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
+import com.khpt.projectkim.dto.UserPrevData;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.service.ChatService;
 import com.khpt.projectkim.service.QuestionService;
@@ -77,6 +78,10 @@ public class ChatController {
         model.addAttribute("recent_results", filledDto.getRecentResults());
         model.addAttribute("results", filledDto.getResults());
         model.addAttribute("chats", filledDto.getChats());
+        UserPrevData userPrevData = userService.getUserPrevData(userid);
+        if (!(userPrevData.getCategory() == null && userPrevData.getType() == null && userPrevData.getRegion() == null && userPrevData.getEducation() == null)) {
+            model.addAttribute("prev_data", "1");
+        }
 
         if (filledDto.getChats().size() == 0) {
             model.addAttribute("questions", questionService.getRandomQuestions());
