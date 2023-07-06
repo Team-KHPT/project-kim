@@ -23,37 +23,39 @@ document.addEventListener("DOMContentLoaded", function () {
             let workType = "";
             if (res.type !== null) workType = res.type.split(",");
 
-            const modalButton = document.getElementById('modalOpenButton');
-            modalButton.addEventListener("click", function () {
-                if(category.length === 0) {
-                    addList('category', document.getElementById('categorySelect').value);
-                } else {
-                    for(let i=0; i<category.length; i++) {
-                        addList('category',category[i]);
+            const modalButton = document.querySelectorAll('.modalOpenButton');
+            modalButton.forEach(function (button){
+                button.addEventListener("click", function () {
+                    if(category.length === 0) {
+                        addList('category', document.getElementById('categorySelect').value);
+                    } else {
+                        for(let i=0; i<category.length; i++) {
+                            addList('category',category[i]);
+                        }
                     }
-                }
-                if(region.length === 0) {
-                    addList('region', document.getElementById('regionSelect').value);
-                } else {
-                    for(let i=0; i<region.length; i++) {
-                        addList('region',region[i]);
+                    if(region.length === 0) {
+                        addList('region', document.getElementById('regionSelect').value);
+                    } else {
+                        for(let i=0; i<region.length; i++) {
+                            addList('region',region[i]);
+                        }
                     }
-                }
-                if(education.length === 0) {
-                    addList('education', document.getElementById('educationSelect').value);
-                } else {
-                    for(let i=0; i<education.length; i++) {
-                        addList('education',education[i]);
+                    if(education.length === 0) {
+                        addList('education', document.getElementById('educationSelect').value);
+                    } else {
+                        for(let i=0; i<education.length; i++) {
+                            addList('education',education[i]);
+                        }
                     }
-                }
-                if(workType.length === 0) {
-                    addList('workType', document.getElementById('workTypeSelect').value);
-                } else {
-                    for(let i=0; i<workType.length; i++) {
-                        addList('workType',workType[i]);
+                    if(workType.length === 0) {
+                        addList('workType', document.getElementById('workTypeSelect').value);
+                    } else {
+                        for(let i=0; i<workType.length; i++) {
+                            addList('workType',workType[i]);
+                        }
                     }
-                }
-            });
+                });
+            })
         })
 
     // 배열 Id, 배열에 넣을 값
