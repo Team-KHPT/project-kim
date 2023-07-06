@@ -40,7 +40,7 @@
   <div class="relative h-full px-14 pt-7 grid grid-rows-6 grid-cols-4 gap-7 overflow-auto">
 
     <div id="chats" class="col-span-3 row-span-5 p-5 border rounded-lg shadow-lg space-y-3 overflow-y-scroll no-scrollbar">
-      <div th:if="${chats == null && name != null && prev_data != null}" class="assistant flex space-x-3">
+      <div th:if="${chats.size() == 0 && name != null && prev_data != null}" class="assistant flex space-x-3">
         <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
         <div class="w-full p-5 bg-violet-100 rounded-lg">
           <span style="white-space: pre-wrap;">안녕하세요, 김비서님! 제가 직업 상담을 도와드리겠습니다.</span>
@@ -59,7 +59,7 @@
 <!--      사전정보가 없을시-->
       <div th:if="${prev_data == null && name != null}" class="w-full h-full flex flex-col items-center justify-center">
         <span class="font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>
-        <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="block bg-violet-100 text-violet-400 p-2 rounded-3xl text-sm w-1/6 flex items-center justify-center mt-3 cursor-pointer">
+        <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton bg-violet-100 text-violet-400 p-2 rounded-3xl text-sm w-1/6 flex items-center justify-center mt-3 cursor-pointer">
           사전정보 입력하기
         </a>
       </div>
@@ -67,7 +67,7 @@
 
     <div id="container" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="row-span-5 h-full p-2 border rounded-lg shadow-lg flex flex-col space-y-2 overflow-y-scroll no-scrollbar">
       <div class="w-full h-full flex items-center justify-center">
-        <span class="font-semibold">분석을 위한 정보가 충분하지 않아요 :(</span>
+        <span class="font-semibold">분석 결과가 없습니다.</span>
       </div>
     </div>
 
@@ -98,7 +98,7 @@
 
     <div class="row-span-1 relative h-24">
       <div class="absolute bottom-0 w-full">
-        <button id="modalOpenButton" data-modal-target="informationModal" data-modal-toggle="informationModal" class="top-0 w-full p-4 border rounded-lg shadow-lg text-stone-500">사전 정보 수정</button>
+        <button data-modal-target="informationModal" data-modal-toggle="informationModal" class=" modalOpenButton top-0 w-full p-4 border rounded-lg shadow-lg text-stone-500">사전 정보 수정</button>
         <div class="h-7"></div>
       </div>
     </div>
@@ -124,57 +124,57 @@
       </div>
       <!-- Modal body -->
       <div class="p-6 space-x-2 flex items-center justify-between">
-        <div class="flex space-x-12">
-          <p id="modal-company" class=" font-bold"></p>
-          <p id="modal-title" class="dark:text-gray-400 font-extrabold"></p>
+        <div class="flex space-x-8">
+          <p id="modal-company" class="text-lg text-stone-500 font-bold"></p>
+          <p id="modal-title" class="text-xl dark:text-gray-400 font-extrabold"></p>
         </div>
-        <a id="modal-url" target="_blank" class="cursor-pointer block bg-violet-200 text-violet-500 p-2 rounded-lg text-xs">
+        <a id="modal-url" target="_blank" class="cursor-pointer block bg-violet-200 text-violet-500 p-2 rounded-lg text-base">
           보러가기
         </a>
       </div>
       <!-- Modal footer -->
-      <div class="flex items-center p-6 border-gray-200 rounded-b dark:border-gray-600">
+      <div class="flex items-center p-6 text-lg border-gray-200 rounded-b dark:border-gray-600">
         <div class="w-1/6 flex flex-col justify-start px-1.5">
-          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+          <div class="font-bold flex items-center justify-start space-x-3">
             <img loading="lazy" class="w-4 h-4" src="/icons/location.png" alt="loc">
             <span>위치</span>
           </div>
-          <span id="modal-region" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+          <span id="modal-region" class="w-full text-base truncate text-ellipsis"></span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
-          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+          <div class="font-bold flex items-center justify-start space-x-3">
             <img loading="lazy" class="w-4 h-4" src="/icons/profit.png" alt="loc">
             <span>연봉</span>
           </div>
-          <span id="modal-salary" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+          <span id="modal-salary" class="w-full text-base truncate text-ellipsis"></span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
-          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+          <div class="font-bold flex items-center justify-start space-x-3">
             <img loading="lazy" class="w-4 h-4" src="/icons/sales.png" alt="loc">
             <span>근무형태</span>
           </div>
-          <span id="modal-type" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+          <span id="modal-type" class="w-full text-base truncate text-ellipsis"></span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
-          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+          <div class="font-bold flex items-center justify-start space-x-3">
             <img loading="lazy" class="w-4 h-4" src="/icons/profile.png" alt="loc">
             <span>학력</span>
           </div>
-          <span id="modal-education" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+          <span id="modal-education" class="w-full text-base truncate text-ellipsis"></span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
-          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+          <div class="font-bold flex items-center justify-start space-x-3">
             <img loading="lazy" class="w-4 h-4" src="/icons/approval.png" alt="loc">
             <span>경력</span>
           </div>
-          <span id="modal-career" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+          <span id="modal-career" class="w-full text-base truncate text-ellipsis"></span>
         </div>
         <div class="w-1/6 flex flex-col justify-start px-1.5">
-          <div class="font-bold text-sm flex items-center justify-start space-x-3">
+          <div class="font-bold flex items-center justify-start space-x-3">
             <img loading="lazy" class="w-4 h-4" src="/icons/time.png" alt="time">
             <span>근무시간</span>
           </div>
-          <span id="modal-time" class="w-full text-xs truncate text-ellipsis">경기 화성시 화성시화성시화성시화성시화성시</span>
+          <span id="modal-time" class="w-full text-base truncate text-ellipsis"></span>
         </div>
       </div>
     </div>
@@ -299,7 +299,7 @@
             </div>
           </div>
           <div class="flex justify-end">
-            <a id="sendInfoButton" data-modal-hide="informationModal" class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-sm">
+            <a id="sendInfoButton" data-modal-hide="informationModal" class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-sm cursor-pointer">
               계속하기
             </a>
           </div>
@@ -319,6 +319,6 @@
 <script src="/js/chatInput.js"></script>
 <script src="/js/chatResult.js"></script>
 <script src="/js/flowbite.min.js"></script>
-<script src="/js/infomation.js"></script>
+<script src="/js/information.js"></script>
 <script src="/js/question.js"></script>
 </html>
