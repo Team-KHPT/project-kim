@@ -53,6 +53,8 @@ public class SimplifyJsonService {
                 if (experience_lvl_list.contains(objectMap.get("experience_level_code").toString())) {
                     simplifiedJobs.add(objectMap);
                 }
+            } else {
+                simplifiedJobs.add(objectMap);
             }
             if (simplifiedJobs.size() >= maxSize) {
                 break;
@@ -95,6 +97,8 @@ public class SimplifyJsonService {
                 if (experience_lvl_list.contains(objectMap.get("experience_level_code").toString())) {
                     simplifiedJobs.add(objectMap);
                 }
+            } else {
+                simplifiedJobs.add(objectMap);
             }
             if (simplifiedJobs.size() >= maxSize) {
                 break;
