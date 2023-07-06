@@ -6,7 +6,9 @@ const refreshData = async () => {
         .then(async (res) => {
             data = await res.json()
             console.log(data)
-            updateData()
+            if (data.length > 0) {
+                updateData()
+            }
         })
 }
 
@@ -37,7 +39,7 @@ const updateData = () => {
             modalRegion.innerHTML = item.location
             modalEducation.innerText = item.education
             modalCareer.innerText = item.experience_level
-            modalTime.innerText = item.time
+            modalTime.innerText = "09:00 ~ 18:00"
             modalSalary.innerText = item.salary
             modalType.innerText = item.type
         })
