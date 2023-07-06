@@ -17,7 +17,7 @@
     <div class="flex space-x-6 items-center">
       <div class="text-2xl font-bold">김비서</div>
       <div class="flex space-x-2 items-center">
-        <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="https://khpt.notion.site/8e800c5f860e459fbeac84a61f64da5d">사용방법</a>
+        <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="https://khpt.notion.site/8e800c5f860e459fbeac84a61f64da5d" target="_blank">사용방법</a>
         <a class="p-2 text-violet-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/new" th:if="${name != null}">새로운 채팅</a>
 <!--        <a class="p-2 text-stone-500 font-bold cursor-pointer rounded-lg hover:bg-stone-100" href="/chat/recent" th:if="${recent_results != null}">이전 기록</a>-->
       </div>
@@ -40,6 +40,15 @@
   <div class="relative h-full px-14 pt-7 grid grid-rows-6 grid-cols-4 gap-7 overflow-auto">
 
     <div id="chats" class="col-span-3 row-span-5 p-5 border rounded-lg shadow-lg space-y-3 overflow-y-scroll no-scrollbar">
+      <div th:if="${chats.size() == 0}" class="assistant flex space-x-3">
+        <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
+        <div class="w-full p-5 bg-violet-100 rounded-lg">
+          <span style="white-space: pre-wrap;">안녕하세요, 김비서님! 제가 직업 상담을 도와드리겠습니다.</span>
+          <div th:each="question : ${questions}">
+            <a th:text="${question}" class="w-fit bg-white text-violet-400 px-4 py-2 rounded-3xl text-sm flex items-center justify-center mt-3 cursor-pointer">나는 문어가 되고 싶어.나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어</a>
+          </div>
+        </div>
+      </div>
 <!--      <img src="/images/logo-32.png" class="w-7 h-7 rounded-lg">-->
 <!--      <div class="process w-fit mb-2 p-2 pl-4 pr-16 bg-violet-200 rounded-lg text-sm flex flex-col">-->
 <!--        <span>안녕하세요. 저는 사용자님께 알맞는 취업 정보를 제공해 드릴 김비서 입니다.</span>-->
