@@ -14,10 +14,14 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(async (response) => {
             const res = await response.json()
 
-            const category = res.category.split(",");
-            const region = res.region.split(",");
-            const education = res.education.split(",");
-            const workType = res.type.split(",");
+            let category = "";
+            if (res.category !== null) category = res.category.split(",");
+            let region = "";
+            if (res.region !== null) region = res.region.split(",");
+            let education = "";
+            if (res.education !== null) education = res.education.split(",");
+            let workType = "";
+            if (res.type !== null) workType = res.type.split(",");
 
             const modalButton = document.getElementById('modalOpenButton');
             modalButton.addEventListener("click", function () {
