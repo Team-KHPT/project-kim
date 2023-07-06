@@ -3,6 +3,7 @@ package com.khpt.projectkim.controller.web;
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.service.ChatService;
+import com.khpt.projectkim.service.QuestionService;
 import com.khpt.projectkim.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ public class ChatController {
     private final ChatService chatService;
 
     private final UserService userService;
+
+    private final QuestionService questionService;
 
     // TODO check if prev data exist
     // TODO add design if no prev data is provided
@@ -74,6 +77,10 @@ public class ChatController {
         model.addAttribute("recent_results", filledDto.getRecentResults());
         model.addAttribute("results", filledDto.getResults());
         model.addAttribute("chats", filledDto.getChats());
+
+        if (filledDto.getChats().size() == 0) {
+            model.addAttribute("questions", questionService.getRandomQuestions());
+        }
 
         return "chat";
     }
