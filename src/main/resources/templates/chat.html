@@ -40,7 +40,7 @@
   <div class="relative h-full px-14 pt-7 grid grid-rows-6 grid-cols-4 gap-7 overflow-auto">
 
     <div id="chats" class="col-span-3 row-span-5 p-5 border rounded-lg shadow-lg space-y-3 overflow-y-scroll no-scrollbar">
-      <div th:if="${chats.size() == 0}" class="assistant flex space-x-3">
+      <div th:if="${chats == null && name != null && prev_data != null}" class="assistant flex space-x-3">
         <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
         <div class="w-full p-5 bg-violet-100 rounded-lg">
           <span style="white-space: pre-wrap;">안녕하세요, 김비서님! 제가 직업 상담을 도와드리겠습니다.</span>
@@ -57,12 +57,12 @@
 <!--        </a>-->
 <!--      </div>-->
 <!--      사전정보가 없을시-->
-<!--      <div class="w-full h-full flex flex-col items-center justify-center">-->
-<!--        <span class="font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>-->
-<!--        <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="block bg-violet-100 text-violet-400 p-2 rounded-3xl text-sm w-1/6 flex items-center justify-center mt-3 cursor-pointer">-->
-<!--          사전정보 입력하기-->
-<!--        </a>-->
-<!--      </div>-->
+      <div th:if="${prev_data == null && name != null}" class="w-full h-full flex flex-col items-center justify-center">
+        <span class="font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>
+        <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="block bg-violet-100 text-violet-400 p-2 rounded-3xl text-sm w-1/6 flex items-center justify-center mt-3 cursor-pointer">
+          사전정보 입력하기
+        </a>
+      </div>
     </div>
 
     <div id="container" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="row-span-5 h-full p-2 border rounded-lg shadow-lg flex flex-col space-y-2 overflow-y-scroll no-scrollbar">
@@ -180,13 +180,9 @@
     </div>
   </div>
 </div>
+
 <!-- Main modal -->
-<div
-        id="informationModal"
-        tabindex="-1"
-        aria-hidden="true"
-        class="font-noto fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
->
+<div id="informationModal" tabindex="-1" aria-hidden="true" class="font-noto fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
   <div class="relative w-full max-w-5xl shadow-lg">
     <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -197,23 +193,9 @@
           <div class="w-3.5 h-3.5 bg-amber-500 rounded-3xl"></div>
           <div class="w-3.5 h-3.5 bg-green-500 rounded-3xl"></div>
         </div>
-        <button
-                type="button"
-                class="text-gray-400 bg-transparent hover:text-gray-600 rounded-lg text-xs p-1.5 ml-auto inline-flex items-center"
-                data-modal-hide="informationModal"
-        >
-          <svg
-                  aria-hidden="true"
-                  class="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-                    fill-rule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-            ></path>
+        <button type="button" class="text-gray-400 bg-transparent hover:text-gray-600 rounded-lg text-xs p-1.5 ml-auto inline-flex items-center" data-modal-hide="informationModal">
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
           </svg>
           <span class="sr-only">Close modal</span>
         </button>
@@ -223,19 +205,13 @@
         <p class="font-bold">사전 정보 수집</p>
       </div>
       <!-- Modal footer -->
-      <div
-              class="w-full px-6 pb-6 border-gray-200 rounded-b dark:border-gray-600"
-      >
+      <div class="w-full px-6 pb-6 border-gray-200 rounded-b dark:border-gray-600">
         <div class="modal space-y-3 mb-5">
           <div class="mb-3">
             <label for="workTypeSelect" class="block mb-1">근무 형태</label>
             <div>
               <div id="workType" class="flex space-x-2">
-                <select
-                        name="workType"
-                        id="workTypeSelect"
-                        class="block w-full border-stone-500 rounded"
-                >
+                <select name="workType" id="workTypeSelect" class="block w-full border-stone-500 rounded">
                   <option value="1">정규직</option>
                   <option value="2">계약직</option>
                   <option value="4">인턴직</option>
@@ -254,11 +230,7 @@
             <label for="educationSelect" class="block mb-1">학력</label>
             <div>
               <div id="education" class="flex space-x-2">
-                <select
-                        name="education"
-                        id="educationSelect"
-                        class="block w-full border-stone-500 rounded"
-                >
+                <select name="education" id="educationSelect" class="block w-full border-stone-500 rounded">
                   <option value="0">학력무관</option>
                   <option value="1">고등학교졸업</option>
                   <option value="2">전문대학졸업</option>
