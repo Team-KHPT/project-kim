@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/chat")
@@ -33,9 +34,9 @@ public class ChatController {
     // TODO add examples. Add html code, with js
 
     @ModelAttribute
-    public void addAttributes(HttpServletRequest request, Model model) {
-        model.addAttribute("current_url", request.getRequestURL().toString().split("8090")[1]);
+    public void addAttributes(Model model) {
         model.addAttribute("image", "/icons/black.png");
+        model.addAttribute("chats", new ArrayList<>());
     }
 
     // TODO 이전 기록 가져오기 메소드
@@ -82,7 +83,6 @@ public class ChatController {
         if (!(userPrevData.getCategory() == null && userPrevData.getType() == null && userPrevData.getRegion() == null && userPrevData.getEducation() == null)) {
             model.addAttribute("prev_data", "1");
         }
-
         if (filledDto.getChats().size() == 0) {
             model.addAttribute("questions", questionService.getRandomQuestions());
         }
