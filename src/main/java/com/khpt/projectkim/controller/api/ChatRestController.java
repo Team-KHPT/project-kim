@@ -135,7 +135,6 @@ public class ChatRestController {
                         .builder()
                         .model("gpt-3.5-turbo-16k-0613")
                         .messages(chatMessages)
-                        .n(1)
                         .maxTokens(512)
                         .functions(functionExecutor.getFunctions())
                         .logitBias(new HashMap<>())

@@ -13,14 +13,14 @@ const refreshData = async () => {
 }
 
 const updateData = () => {
-    let container = document.getElementById('container')
+    let container = document.getElementById('result-list')
     container.innerHTML = ''
 
     for (const item of data) {
         let div = document.createElement('a')
         div.setAttribute("data-modal-target", "defaultModal")
         div.setAttribute("data-modal-toggle","defaultModal")
-        div.className = "p-2 flex flex-col border rounded-lg space-y-2 text-stone-600 cursor-pointer"
+        div.className = "p-2 flex flex-col border rounded-lg space-y-2 text-stone-600 cursor-pointer hover:bg-stone-100 hover:shadow-inner"
         div.addEventListener("click", () => {
             console.log(item)
             const modalCompany = document.getElementById("modal-company")
