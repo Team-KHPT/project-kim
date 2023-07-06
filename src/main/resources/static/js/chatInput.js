@@ -59,12 +59,6 @@ function sendMessage(inputValue) {
 
     document.getElementById('chats').appendChild(userChatItem)
 
-    // const chatItems = Array.from(document.getElementById('chats').children).map(function(chatItem) {
-    //     return {
-    //         role: chatItem.classList.contains('assistant') ? 'assistant' : 'user',
-    //         content: chatItem.querySelector('.w-full').textContent
-    //     }
-    // })
     const chatItem = {
         role: "user",
         content: inputValue
@@ -136,11 +130,6 @@ function sendMessage(inputValue) {
                 console.log('Error: ', error);
                 inputAvailable = true
             }
-            // const data = await response.json()
-            //
-            // const assistantChatItem = makeAssistantChatItem(data.content)
-            //
-            // document.getElementById('chats').appendChild(assistantChatItem)
         })
 }
 
@@ -152,7 +141,7 @@ function makeUserChatItem(chat) {
     userImg.classList.add('w-7', 'h-7', 'rounded-lg')
     userImg.src = getUserImage()
 
-    const userText = document.createElement('pre')
+    const userText = document.createElement('span')
     userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg')
     userText.style.whiteSpace = "pre-wrap"
     userText.textContent = chat
@@ -171,7 +160,7 @@ function makeAssistantChatItem(chat) {
     assistantImg.classList.add('w-7', 'h-7', 'rounded-lg')
     assistantImg.src = "/images/logo-rev.png"
 
-    const assistantText = document.createElement('pre')
+    const assistantText = document.createElement('span')
     assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg')
     assistantText.style.whiteSpace = 'pre-wrap'
     assistantText.textContent = chat
