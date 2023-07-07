@@ -7,6 +7,8 @@ let inputAvailable = true
 function removeExampleChat() {
     const exampleChatElem = document.getElementById("example-chat")
     if (exampleChatElem != null) exampleChatElem.remove()
+    const examplesElem = document.getElementById("examples")
+    if (examplesElem != null) examplesElem.remove()
 }
 
 
@@ -37,6 +39,7 @@ chatBtn.addEventListener('click', function (event) {
     }
     sendMessage(chatInput.value)
     chatInput.value = ''
+    inputHandler()
 })
 
 chatInput.addEventListener('keydown', function(event) {
@@ -70,9 +73,13 @@ function sendMessage(inputValue) {
 
     inputAvailable = false
 
+    const chats = document.getElementById('chats')
+
     const userChatItem = makeUserChatItem(inputValue)
 
-    document.getElementById('chats').appendChild(userChatItem)
+    chats.appendChild(userChatItem)
+
+    chats.scrollTo(0, chats.scrollHeight)
 
     const chatItem = {
         role: "user",
@@ -97,16 +104,20 @@ function sendMessage(inputValue) {
                 return
             }
 
+            chats.scrollTo(0, chats.scrollHeight)
+
+
             const assistantChatItem = makeAssistantChatItem("")
 
             document.getElementById('chats').appendChild(assistantChatItem)
 
+            chats.scrollTo(0, chats.scrollHeight)
 
             const eventSource = new EventSource("/chat/events")
             eventSource.addEventListener('message', function(event) {
                 assistantChatItem.lastChild.textContent = assistantChatItem.lastChild.textContent + event.data.toString().replaceAll("%20", " ").replaceAll("%0A", "\n")
-                const chats = document.getElementById('chats')
 
+                const chats = document.getElementById('chats')
                 chats.scrollTo(0, chats.scrollHeight)
             })
             eventSource.addEventListener('function', function(event) {
@@ -189,7 +200,12 @@ function makeAssistantChatItem(chat) {
 
 window.addEventListener("load", async (event) => {
     const res = await fetch("/chat/all")
-    const chats = await res.json()
+    let chats = []
+    await res.json()
+        .then((json) => {
+            chats = json
+        })
+        .catch(() => console.log(''))
     console.log(chats)
     for (const chat of chats) {
         if (chat.role === "user") {
