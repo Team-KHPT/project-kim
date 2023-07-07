@@ -25,6 +25,12 @@ public class UserService {
         return userRepository.findById(Long.parseLong(id)).orElseThrow();
     }
 
+    public boolean userHasPrevData(String id) {
+        User user = getUserByStringId(id);
+
+        return !(user.getCategory() == null && user.getType() == null && user.getEducation() == null && user.getRegion() == null);
+    }
+
     @Transactional
     public void copyResultsToRecentResultsAndClearResults(String id) {
         User user = getUserByStringId(id);

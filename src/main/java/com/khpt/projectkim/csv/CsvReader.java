@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 
 public class CsvReader {
     public static String getDetailedJobCode(String job_mid_code) {
-        String csvFile = "src/main/java/com/khpt/projectkim/csv/job_cd.csv"; // Replace with the actual path to your CSV file
+        String csvFile = "src/main/java/com/khpt/projectkim/csv/job_cd.csv";
         String line;
         String csvSplitBy = ",";
         StringBuilder extractedRowsString = new StringBuilder();
@@ -30,12 +30,12 @@ public class CsvReader {
                 }
             }
 
-        // Print the extracted rows
-        System.out.println(extractedRowsString.toString());
+            // Print the extracted rows
+            System.out.println(extractedRowsString);
 
             extractedRowsString.append("code,keyword\n");
 
-            // Extract rows where 'job_mid_cd' column is 16
+            int cnt = 0;
             while ((line = br.readLine()) != null) {
                 String[] row = line.split(csvSplitBy);
                 if (row.length > jobMidCdIndex && row[jobMidCdIndex].equals(job_mid_code)) {
@@ -45,6 +45,10 @@ public class CsvReader {
 
                     // Append the extracted row to the result string
                     extractedRowsString.append(code).append(",").append(keyword).append("\n");
+                    cnt++;
+                }
+                if (cnt == 50) {
+                    break;
                 }
             }
         } catch (IOException e) {

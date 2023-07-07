@@ -26,7 +26,7 @@
 
     <!--Right Appbar contents-->
     <div class="flex space-x-5 items-center">
-      <a th:if="${name == null}" th:href="|/login?redirect=${ current_url }|" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그인</a>
+      <a id="login-button" th:if="${name == null}" href="/login" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그인</a>
       <span th:if="${name != null}" class="p-2 text-violet-500 font-bold underline" th:text="${name}"></span>
       <a th:if="${name != null}" href="/logout" class="p-2 text-stone-800 font-bold cursor-pointer rounded-lg hover:bg-stone-100">로그아웃</a>
     </div>
@@ -39,37 +39,49 @@
   <!--Body-->
   <div class="relative h-full px-14 pt-7 grid grid-rows-6 grid-cols-4 gap-7 overflow-auto">
 
-    <div id="chats" class="col-span-3 row-span-5 p-5 border rounded-lg shadow-lg space-y-3 overflow-y-scroll no-scrollbar">
-      <div th:if="${chats.size() == 0 && name != null && prev_data != null}" class="assistant flex space-x-3">
-        <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
-        <div class="w-full p-5 bg-violet-100 rounded-lg">
-          <span style="white-space: pre-wrap;">안녕하세요, 김비서님! 제가 직업 상담을 도와드리겠습니다.</span>
-          <div class="question-field" th:each="question : ${questions}">
-            <a th:text="${question}" class="w-fit bg-white text-violet-400 px-4 py-2 rounded-3xl text-sm flex items-center justify-center mt-3 cursor-pointer"></a>
+    <div class="col-span-3 row-span-5 h-full p-5 border rounded-lg shadow-lg relative">
+      <div class="absolute -top-3.5">
+        <span class="font-light px-1 bg-white">채팅</span>
+      </div>
+      <div id="chats" class="h-full flex flex-col space-y-3 overflow-y-scroll no-scrollbar">
+        <div id="example-chat" th:if="${chats.size() == 0&& name != null && prev_data != null}" class="assistant flex space-x-3">
+          <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
+          <div class="w-full p-5 bg-violet-100 rounded-lg">
+            <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요!</span>
+            <div class="question-field" th:each="question : ${questions}">
+              <a th:text="${question}" class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100">나는 문어가 되고 싶어.나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어</a>
+            </div>
           </div>
         </div>
-      </div>
-<!--      <img src="/images/logo-32.png" class="w-7 h-7 rounded-lg">-->
-<!--      <div class="process w-fit mb-2 p-2 pl-4 pr-16 bg-violet-200 rounded-lg text-sm flex flex-col">-->
-<!--        <span>안녕하세요. 저는 사용자님께 알맞는 취업 정보를 제공해 드릴 김비서 입니다.</span>-->
-<!--        <a class="block w-fit bg-white text-violet-400 px-4 py-2 rounded-3xl text-sm flex items-center justify-center mt-3 cursor-pointer">-->
-<!--          나는 문어가 되고 싶어.-->
-<!--        </a>-->
-<!--      </div>-->
-<!--      사전정보가 없을시-->
-      <div th:if="${prev_data == null && name != null}" class="w-full h-full flex flex-col items-center justify-center">
-        <span class="font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>
-        <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton bg-violet-100 text-violet-400 p-2 rounded-3xl text-sm w-1/6 flex items-center justify-center mt-3 cursor-pointer">
-          사전정보 입력하기
-        </a>
+        <!--      <img src="/images/logo-32.png" class="w-7 h-7 rounded-lg">-->
+        <!--      <div class="process w-fit mb-2 p-2 pl-4 pr-16 bg-violet-200 rounded-lg text-sm flex flex-col">-->
+        <!--        <span>안녕하세요. 저는 사용자님께 알맞는 취업 정보를 제공해 드릴 김비서 입니다.</span>-->
+        <!--        <a class="block w-fit bg-white text-violet-400 px-4 py-2 rounded-3xl text-sm flex items-center justify-center mt-3 cursor-pointer">-->
+        <!--          나는 문어가 되고 싶어.-->
+        <!--        </a>-->
+        <!--      </div>-->
+        <!--      사전정보가 없을시-->
+        <div th:if="${prev_data == null && name != null}" class="w-full h-full flex flex-col items-center justify-center">
+          <span class="font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>
+          <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton bg-violet-100 text-violet-400 p-2 rounded-3xl text-sm w-1/6 flex items-center justify-center mt-3 cursor-pointer">
+            사전정보 입력하기
+          </a>
+        </div>
       </div>
     </div>
 
-    <div id="container" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="row-span-5 h-full p-2 border rounded-lg shadow-lg flex flex-col space-y-2 overflow-y-scroll no-scrollbar">
-      <div class="w-full h-full flex items-center justify-center">
-        <span class="font-semibold">분석 결과가 없습니다.</span>
+
+    <div class="row-span-5 h-full p-3 border rounded-lg shadow-lg relative">
+      <div class="absolute -top-3.5">
+        <span class="font-light px-1 bg-white">분석 결과</span>
+      </div>
+      <div id="result-list" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="h-full flex flex-col space-y-2 overflow-y-scroll no-scrollbar">
+        <div class="w-full h-full flex items-center justify-center">
+          <span class="font-semibold">분석 결과가 없습니다.</span>
+        </div>
       </div>
     </div>
+
 
     <div class="col-span-3 relative h-24">
       <div class="absolute bottom-0 left-0 w-full bg-white">
@@ -98,7 +110,9 @@
 
     <div class="row-span-1 relative h-24">
       <div class="absolute bottom-0 w-full">
-        <button data-modal-target="informationModal" data-modal-toggle="informationModal" class=" modalOpenButton top-0 w-full p-4 border rounded-lg shadow-lg text-stone-500">사전 정보 수정</button>
+        <button data-modal-target="informationModal" data-modal-toggle="informationModal" class=" modalOpenButton top-0 w-full p-4 border rounded-lg shadow-lg text-stone-500 hover:bg-stone-100">
+          사전 정보 수정
+        </button>
         <div class="h-7"></div>
       </div>
     </div>
@@ -315,6 +329,10 @@
     function getUserImage() {
         return [[${image}]]
     }
+</script>
+<script>
+  const loginBtn = document.getElementById("login-button")
+  if (loginBtn !== null) loginBtn.setAttribute("href", `/login?redirect=${location.href}`)
 </script>
 <script src="/js/chatInput.js"></script>
 <script src="/js/chatResult.js"></script>
