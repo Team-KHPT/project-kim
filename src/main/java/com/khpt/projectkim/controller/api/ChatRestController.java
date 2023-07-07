@@ -3,12 +3,12 @@ package com.khpt.projectkim.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.khpt.projectkim.csv.CsvReader;
+import com.khpt.projectkim.dto.ExampleChat;
+import com.khpt.projectkim.dto.ExampleResult;
+import com.khpt.projectkim.entity.Example;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.functions.ApiRequest;
-import com.khpt.projectkim.service.ApiRequestService;
-import com.khpt.projectkim.service.ChatService;
-import com.khpt.projectkim.service.SimplifyJsonService;
-import com.khpt.projectkim.service.UserService;
+import com.khpt.projectkim.service.*;
 import com.theokanning.openai.completion.chat.*;
 import com.theokanning.openai.service.FunctionExecutor;
 import com.theokanning.openai.service.OpenAiService;
@@ -41,6 +41,8 @@ public class ChatRestController {
 
     private final UserService userService;
 
+    private final QuestionService questionService;
+
     private static final ObjectMapper mapper = defaultObjectMapper();
 
 
@@ -55,6 +57,38 @@ public class ChatRestController {
     @PostConstruct
     public void init() {
         this.openAiService = new OpenAiService(token);
+    }
+
+    @PostMapping("/example")
+    public ExampleResult exampleChat(HttpSession session, @RequestBody String id) {
+        if (session.getAttribute("user") != null) {
+            System.out.println("already login. no example");
+            return null;
+        }
+
+        Example example = questionService.getExampleByStringId(id);
+        ExampleResult exampleResult = new ExampleResult();
+        exampleResult.setResult(example.getResult());
+        exampleResult.setResponse(example.getResponse());
+        return exampleResult;
+    }
+
+    @GetMapping("/example")
+    public List<ExampleChat> getExampleChat(HttpSession session) {
+        if (session.getAttribute("user") != null) {
+            System.out.println("already login. no example");
+            return null;
+        }
+
+        List<Example> exampleList = questionService.getRandomExamples();
+        System.out.println(exampleList);
+
+        List<ExampleChat> exampleChats = new ArrayList<>();
+        for (Example example : exampleList) {
+            exampleChats.add(new ExampleChat(example.getId().toString(), example.getQuestion()));
+        }
+
+        return exampleChats;
     }
 
     @GetMapping("/events")

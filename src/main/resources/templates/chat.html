@@ -44,12 +44,21 @@
         <span class="font-light px-1 bg-white">채팅</span>
       </div>
       <div id="chats" class="h-full flex flex-col space-y-3 overflow-y-scroll no-scrollbar">
+        <div id="examples" th:if="${name == null}" class="assistant flex space-x-3">
+          <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
+          <div class="w-full p-5 bg-violet-100 rounded-lg">
+            <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요! (비로그인 사용자는 미리 저장된 답변이 제공됩니다)</span>
+            <div>
+<!--              <a class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100"></a>-->
+            </div>
+          </div>
+        </div>
         <div id="example-chat" th:if="${chats.size() == 0&& name != null && prev_data != null}" class="assistant flex space-x-3">
           <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
           <div class="w-full p-5 bg-violet-100 rounded-lg">
             <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요!</span>
             <div class="question-field" th:each="question : ${questions}">
-              <a th:text="${question}" class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100">나는 문어가 되고 싶어.나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어나는 문어가 되고 싶어</a>
+              <a th:text="${question}" class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100"></a>
             </div>
           </div>
         </div>
@@ -62,8 +71,8 @@
         <!--      </div>-->
         <!--      사전정보가 없을시-->
         <div th:if="${prev_data == null && name != null}" class="w-full h-full flex flex-col items-center justify-center">
-          <span class="font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>
-          <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton bg-violet-100 text-violet-400 p-2 rounded-3xl text-sm w-1/6 flex items-center justify-center mt-3 cursor-pointer">
+          <span class="text-lg font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>
+          <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton bg-violet-100 text-violet-500 border border-violet-300 px-5 py-2 rounded-full w-fit flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-violet-100/50">
             사전정보 입력하기
           </a>
         </div>
@@ -110,7 +119,7 @@
 
     <div class="row-span-1 relative h-24">
       <div class="absolute bottom-0 w-full">
-        <button data-modal-target="informationModal" data-modal-toggle="informationModal" class=" modalOpenButton top-0 w-full p-4 border rounded-lg shadow-lg text-stone-500 hover:bg-stone-100">
+        <button id="info-modal" data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton top-0 w-full p-4 border rounded-lg shadow-lg text-stone-500 hover:bg-stone-100">
           사전 정보 수정
         </button>
         <div class="h-7"></div>
@@ -336,7 +345,7 @@
 </script>
 <script src="/js/chatInput.js"></script>
 <script src="/js/chatResult.js"></script>
-<script src="/js/flowbite.min.js"></script>
-<script src="/js/information.js"></script>
 <script src="/js/question.js"></script>
+<script src="/js/information.js"></script>
+<script src="/js/flowbite.min.js"></script>
 </html>
