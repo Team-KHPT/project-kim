@@ -12,6 +12,10 @@ const refreshData = async () => {
         })
 }
 
+const setData = async (newData) => {
+    data = newData
+}
+
 const updateData = () => {
     let container = document.getElementById('result-list')
     container.innerHTML = ''
