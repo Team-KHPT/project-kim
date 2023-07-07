@@ -12,7 +12,7 @@
 
 **Github 주소**
 
-[**https://github.com/Team-KHPT/Project_Kim**](https://github.com/Team-KHPT/project-kim)
+[**https://github.com/Team-KHPT/project-kim**](https://github.com/Team-KHPT/project-kim)
 
 **서비스 가이드**
 
