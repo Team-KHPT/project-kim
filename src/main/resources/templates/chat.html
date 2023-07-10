@@ -80,7 +80,7 @@
     </div>
 
 
-    <div class="row-span-5 h-full py-5 px-2.5 border rounded-lg shadow-lg relative">
+    <div class="row-span-5 h-full py-5 px-2.5 border rounded-lg shadow-md relative">
       <div class="absolute -top-3.5">
         <span class="font-light px-2 bg-white">분석 결과</span>
       </div>
@@ -96,7 +96,7 @@
       <div class="absolute bottom-0 left-0 w-full bg-white">
         <form class="stretch flex flex-row">
           <div class="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
-            <div class="flex flex-col w-full flex-grow py-4 pl-4 relative border border-black/10 bg-stone-50 rounded-lg shadow-lg">
+            <div class="flex flex-col w-full flex-grow py-4 pl-4 relative border border-black/10 bg-stone-50 rounded-lg shadow-md">
               <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>
               <button id="chat-btn" class="absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-violet-500 text-white bottom-1.5 transition-colors disabled:opacity-40" disabled="">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
@@ -119,7 +119,7 @@
 
     <div class="row-span-1 relative h-24">
       <div class="absolute bottom-0 w-full">
-        <button id="info-modal" data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton top-0 w-full p-4 border rounded-lg shadow-lg text-stone-500 hover:bg-stone-100">
+        <button id="info-modal" data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton top-0 w-full p-4 border rounded-lg shadow-md text-stone-500 hover:bg-stone-100">
           사전 정보 수정
         </button>
         <div class="h-7"></div>
@@ -130,7 +130,7 @@
 
 </div>
 <div id="defaultModal" tabindex="-1" aria-hidden="true" class="font-noto absolute top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-  <div class="relative w-full max-w-5xl max-h-full shadow-lg">
+  <div class="relative w-full max-w-5xl max-h-full shadow-md">
     <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
       <!-- Modal header -->
@@ -151,7 +151,7 @@
           <p id="modal-company" class="text-lg text-stone-500"></p>
           <p id="modal-title" class="text-xl font-bold"></p>
         </div>
-        <a id="modal-url" target="_blank" class="cursor-pointer block bg-violet-200 text-violet-500 p-2 rounded-lg text-base">
+        <a id="modal-url" target="_blank" class="cursor-pointer block bg-violet-200 text-violet-500 p-2 rounded-lg text-base hover:bg-violet-100">
           보러가기
         </a>
       </div>
@@ -206,7 +206,7 @@
 
 <!-- Main modal -->
 <div id="informationModal" tabindex="-1" aria-hidden="true" class="font-noto fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-  <div class="relative w-full max-w-5xl shadow-lg">
+  <div class="relative w-full max-w-5xl shadow-md">
     <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
       <!-- Modal header -->
