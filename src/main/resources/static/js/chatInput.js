@@ -202,7 +202,7 @@ function makeAssistantChatItem(chat, safe=true) {
     return assistantChatItem
 }
 
-window.addEventListener("load", async (event) => {
+window.addEventListener("load", async () => {
     const res = await fetch("/chat/all")
     let chats = []
     await res.json()
@@ -218,5 +218,5 @@ window.addEventListener("load", async (event) => {
             document.getElementById('chats').appendChild(makeAssistantChatItem(chat.content))
         }
     }
-    await refreshData()
+    await refreshData(true)
 })

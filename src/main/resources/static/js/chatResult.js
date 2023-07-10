@@ -1,13 +1,16 @@
 let data = []
 
 
-const refreshData = async () => {
+const refreshData = async (isInit = false) => {
     await fetch("/result")
         .then(async (res) => {
             data = await res.json()
             console.log(data)
             if (data.length > 0) {
                 updateData()
+            }
+            if (data.length <= 3 && !isInit) {
+                alert("분석 결과가 적습니다. 사전 정보의 범위를 수정해주세요.\n(Or.. maybe you're looking for special jobs..!)")
             }
         })
 }
