@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let education = "";
             if (res.education !== null) education = res.education.split(",");
             let workType = "";
-            if (res.type !== null) workType = res.type.split(",");
+            if (res.workType !== null) workType = res.workType.split(",");
 
             const modalButton = document.querySelectorAll('.modalOpenButton');
             modalButton.forEach(function (button){
