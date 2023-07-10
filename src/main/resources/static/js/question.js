@@ -59,8 +59,8 @@ async function getExamples() {
                         chats.appendChild(assistantChatItem)
 
                         setTimeout(() => {
-                            chats.appendChild(makeAssistantChatItem(`위 답변은 예시 답변입니다. 모든 기능을 이용하기 위해선 <a class="text-violet-500" href="/login?redirect=${location.href}">로그인</a>을 해주세요.    <a href="/chat" class="px-4 py-2 bg-violet-200 rounded-lg text-sm hover:bg-violet-300">다시하기</a>`, false))
-                        }, 2000)
+                            chats.appendChild(makeAssistantChatItem(`<div class="flex flex-col space-y-2"><div>위 답변은 예시 답변입니다. 모든 기능을 이용하기 위해선 <a class="text-violet-500" href="/login?redirect=${location.href}">로그인</a>을 해주세요.</div><a href="/chat" class="w-fit px-4 py-2 bg-violet-200 rounded-lg text-sm hover:bg-violet-300">다시하기</a></div>`, false))
+                        }, 1500)
 
                         await setData(JSON.parse(data.result))
                         updateData()
