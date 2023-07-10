@@ -39,7 +39,6 @@ chatBtn.addEventListener('click', function (event) {
     }
     sendMessage(chatInput.value)
     chatInput.value = ''
-    inputHandler()
 })
 
 chatInput.addEventListener('keydown', function(event) {
@@ -57,6 +56,7 @@ chatInput.addEventListener('keydown', function(event) {
 
         sendMessage(this.value)
         this.value = ''
+        inputHandler()
     }
 })
 
@@ -179,7 +179,7 @@ function makeUserChatItem(chat) {
     return userChatItem
 }
 
-function makeAssistantChatItem(chat) {
+function makeAssistantChatItem(chat, safe=true) {
     const assistantChatItem = document.createElement('div')
     assistantChatItem.classList.add('assistant', 'flex', 'space-x-3')
 
@@ -190,7 +190,11 @@ function makeAssistantChatItem(chat) {
     const assistantText = document.createElement('span')
     assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg')
     assistantText.style.whiteSpace = 'pre-wrap'
-    assistantText.textContent = chat
+    if (safe) {
+        assistantText.textContent = chat
+    } else {
+        assistantText.innerHTML = chat
+    }
 
     assistantChatItem.appendChild(assistantImg)
     assistantChatItem.appendChild(assistantText)
