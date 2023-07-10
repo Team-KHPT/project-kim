@@ -58,6 +58,8 @@ async function getExamples() {
                         const assistantChatItem = makeAssistantChatItem(data.response)
                         chats.appendChild(assistantChatItem)
 
+                        chats.appendChild(makeAssistantChatItem("위 답변은 예시 답변입니다. 모든 기능을 이용하기 위해선 로그인을 해주세요."))
+
                         await setData(JSON.parse(data.result))
                         updateData()
                     })
