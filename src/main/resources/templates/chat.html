@@ -39,16 +39,16 @@
   <!--Body-->
   <div class="relative h-full px-14 pt-7 grid grid-rows-6 grid-cols-4 gap-7 overflow-auto">
 
-    <div class="col-span-3 row-span-5 h-full p-5 border rounded-lg shadow-lg relative">
+    <div class="col-span-3 row-span-5 h-full py-5 px-2.5 border rounded-lg shadow-md relative">
       <div class="absolute -top-3.5">
-        <span class="font-light px-1 bg-white">채팅</span>
+        <span class="font-light px-2 bg-white">채팅</span>
       </div>
-      <div id="chats" class="h-full flex flex-col space-y-3 overflow-y-scroll">
+      <div id="chats" class="h-full px-2.5 flex flex-col space-y-3 overflow-y-scroll">
         <div id="examples" th:if="${name == null}" class="assistant flex space-x-3">
           <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
           <div class="w-full p-5 bg-violet-100 rounded-lg">
             <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요! (비로그인 사용자는 미리 저장된 답변이 제공됩니다)</span>
-            <div>
+            <div class="example-list">
 <!--              <a class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100"></a>-->
             </div>
           </div>
@@ -80,13 +80,13 @@
     </div>
 
 
-    <div class="row-span-5 h-full py-3 px-1.5 border rounded-lg shadow-lg relative">
+    <div class="row-span-5 h-full py-5 px-2.5 border rounded-lg shadow-lg relative">
       <div class="absolute -top-3.5">
-        <span class="font-light px-1 bg-white">분석 결과</span>
+        <span class="font-light px-2 bg-white">분석 결과</span>
       </div>
-      <div id="result-list" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="h-full px-1.5 flex flex-col space-y-2 overflow-y-scroll ">
+      <div id="result-list" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="h-full px-2.5 flex flex-col space-y-2 overflow-y-scroll ">
         <div class="w-full h-full flex items-center justify-center">
-          <span class="font-semibold">분석 결과가 없습니다.</span>
+          <span class="">분석 결과가 없습니다.</span>
         </div>
       </div>
     </div>
@@ -109,9 +109,9 @@
         <div class="h-7 pt-2 text-center text-stone-500 space-x-1">
           <span class="text-xs">Powered by</span>
           <span class="text-xs">
-            <a class="text-violet-400" href="https://openai.com" target="_blank">OpenAI</a>
+            <a class="text-violet-500" href="https://openai.com" target="_blank">OpenAI</a>
             <span class="text-sm">|</span>
-            <a class="text-violet-400" href="https://saramin.co.kr" target="_blank">Saramin</a>
+            <a class="text-violet-500" href="https://saramin.co.kr" target="_blank">Saramin</a>
           </span>
         </div>
       </div>
@@ -147,9 +147,9 @@
       </div>
       <!-- Modal body -->
       <div class="p-6 space-x-2 flex items-center justify-between">
-        <div class="flex space-x-8">
-          <p id="modal-company" class="text-lg text-stone-500 font-bold"></p>
-          <p id="modal-title" class="text-xl dark:text-gray-400 font-extrabold"></p>
+        <div class="flex flex-col space-y-2">
+          <p id="modal-company" class="text-lg text-stone-500"></p>
+          <p id="modal-title" class="text-xl font-bold"></p>
         </div>
         <a id="modal-url" target="_blank" class="cursor-pointer block bg-violet-200 text-violet-500 p-2 rounded-lg text-base">
           보러가기
