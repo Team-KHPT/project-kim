@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,10 +22,10 @@ public class UserService {
         return userRepository.findById(Long.parseLong(id)).orElseThrow();
     }
 
-    public boolean userHasPrevData(String id) {
-        User user = getUserByStringId(id);
-
-        return !(user.getCategory() == null && user.getType() == null && user.getEducation() == null && user.getRegion() == null);
+    public boolean userHasNoPrevData(User user) {
+        Boolean isAllNull = user.getCategory() == null && user.getType() == null && user.getEducation() == null && user.getRegion() == null;
+        Boolean isAllBlank = Objects.equals(user.getCategory(), "") && Objects.equals(user.getType(), "") && Objects.equals(user.getEducation(), "") && Objects.equals(user.getRegion(), "");
+        return isAllNull || isAllBlank;
     }
 
     @Transactional

@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let education = "";
             if (res.education !== null) education = res.education.split(",");
             let workType = "";
-            if (res.type !== null) workType = res.type.split(",");
+            if (res.workType !== null) workType = res.workType.split(",");
 
             const modalButton = document.querySelectorAll('.modalOpenButton');
             modalButton.forEach(function (button){
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let newDiv = document.createElement("div");
             newDiv.id = selectValue;
             newDiv.className =
-                "info-div font-noto w-40 h-10 bg-stone-200 mt-2 mb-4 mr-2 px-3 py-5 flex items-center justify-between rounded-lg space-x-2 text-gray-600";
+                "info-div font-noto bg-stone-200 my-2 mr-2 p-2 flex items-center justify-between rounded-lg space-x-6 text-gray-600";
 
             // 선택된 정보를 div의 innerText로 추가
             newDiv.innerText = selectText;

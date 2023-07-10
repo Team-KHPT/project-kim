@@ -224,17 +224,19 @@
         </button>
       </div>
       <!-- Modal body -->
-      <div class="p-6 space-x-2 flex items-center justify-between">
-        <p class="font-bold">사전 정보 수집</p>
+      <div class="p-6 space-y-2">
+        <p class="font-bold text-xl">사전 정보 수집</p>
+        <p class="text-stone-500">적절히 입력해야 김비서가 정확한 답변을 제공해줍니다!</p>
       </div>
       <!-- Modal footer -->
       <div class="w-full px-6 pb-6 border-gray-200 rounded-b dark:border-gray-600">
         <div class="modal space-y-3 mb-5">
           <div class="mb-3">
-            <label for="workTypeSelect" class="block mb-1">근무 형태</label>
+            <label for="workTypeSelect" class="block mb-1">희망 근무 형태</label>
             <div>
-              <div id="workType" class="flex space-x-2">
-                <select name="workType" id="workTypeSelect" class="block w-full border-stone-500 rounded">
+              <div id="workType" class="flex">
+                <select name="workType" id="workTypeSelect" class="optionList block w-full border-stone-500 rounded">
+                  <option value="-1">근무 형태 선택</option>
                   <option value="1">정규직</option>
                   <option value="2">계약직</option>
                   <option value="4">인턴직</option>
@@ -252,8 +254,9 @@
           <div class="mb-3">
             <label for="educationSelect" class="block mb-1">학력</label>
             <div>
-              <div id="education" class="flex space-x-2">
-                <select name="education" id="educationSelect" class="block w-full border-stone-500 rounded">
+              <div id="education" class="flex">
+                <select name="education" id="educationSelect" class="optionList block w-full border-stone-500 rounded">
+                  <option value="-1">학력 선택</option>
                   <option value="0">학력무관</option>
                   <option value="1">고등학교졸업</option>
                   <option value="2">전문대학졸업</option>
@@ -268,10 +271,11 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="categorySelect" class="block mb-1">직무</label>
+            <label for="categorySelect" class="block mb-1">희망 직무 구분</label>
             <div>
-              <div id="category" class="flex space-x-2">
-                <select name="category" id="categorySelect" class="category block w-full border-stone-500 rounded">
+              <div id="category" class="flex">
+                <select name="category" id="categorySelect" class="optionList category block w-full border-stone-500 rounded">
+                  <option value="-1">직무 선택</option>
                   <option value="16">기획·전략</option>
                   <option value="14">마케팅·홍보</option>
                   <option value="3">회계·재무</option>
@@ -290,14 +294,11 @@
             </div>
           </div>
           <div class="mb-3">
-            <label for="regionSelect" class="block mb-1">지역</label>
+            <label for="regionSelect" class="block mb-1">취업 희망 지역</label>
             <div>
-              <div id="region" class="flex space-x-2">
-                <select
-                        name="region"
-                        id="regionSelect"
-                        class="block w-full border-stone-500 rounded"
-                >
+              <div id="region" class="flex">
+                <select name="region" id="regionSelect" class=" optionList block w-full border-stone-500 rounded">
+                  <option value="-1">지역 선택</option>
                   <option value="101000">서울</option>
                   <option value="102000">경기</option>
                   <option value="103000">광주</option>
@@ -322,7 +323,7 @@
             </div>
           </div>
           <div class="flex justify-end">
-            <a id="sendInfoButton" data-modal-hide="informationModal" class="block bg-violet-200 text-violet-500 p-2 rounded-lg text-sm cursor-pointer">
+            <a id="sendInfoButton" data-modal-hide="informationModal" class="block bg-violet-200 text-violet-500 py-2 px-5 rounded-lg cursor-pointer">
               계속하기
             </a>
           </div>
@@ -346,6 +347,6 @@
 <script src="/js/chatInput.js"></script>
 <script src="/js/chatResult.js"></script>
 <script src="/js/question.js"></script>
-<script src="/js/information.js"></script>
+<script src="/js/information2.js"></script>
 <script src="/js/flowbite.min.js"></script>
 </html>
