@@ -1,5 +1,6 @@
 package com.khpt.projectkim.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -8,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPrevData {
+    @JsonProperty(value = "workType")
     private String type;  // 근무 형태
 
     private String region; // 지역
