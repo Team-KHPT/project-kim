@@ -78,7 +78,7 @@ public class ChatController {
         model.addAttribute("results", filledDto.getResults());
         model.addAttribute("chats", filledDto.getChats());
         UserPrevData userPrevData = userService.getUserPrevData(userid);
-        if (!(userPrevData.getCategory() == null && userPrevData.getType() == null && userPrevData.getRegion() == null && userPrevData.getEducation() == null)) {
+        if (!userService.userHasNoPrevData(user)) {
             model.addAttribute("prev_data", "1");
         }
         if (filledDto.getChats().size() == 0) {
