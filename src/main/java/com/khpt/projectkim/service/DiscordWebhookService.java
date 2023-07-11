@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.awt.Color;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.IOException;
@@ -30,32 +32,42 @@ public class DiscordWebhookService {
             return;
         }
 
-        String strDate = sdf.format(new Date());
-
         DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
-                .setTitle("방금 로그인 함")
+                .setTitle("침입 경보")
                 .setDescription("")
                 .setColor(Color.LIGHT_GRAY)
                 .addField("id", userId, true)
                 .addField("name", userName, true)
-                .addField("datetime", strDate, true);
+                .setFooter(sdf.format(new Date()), "");
 
         embedQueue.add(embed);
         userQueue.add(userId);
     }
 
-    public void queueErrorLog(String userId, String message) {
-        String strDate = sdf.format(new Date());
+    public void queueErrorLog(String userId, String message, Throwable e) {
+        if (userQueue.contains(userId)) {
+            return;
+        }
+
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+
+        String error = e.toString();
+        log.info("err: {}", e.toString());
+        String trace = sw.toString();
+        log.info("trace: {}", trace);
 
         DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
-                .setTitle("방금 로그인 함")
+                .setTitle("김비서가 왜 그럴까")
                 .setDescription("")
                 .setColor(Color.LIGHT_GRAY)
                 .addField("id", userId, true)
-                .addField("datetime", strDate, true)
-                .addField("message", message, false);
+                .addField("message", message, false)
+                .addField("error", error, false)
+                .setFooter(sdf.format(new Date()), "");
 
         embedQueue.add(embed);
+        userQueue.add(userId);
     }
 
     @Scheduled(fixedRate = 3000)
@@ -87,6 +99,7 @@ public class DiscordWebhookService {
             webhook.execute();
         } catch (IOException e) {
             log.error("Webhook: send fail");
+            e.printStackTrace();
         }
     }
 

@@ -18,15 +18,11 @@ public class QuestionService {
     private final ExampleRepository exampleRepository;
 
     public List<String> getRandomQuestions() {
-        List<String> questionList = questionRepository.findRandomEntities();
-        System.out.println(questionList);
-        return questionList;
+        return questionRepository.findRandomEntities();
     }
 
     public List<Example> getRandomExamples() {
-        List<Example> exampleList = exampleRepository.findRandomEntities();
-        System.out.println(exampleList);
-        return exampleList;
+        return exampleRepository.findRandomEntities();
     }
 
     public Example getExampleByStringId(String id) {

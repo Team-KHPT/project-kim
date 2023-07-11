@@ -49,6 +49,8 @@ public class ChatRestController {
 
     private final ChatRepository chatRepository;
 
+    private final DiscordWebhookService discordWebhookService;
+
     private static final ObjectMapper mapper = defaultObjectMapper();
 
 
@@ -165,6 +167,9 @@ public class ChatRestController {
 
                                 return mapper.writeValueAsString(simplifiedJobs);
                             } catch (IOException e) {
+                                log.error("{} Event: IOException in functions", userId);
+                                discordWebhookService.queueErrorLog(userId, "IOException in functions", e);
+
                                 throw new RuntimeException(e);
                             }
                         })
@@ -216,6 +221,9 @@ public class ChatRestController {
                                     emitter.send(SseEmitter.event().name("process").data("Preparing API request"));
                                 }
                             } catch (IOException e) {
+                                log.error("{} Event: IOException in first completion", userId);
+                                discordWebhookService.queueErrorLog(userId, "IOException in first completion", e);
+
                                 emitter.send(SseEmitter.event().name("err").data("ChatGPT 응답중 에러"));
                                 emitter.completeWithError(e);
                                 throw new RuntimeException(e);
@@ -314,6 +322,9 @@ public class ChatRestController {
                                                         emitter.send(SseEmitter.event().name("message").data(message.getContent().replaceAll(" ", "%20").replaceAll("\n", "%0A")));
                                                     }
                                                 } catch (IOException e) {
+                                                    log.error("{} Event: IOException in second completion", userId);
+                                                    discordWebhookService.queueErrorLog(userId, "IOException in second completion", e);
+
                                                     emitter.send(SseEmitter.event().name("err").data("ChatGPT functions 응답중 에러"));
                                                     emitter.completeWithError(e);
                                                     throw new RuntimeException(e);
