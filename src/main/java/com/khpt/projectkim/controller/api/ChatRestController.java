@@ -137,10 +137,10 @@ public class ChatRestController {
                             if (w.getKeyword() != null) params.put("keywords", w.getKeyword());
                             if (w.getSort() != null) params.put("sort", String.valueOf(w.getSort()));
                             if (w.getCodes() != null) params.put("job-cd", w.getCodes());  // TODO 작동 하는지 확인
-                            if (user.getCategory() != null) params.put("job-mid-cd", user.getCategory());
-                            if (user.getType() != null) params.put("job_type", user.getType());
-                            if (user.getEducation() != null) params.put("edu_lv", user.getEducation());
-                            if (user.getRegion() != null) params.put("loc_mcd", user.getRegion());
+                            if (user.getCategory() != null && !user.getCategory().equals("")) params.put("job-mid-cd", user.getCategory());
+                            if (user.getType() != null && !user.getType().equals("")) params.put("job_type", user.getType());
+                            if (user.getEducation() != null && !user.getEducation().equals("")) params.put("edu_lv", user.getEducation());
+                            if (user.getRegion() != null && !user.getRegion().equals("")) params.put("loc_mcd", user.getRegion());
                             params.put("count", "100");
                             params.put("access-key", saramin_key);
 
