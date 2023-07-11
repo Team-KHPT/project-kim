@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-        <div id="example-chat" th:if="${chats.size() == 0&& name != null && prev_data != null}" class="assistant flex space-x-3">
+        <div id="example-chat" th:if="${chats.size() == 0 && name != null && prev_data != null}" class="assistant flex space-x-3">
           <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
           <div class="w-full p-5 bg-violet-100 rounded-lg">
             <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요!</span>
@@ -70,7 +70,7 @@
         <!--        </a>-->
         <!--      </div>-->
         <!--      사전정보가 없을시-->
-        <div th:if="${prev_data == null && name != null}" class="w-full h-full flex flex-col items-center justify-center">
+        <div th:if="${prev_data == null && name != null && chats.size() == 0}" class="w-full h-full flex flex-col items-center justify-center">
           <span class="text-lg font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>
           <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton bg-violet-100 text-violet-500 border border-violet-300 px-5 py-2 rounded-full w-fit flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-violet-100/50">
             사전정보 입력하기
