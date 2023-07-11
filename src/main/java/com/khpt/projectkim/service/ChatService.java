@@ -9,6 +9,7 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ChatService {
+
+    private final UserService userService;
 
     private final UserRepository userRepository;
 
@@ -40,6 +43,23 @@ public class ChatService {
         log.debug("{} ChatService: total size {}", userId, test);
 
         return extractListFromUserDto;
+    }
+
+    public void deleteLastTwoChat(String userId) {
+        User user = userService.getUserByStringId(userId);
+
+        List<Chat> chatItems = user.getChats();
+        if (chatItems.size() >= 2) {
+            if (chatItems.get(chatItems.size() - 1).getRole() == ChatMessageRole.ASSISTANT) {
+                chatItems.remove(chatItems.size() - 1);
+                chatItems.remove(chatItems.size() - 1);
+            } else {
+                chatItems.remove(chatItems.size() - 1);
+            }
+
+        }
+        user.setChats(chatItems);
+        userRepository.save(user);
     }
 
     @Transactional

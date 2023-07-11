@@ -405,7 +405,14 @@ public class ChatRestController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteLastTwoChatItems() {
+    public ResponseEntity<String> deleteLastTwoChatItems(HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            log.info("Chat delete: No session");
+            return ResponseEntity.notFound().build();
+        }
+
+        String userId = session.getAttribute("user").toString();
+
         List<Chat> chatItems = chatRepository.findAll();
         int size = chatItems.size();
         if (size >= 2) {
