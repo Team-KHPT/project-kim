@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/login")
+@Slf4j
 public class LoginController {
     @GetMapping
     public String loginPage(HttpSession session, HttpServletResponse response, Model model, @RequestParam(value = "redirect", defaultValue = "/") String uri) throws IOException {
         if (session.getAttribute("user") != null) {
+            log.info("Login: already login");
             response.sendRedirect("/");
         }
+
+        log.info("Login: page show");
 
         model.addAttribute("redirect_uri", uri);
         return "login";
