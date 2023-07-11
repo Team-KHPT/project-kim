@@ -1,12 +1,12 @@
 package com.khpt.projectkim.controller.web;
 
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
-import com.khpt.projectkim.dto.UserPrevData;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.service.ChatService;
 import com.khpt.projectkim.service.QuestionService;
 import com.khpt.projectkim.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/chat")
 @RequiredArgsConstructor
+@Slf4j
 public class ChatController {
 
     private final ChatService chatService;
@@ -26,10 +27,6 @@ public class ChatController {
     private final UserService userService;
 
     private final QuestionService questionService;
-
-    // TODO check if prev data exist
-    // TODO add design if no prev data is provided
-    // TODO add examples. Add html code, with js
 
     @ModelAttribute
     public void addAttributes(Model model) {
@@ -42,7 +39,7 @@ public class ChatController {
     @GetMapping("/new")
     public String newChat(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
-            System.out.println("Create new chat failed. No session");
+            log.info("Chat new: Create new chat failed. No session");
             response.sendRedirect("/");
             return null;
         }
@@ -60,16 +57,15 @@ public class ChatController {
     @GetMapping
     public String chat(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
-            System.out.println("userid is null");
+            log.info("Chat: without login");
             return "chat";
         }
         String userid = session.getAttribute("user").toString();
-        System.out.println(userid);
 
         ExtractListFromUserDto filledDto = chatService.getListFromUser(userid);
 
         User user = filledDto.getUser();
-        System.out.println(user.getLogin());
+        log.info("{} Chat: with login {}", userid, user.getLogin());
 
         model.addAttribute("name", user.getLogin());
         model.addAttribute("image", user.getPicture());
@@ -77,7 +73,7 @@ public class ChatController {
         model.addAttribute("recent_results", filledDto.getRecentResults());
         model.addAttribute("results", filledDto.getResults());
         model.addAttribute("chats", filledDto.getChats());
-        UserPrevData userPrevData = userService.getUserPrevData(userid);
+
         if (!userService.userHasNoPrevData(user)) {
             model.addAttribute("prev_data", "1");
         }
