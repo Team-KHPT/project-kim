@@ -32,13 +32,13 @@ chatInput.addEventListener('input', function() {
 })
 
 chatBtn.addEventListener('click', function (event) {
-    inputHandler()
     event.preventDefault()
     if (!inputAvailable) {
         return
     }
     sendMessage(chatInput.value)
     chatInput.value = ''
+    inputHandler()
 })
 
 chatInput.addEventListener('keydown', function(event) {
@@ -115,7 +115,8 @@ function sendMessage(inputValue) {
 
             const eventSource = new EventSource("/chat/events")
             eventSource.addEventListener('message', function(event) {
-                assistantChatItem.lastChild.textContent = assistantChatItem.lastChild.textContent + event.data.toString().replaceAll("%20", " ").replaceAll("%0A", "\n")
+                assistantChatItem.lastChild.firstChild.textContent = assistantChatItem.lastChild.firstChild.textContent + event.data.toString().replaceAll("%20", " ").replaceAll("%0A", "\n")
+
 
                 const chats = document.getElementById('chats')
                 chats.scrollTo(0, chats.scrollHeight)
@@ -126,14 +127,14 @@ function sendMessage(inputValue) {
             eventSource.addEventListener('process', function(event) {
                 console.log(event.data)
                 const chats = document.getElementById('chats')
-                const processElem = chats.querySelector(".process span")
+                const processElem = chats.querySelector("div .process span")
                 if (event.data === "fine") {
                     processElem.textContent = ""
                     return
                 }
                 if (processElem == null) {
                     const process = createCustomElement(event.data)
-                    chats.lastChild.lastChild.appendChild(process)
+                    chats.lastChild.lastChild.firstChild.appendChild(process)
                 } else {
                     processElem.textContent = event.data
                 }
