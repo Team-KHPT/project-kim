@@ -3,6 +3,7 @@ package com.khpt.projectkim.service;
 import com.khpt.projectkim.dto.ExtractListFromUserDto;
 import com.khpt.projectkim.entity.Chat;
 import com.khpt.projectkim.entity.User;
+import com.khpt.projectkim.repository.ChatRepository;
 import com.khpt.projectkim.repository.UserRepository;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
