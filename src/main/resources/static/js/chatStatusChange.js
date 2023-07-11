@@ -4,18 +4,26 @@ function addIconsToChat() {
 
     copyBtns.forEach(btn => {
         btn.addEventListener("click", () => {
-            const text = btn.parentNode.parentNode.children[0]
-            console.log(text)
-            const range = document.createRange();
-            range.selectNode(text);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
+            // const text = btn.parentNode.parentNode.children[0]
+            // console.log(text)
+            // const range = document.createRange();
+            // range.selectNode(text);
+            // window.getSelection().removeAllRanges();
+            // window.getSelection().addRange(range);
+            //
+            // // 클립보드에 복사
+            // document.execCommand("copy");
+            //
+            // // 선택해제
+            // window.getSelection().removeAllRanges();
 
-            // 클립보드에 복사
+            const textarea = document.createElement("textarea");
+            textarea.value = btn.parentNode.parentNode.firstChild.textContent;
+
+            document.body.appendChild(textarea);
+            textarea.select();
             document.execCommand("copy");
-
-            // 선택해제
-            window.getSelection().removeAllRanges();
+            document.body.removeChild(textarea);
         })
     })
 
