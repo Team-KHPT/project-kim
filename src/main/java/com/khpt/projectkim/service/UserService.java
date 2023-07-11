@@ -59,7 +59,7 @@ public class UserService {
     public void clearChats(String id) {
         User user = getUserByStringId(id);
 
-        log.debug("chats size {}", user.getChats().size());
+        log.debug("{} UserService: chats size {}", id, user.getChats().size());
         if (user.getChats().size() > 0) {
             user.getChats().clear();
 
@@ -112,7 +112,7 @@ public class UserService {
             return dto;
         }).collect(Collectors.toList());
 
-        log.debug("results size {}", resultDtos.size());
+        log.debug("{} UserService: results size {}", id, resultDtos.size());
 
         // Return the list of ResultDto objects
         return resultDtos;
