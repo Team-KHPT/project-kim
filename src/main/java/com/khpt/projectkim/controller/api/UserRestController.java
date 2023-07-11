@@ -3,6 +3,7 @@ package com.khpt.projectkim.controller.api;
 import com.khpt.projectkim.dto.UserPrevData;
 import com.khpt.projectkim.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Slf4j
 public class UserRestController {
 
     private final UserService userService;
@@ -21,16 +23,16 @@ public class UserRestController {
     @PostMapping("/prev")
     public ResponseEntity<Void> setPrevData(HttpSession session, @RequestBody UserPrevData userPrevData) {
         if (session.getAttribute("user") == null) {
-            System.out.println("Set prev data failed. No session");
+            log.info("User prev: Set prev data failed. No session");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        System.out.println(userPrevData.getType());
-        System.out.println(userPrevData.getCategory());
-        System.out.println(userPrevData.getEducation());
-        System.out.println(userPrevData.getRegion());
-
         String userId = session.getAttribute("user").toString();
         userService.setUserPrevData(userId, userPrevData);
+
+        log.debug("{} type: {}", userId, userPrevData.getType());
+        log.debug("{} cate: {}", userId, userPrevData.getCategory());
+        log.debug("{} educ: {}", userId, userPrevData.getEducation());
+        log.debug("{} regi: {}", userId, userPrevData.getRegion());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -38,7 +40,7 @@ public class UserRestController {
     @GetMapping("/prev")
     public UserPrevData getPrevData(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
-            System.out.println("Get prev data failed. No session");
+            log.info("User prev: Get prev data failed. No session");
             response.sendRedirect("/");
             return null;
         }

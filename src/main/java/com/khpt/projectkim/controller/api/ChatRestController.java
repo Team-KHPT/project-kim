@@ -15,6 +15,7 @@ import com.theokanning.openai.service.OpenAiService;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ import static com.theokanning.openai.service.OpenAiService.defaultObjectMapper;
 @RestController
 @RequestMapping("/chat")
 @RequiredArgsConstructor
+@Slf4j
 public class ChatRestController {
 
     private final ChatService chatService;
@@ -62,7 +64,7 @@ public class ChatRestController {
     @PostMapping("/example")
     public ExampleResult exampleChat(HttpSession session, @RequestBody String id) {
         if (session.getAttribute("user") != null) {
-            System.out.println("already login. no example");
+            log.info("Post Example: Already login");
             return null;
         }
 
@@ -70,24 +72,25 @@ public class ChatRestController {
         ExampleResult exampleResult = new ExampleResult();
         exampleResult.setResult(example.getResult());
         exampleResult.setResponse(example.getResponse());
+        log.info("Post Example: success");
         return exampleResult;
     }
 
     @GetMapping("/example")
     public List<ExampleChat> getExampleChat(HttpSession session) {
         if (session.getAttribute("user") != null) {
-            System.out.println("already login. no example");
+            log.info("Get Example: Already login");
             return null;
         }
 
         List<Example> exampleList = questionService.getRandomExamples();
-        System.out.println(exampleList);
 
         List<ExampleChat> exampleChats = new ArrayList<>();
         for (Example example : exampleList) {
             exampleChats.add(new ExampleChat(example.getId().toString(), example.getQuestion()));
         }
 
+        log.info("Get Example: success");
         return exampleChats;
     }
 
@@ -97,19 +100,18 @@ public class ChatRestController {
 
         // TODO 프롬프트 엔지니어링
 
-        // TODO 예시 페이지 만들기
-
         if (session.getAttribute("user") == null) {
-            System.out.println("Get chat events failed. No session");
+            log.info("Event: No session");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return null;
         }
         if (session.getAttribute("chat") == null) {
-            System.out.println("event is found, but no chat");
+            log.info("Event: No chat");
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
         String userId = session.getAttribute("user").toString();
+        log.info("{} Event: start", userId);
 
         String chat = session.getAttribute("chat").toString();
         session.removeAttribute("chat");
@@ -149,10 +151,10 @@ public class ChatRestController {
                                 SimplifyJsonService.Root root = mapper.readValue(apiResponse, SimplifyJsonService.Root.class);
 
                                 Map<String, List<Map<String, Object>>> simplifiedJobs = simplifyJobs(root, user.getCareer(), 15);
-                                System.out.print("Jobs found with API: ");
-                                System.out.println(root.jobs.job.size());
-                                System.out.print("Simplified job count: ");
-                                System.out.println(simplifiedJobs.get("jobs").size());
+//                                System.out.print("Jobs found with API: ");
+//                                System.out.println(root.jobs.job.size());
+//                                System.out.print("Simplified job count: ");
+//                                System.out.println(simplifiedJobs.get("jobs").size());
 
                                 Map<String, List<Map<String, Object>>> simplifiedJobs2 = simplifyJobs2(root, user.getCareer(), 15);
                                 userService.setUserResults(userId, simplifiedJobs2);
@@ -219,11 +221,12 @@ public class ChatRestController {
                         emitter::completeWithError,
                         // onComplete
                         () -> {
+                            log.info("{} Event: First completion", userId);
                             try {
-                                System.out.println(accumulatedMessage);
-                                System.out.println(accumulatedMessage.getRole());
-                                System.out.println(accumulatedMessage.getContent());
-                                System.out.println(accumulatedMessage.getFunctionCall());
+                                log.debug("Event: {}", accumulatedMessage);
+                                log.debug("Event: {}", accumulatedMessage.getRole());
+                                log.debug("Event: {}", accumulatedMessage.getContent());
+                                log.debug("Event: {}", accumulatedMessage.getFunctionCall());
 
                                 if (accumulatedMessage.getFunctionCall() != null) {
                                     emitter.send(SseEmitter.event().name("process").data("Processing API request"));
@@ -233,6 +236,7 @@ public class ChatRestController {
                                         emitter.send(SseEmitter.event().name("complete").data("error executing function"));
                                         emitter.send(SseEmitter.event().name("process").data("Error"));
                                         emitter.complete();
+                                        log.info("{} Event: No prev data", userId);
                                         return;
                                     }
 
@@ -242,6 +246,7 @@ public class ChatRestController {
                                         emitter.send(SseEmitter.event().name("complete").data("error executing function"));
                                         emitter.send(SseEmitter.event().name("process").data("Error"));
                                         emitter.complete();
+                                        log.info("{} Event: Error API request", userId);
                                         return;
                                     }
 
@@ -314,6 +319,7 @@ public class ChatRestController {
                                             emitter::completeWithError,
                                             // onComplete
                                             () -> {
+                                                log.info("{} Event: Second completion", userId);
                                                 try {
                                                     // Save GPT response to DB
                                                     chatService.addUserChats(userId, accumulatedMessage2);
@@ -321,9 +327,9 @@ public class ChatRestController {
                                                     emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
                                                     emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
                                                     emitter.complete();
-                                                    System.out.println("Save chat with functions");
+                                                    log.info("{} Event: Saved chat with function", userId);
                                                 } catch (IOException e) {
-                                                    System.out.println("complete error3");
+                                                    log.info("{} Event: Error IOException 3", userId);
                                                     emitter.send(SseEmitter.event().name("err").data("채팅 저장중 에러"));
                                                     emitter.completeWithError(e);
                                                 }
@@ -337,22 +343,22 @@ public class ChatRestController {
                                     emitter.send(SseEmitter.event().name("info").data("ChatGPT processing complete."));
                                     emitter.send(SseEmitter.event().name("complete").data("Processing complete"));
                                     emitter.complete();
-                                    System.out.println("Save chat without functions");
+                                    log.info("{} Event: Saved chat", userId);
                                 }
                             } catch (IOException e) {
-                                System.out.println("complete error2");
+                                log.info("{} Event: Error IOException 2", userId);
                                 emitter.send(SseEmitter.event().name("err").data("ChatGPT 응답 처리 중 에러"));
                                 emitter.completeWithError(e);
                             }
                         }
                 );
             } catch (IOException e) {
-                System.out.println("complete error1");
+                log.info("{} Event: Error IOException 1", userId);
                 emitter.completeWithError(e);
             }
         }).start();
 
-        System.out.println("return emitter");
+        log.info("{} Event: Returned emitter", userId);
         return emitter;
     }
 
@@ -360,11 +366,10 @@ public class ChatRestController {
     @PostMapping
     public ResponseEntity<Void> sendChat(HttpSession session, HttpServletResponse response, @RequestBody ChatMessage chatMessage) {
         if (session.getAttribute("user") == null) {
-            System.out.println("Send chat failed. No session");
+            log.info("Chat: No session");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        System.out.println(chatMessage.getRole() + chatMessage.getContent());
 
         String userId = session.getAttribute("user").toString();
         chatService.addUserChats(userId, chatMessage);
@@ -376,7 +381,7 @@ public class ChatRestController {
     @GetMapping("/all")
     public List<ChatMessage> getChats(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
-            System.out.println("Get chat failed. No session");
+            log.info("Chat all: No session");
             response.sendRedirect("/");
             return null;
         }
@@ -384,10 +389,10 @@ public class ChatRestController {
         return chatService.getUserChats(userId);
     }
 
-    @GetMapping("/test")
-    public String test(@RequestParam("cd") String cd) {
-        String result = CsvReader.getDetailedJobCode(cd);
-        System.out.println(result);
-        return result;
-    }
+//    @GetMapping("/test")
+//    public String test(@RequestParam("cd") String cd) {
+//        String result = CsvReader.getDetailedJobCode(cd);
+//        System.out.println(result);
+//        return result;
+//    }
 }
