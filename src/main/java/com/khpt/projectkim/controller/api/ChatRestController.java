@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.khpt.projectkim.csv.CsvReader;
 import com.khpt.projectkim.dto.ExampleChat;
 import com.khpt.projectkim.dto.ExampleResult;
+import com.khpt.projectkim.entity.Chat;
 import com.khpt.projectkim.entity.Example;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.functions.ApiRequest;
+import com.khpt.projectkim.repository.ChatRepository;
 import com.khpt.projectkim.service.*;
 import com.theokanning.openai.completion.chat.*;
 import com.theokanning.openai.service.FunctionExecutor;
@@ -44,6 +46,8 @@ public class ChatRestController {
     private final UserService userService;
 
     private final QuestionService questionService;
+
+    private final ChatRepository chatRepository;
 
     private static final ObjectMapper mapper = defaultObjectMapper();
 
@@ -389,6 +393,20 @@ public class ChatRestController {
         return chatService.getUserChats(userId);
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteLastTwoChatItems() {
+        List<Chat> chatItems = chatRepository.findAll();
+        int size = chatItems.size();
+        if (size >= 2) {
+            Chat lastItem = chatItems.get(size - 1);
+            Chat secondLastItem = chatItems.get(size - 2);
+            chatRepository.delete(lastItem);
+            chatRepository.delete(secondLastItem);
+            return ResponseEntity.ok("마지막 인자 두 개 삭제 성공");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 //    @GetMapping("/test")
 //    public String test(@RequestParam("cd") String cd) {
 //        String result = CsvReader.getDetailedJobCode(cd);
