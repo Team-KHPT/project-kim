@@ -15,6 +15,7 @@ import com.theokanning.openai.service.OpenAiService;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ import static com.theokanning.openai.service.OpenAiService.defaultObjectMapper;
 @RestController
 @RequestMapping("/chat")
 @RequiredArgsConstructor
+@Slf4j
 public class ChatRestController {
 
     private final ChatService chatService;
@@ -76,7 +78,7 @@ public class ChatRestController {
     @GetMapping("/example")
     public List<ExampleChat> getExampleChat(HttpSession session) {
         if (session.getAttribute("user") != null) {
-            System.out.println("already login. no example");
+            log.info("Get Example: Already login");
             return null;
         }
 
@@ -96,8 +98,6 @@ public class ChatRestController {
         // TODO 프로세스 확인
 
         // TODO 프롬프트 엔지니어링
-
-        // TODO 예시 페이지 만들기
 
         if (session.getAttribute("user") == null) {
             System.out.println("Get chat events failed. No session");
