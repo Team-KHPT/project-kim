@@ -2,11 +2,23 @@ let data = []
 
 
 const refreshData = async (isInit = false) => {
+    const resultPing = document.getElementById("result-ping")
+    if (resultPing !== null) {
+        resultPing.classList.remove("flex")
+        resultPing.classList.add("hidden")
+    }
+
     await fetch("/result")
         .then(async (res) => {
             data = await res.json()
             console.log(data)
             if (data.length > 0) {
+                const resultPing = document.getElementById("result-ping")
+                if (resultPing !== null) {
+                    resultPing.classList.remove("hidden")
+                    resultPing.classList.add("flex")
+                }
+
                 updateData()
             }
             if (data.length <= 3 && !isInit) {

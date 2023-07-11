@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/output.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet"/>
+  <title>Chat</title>
+</head>
+<body>
+<div class="flex flex-col h-screen font-noto">
+
+  <!--Appbar-->
+  <div class="flex flex-col px-6 py-3 space-y-6">
+    <div class="flex justify-between items-center">
+      <div class="relative">
+        <a href="/m/result" class="text-stone-500 px-2">분석결과</a>
+        <span id="result-ping" class="hidden absolute h-2 w-2 top-0 right-0 -mt-1 -mr-1">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-50"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500 opacity-40"></span>
+        </span>
+      </div>
+      <a href="/" class="font-bold px-2">홈</a>
+      <a th:if="${name != null}" href="/m/profile" class="text-stone-500 px-2">프로필</a>
+      <a id="login-button" th:if="${name == null}" href="/login" class="text-stone-500 px-2">로그인</a>
+    </div>
+<!--    th:if="${!(prev_data == null && name != null && chats.size() == 0)}"-->
+    <div class="flex justify-around">
+      <a th:if="${name != null}" id="info-modal" class="modalOpenButton bg-violet-100 text-violet-500 border border-violet-300 px-3 py-1 rounded-full cursor-pointer" data-modal-target="informationModal" data-modal-toggle="informationModal">사전 정보 수정</a>
+      <a th:if="${name != null}" href="/chat/new" class="bg-violet-100 text-violet-500 border border-violet-300 px-5 py-1 rounded-full cursor-pointer">새로운 채팅</a>
+    </div>
+  </div>
+  <!--Appbar-->
+
+  <div id="chats" class="h-full px-2.5 pb-20 flex flex-col space-y-3 overflow-y-scroll">
+    <div id="examples" th:if="${name == null}" class="assistant w-full flex md:space-x-3 lg:space-x-3">
+      <img class="w-7 h-7 rounded-lg hidden md:block lg:block" src="/images/logo-rev.png">
+      <div class="w-full p-5 bg-violet-100 rounded-lg">
+        <span class="text-sm" style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요! (비로그인 사용자는 미리 저장된 답변이 제공됩니다)</span>
+        <div class="example-list">
+          <!--              <a class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100"></a>-->
+        </div>
+      </div>
+    </div>
+    <div id="example-chat" th:if="${chats.size() == 0 && name != null && prev_data != null}" class="assistant flex md:space-x-3 lg:space-x-3">
+      <img class="w-7 h-7 rounded-lg hidden md:block lg:block" src="/images/logo-rev.png">
+      <div class="w-full p-5 bg-violet-100 rounded-lg">
+        <span class="text-sm" style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요!</span>
+        <div class="question-field">
+          <a th:each="question : ${questions}" th:text="${question}" class="w-fit bg-white text-sm md:text-base lg:text-base text-violet-600 px-4 py-2 rounded-3xl border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100"></a>
+        </div>
+      </div>
+    </div>
+    <!--      <img src="/images/logo-32.png" class="w-7 h-7 rounded-lg">-->
+    <!--      <div class="process w-fit mb-2 p-2 pl-4 pr-16 bg-violet-200 rounded-lg text-sm flex flex-col">-->
+    <!--        <span>안녕하세요. 저는 사용자님께 알맞는 취업 정보를 제공해 드릴 김비서 입니다.</span>-->
+    <!--        <a class="block w-fit bg-white text-violet-400 px-4 py-2 rounded-3xl text-sm flex items-center justify-center mt-3 cursor-pointer">-->
+    <!--          나는 문어가 되고 싶어.-->
+    <!--        </a>-->
+    <!--      </div>-->
+    <!--      사전정보가 없을시-->
+    <div th:if="${prev_data == null && name != null && chats.size() == 0}" class="w-full h-full flex flex-col items-center justify-center">
+      <span class="text-lg text-stone-700">더 정확한 분석 결과를 위해</span>
+      <span class="text-lg text-stone-700">사전정보를 입력해주세요.</span>
+      <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton bg-violet-100 text-violet-500 border border-violet-300 px-5 py-2 rounded-full w-fit flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-violet-100/50">
+        사전정보 입력하기
+      </a>
+    </div>
+  </div>
+
+  <div class="h-24 flex items-center justify-center fixed bottom-0 w-full">
+    <div class="absolute bottom-0 left-0 w-full bg-white px-2 pb-7">
+      <form class="stretch flex flex-row">
+        <div class="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
+          <div class="flex flex-col w-full flex-grow py-2.5 pl-2 relative border border-black/10 bg-stone-50 rounded-lg shadow-md">
+            <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="text-sm m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>
+            <button id="chat-btn" class="absolute p-1 rounded-md bottom-1.5 right-1 disabled:text-gray-400 enabled:bg-violet-500 text-white transition-colors disabled:opacity-40" disabled="">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
+                <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Main modal -->
+<div id="informationModal" tabindex="-1" aria-hidden="true" class="font-noto overflow-auto fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative w-full max-w-5xl shadow-md overflow-auto">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 overflow-auto  ">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-4 py-1 border-b rounded-t dark:border-gray-300 bg-stone-100">
+        <div class="flex space-x-2">
+          <div class="w-3.5 h-3.5 bg-red-500 rounded-3xl cursor-pointer hover:border hover:border-red-600" data-modal-hide="informationModal"></div>
+          <div class="w-3.5 h-3.5 bg-amber-500 rounded-3xl"></div>
+          <div class="w-3.5 h-3.5 bg-green-500 rounded-3xl"></div>
+        </div>
+        <button type="button" class="text-gray-400 bg-transparent hover:text-gray-600 rounded-lg text-xs p-1.5 ml-auto inline-flex items-center" data-modal-hide="informationModal">
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-6 space-y-2">
+        <p class="font-bold text-xl">사전 정보 수집</p>
+        <p class="text-stone-500 text-sm md:text-base lg:text-base">적절히 입력해야 정확한 답변을 제공해줍니다!</p>
+      </div>
+      <!-- Modal footer -->
+      <div class="w-full px-6 pb-6 border-gray-200 rounded-b dark:border-gray-600 h-full overflow-y-scroll">
+        <div class="modal space-y-3 mb-5">
+          <div class="">
+            <label for="workTypeSelect" class="mb-1 hidden md:block lg:block">희망 근무 형태</label>
+            <div>
+              <div id="workType" class="flex">
+                <select name="workType" id="workTypeSelect" class="optionList block w-full border-stone-500 rounded">
+                  <option value="-1">근무 형태 선택</option>
+                  <option value="1">정규직</option>
+                  <option value="2">계약직</option>
+                  <option value="4">인턴직</option>
+                  <option value="6">파견직</option>
+                  <option value="3">병역특례</option>
+                  <option value="9">프리랜서</option>
+                  <option value="5">아르바이트</option>
+                </select>
+              </div>
+              <div id="workTypePlus">
+                <div class="plusField flex flex-wrap pt-2"></div>
+              </div>
+            </div>
+          </div>
+          <div class="">
+            <label for="educationSelect" class="mb-1 hidden md:block lg:block">학력</label>
+            <div>
+              <div id="education" class="flex">
+                <select name="education" id="educationSelect" class="optionList block w-full border-stone-500 rounded">
+                  <option value="-1">학력 선택</option>
+                  <option value="0">학력무관</option>
+                  <option value="1">고등학교졸업</option>
+                  <option value="2">전문대학졸업</option>
+                  <option value="3">대학교 졸업</option>
+                  <option value="4">석사 졸업</option>
+                  <option value="5">박사 졸업</option>
+                </select>
+              </div>
+              <div id="educationPlus">
+                <div class="plusField flex flex-wrap pt-2"></div>
+              </div>
+            </div>
+          </div>
+          <div class="">
+            <label for="categorySelect" class="mb-1 hidden md:block lg:block">희망 직무 구분</label>
+            <div>
+              <div id="category" class="flex">
+                <select name="category" id="categorySelect" class="optionList category block w-full border-stone-500 rounded">
+                  <option value="-1">직무 선택</option>
+                  <option value="16">기획·전략</option>
+                  <option value="14">마케팅·홍보</option>
+                  <option value="3">회계·재무</option>
+                  <option value="2">IT개발·데이터</option>
+                  <option value="12">상품기획·MD</option>
+                  <option value="15">디자인</option>
+                  <option value="6">의료</option>
+                  <option value="10">서비스</option>
+                  <option value="11">생산</option>
+                  <option value="19">교육</option>
+                </select>
+              </div>
+              <div id="categoryPlus">
+                <div class="plusField flex flex-wrap pt-2"></div>
+              </div>
+            </div>
+          </div>
+          <div class="">
+            <label for="regionSelect" class="mb-1 hidden md:block lg:block">취업 희망 지역</label>
+            <div>
+              <div id="region" class="flex">
+                <select name="region" id="regionSelect" class=" optionList block w-full border-stone-500 rounded">
+                  <option value="-1">지역 선택</option>
+                  <option value="101000">서울</option>
+                  <option value="102000">경기</option>
+                  <option value="103000">광주</option>
+                  <option value="104000">대구</option>
+                  <option value="105000">대전</option>
+                  <option value="106000">부산</option>
+                  <option value="107000">울산</option>
+                  <option value="108000">인천</option>
+                  <option value="109000">강원</option>
+                  <option value="110000">경남</option>
+                  <option value="111000">경북</option>
+                  <option value="112000">전남</option>
+                  <option value="113000">전북</option>
+                  <option value="114000">충북</option>
+                  <option value="115000">충남</option>
+                  <option value="116000">제주</option>
+                </select>
+              </div>
+              <div id="regionPlus">
+                <div class="plusField flex flex-wrap pt-2"></div>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <a id="sendInfoButton" data-modal-hide="informationModal" class="block bg-violet-200 text-violet-500 py-2 px-5 rounded-lg cursor-pointer">
+              계속하기
+            </a>
+          </div>
+        </div>
+        <div class="flex justify-end">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script th:inline="javascript">
+    function getUserImage() {
+        return [[${image}]]
+    }
+</script>
+<script>
+    const loginBtn = document.getElementById("login-button")
+    if (loginBtn !== null) loginBtn.setAttribute("href", `/login?redirect=${location.href}`)
+</script>
+<script src="/js/chatInput.js"></script>
+<script src="/js/chatResult.js"></script>
+<script src="/js/question.js"></script>
+<script src="/js/information2.js"></script>
+<script src="/js/flowbite.min.js"></script>
+<script src="/js/chatStatusChange.js"></script>
+</html>
