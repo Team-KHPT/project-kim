@@ -1,12 +1,12 @@
 package com.khpt.projectkim.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khpt.projectkim.dto.ResultDto;
 import com.khpt.projectkim.dto.UserPrevData;
 import com.khpt.projectkim.entity.Result;
 import com.khpt.projectkim.entity.User;
 import com.khpt.projectkim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
 
@@ -34,7 +35,6 @@ public class UserService {
 
         // Make a copy of the results
         List<Result> resultsCopy = new ArrayList<>(user.getResults());
-        System.out.println("results size: " + resultsCopy.size());
 
         if (resultsCopy.size() > 0) {
             // Clear the recentResults and add the copied results
@@ -59,7 +59,7 @@ public class UserService {
     public void clearChats(String id) {
         User user = getUserByStringId(id);
 
-        System.out.println("chats size: " + user.getChats().size());
+        log.debug("chats size {}", user.getChats().size());
         if (user.getChats().size() > 0) {
             user.getChats().clear();
 
@@ -112,74 +112,10 @@ public class UserService {
             return dto;
         }).collect(Collectors.toList());
 
-        System.out.println("result length: " + resultDtos.size());
+        log.debug("results size {}", resultDtos.size());
 
         // Return the list of ResultDto objects
         return resultDtos;
-    }
-
-    public String getUserResultsAsString(String id) {
-        try {
-            // Get the user
-            User user = getUserByStringId(id);
-
-            // Get the user's results
-            List<Result> results = user.getResults();
-
-            // Convert the results to a list of maps
-            List<Map<String, Object>> resultMaps = results.stream().map(result -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("company", result.getCompany());
-                map.put("education", result.getEducation());
-                map.put("location", result.getRegion());
-                map.put("salary", result.getSalary());
-                map.put("title", result.getTitle());
-                map.put("type", result.getType());
-                map.put("url", result.getUrl());
-                return map;
-            }).collect(Collectors.toList());
-
-            // Create a map for the final result
-            Map<String, List<Map<String, Object>>> finalResult = new HashMap<>();
-            finalResult.put("jobs", resultMaps);
-
-            // Convert the map to JSON
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            // Return the JSON string
-            return objectMapper.writeValueAsString(finalResult);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Map<String, List<Map<String, Object>>> getUserResultsAsMap(String id) {
-        // Get the user
-        User user = getUserByStringId(id);
-
-        // Get the user's results
-        List<Result> results = user.getResults();
-
-        // Convert the results to a list of maps
-        List<Map<String, Object>> resultMaps = results.stream().map(result -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("company", result.getCompany());
-            map.put("education", result.getEducation());
-            map.put("location", result.getRegion());
-            map.put("salary", result.getSalary());
-            map.put("title", result.getTitle());
-            map.put("type", result.getType());
-            map.put("url", result.getUrl());
-            return map;
-        }).collect(Collectors.toList());
-
-        // Create a map for the final result
-        Map<String, List<Map<String, Object>>> finalResult = new HashMap<>();
-        finalResult.put("jobs", resultMaps);
-
-        // Return the final map
-        return finalResult;
     }
 
     public void setUserPrevData(String id, UserPrevData userPrevData) {

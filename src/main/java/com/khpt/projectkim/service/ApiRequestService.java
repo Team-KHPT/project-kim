@@ -1,20 +1,17 @@
 package com.khpt.projectkim.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-import static com.khpt.projectkim.service.SimplifyJsonService.simplifyJobs;
-
 @Service
+@Slf4j
 public class ApiRequestService {
 
     public String getApiResponseAsString(String url, Map<String, String> params) throws JsonProcessingException {
@@ -40,29 +37,8 @@ public class ApiRequestService {
                 String.class
         );
 
-        System.out.println("response:");
-        System.out.println(response.getBody());
-        System.out.println(response.getHeaders());
-
+        log.debug("response: {}", response.getBody());
 
         return response.getBody();
-    }
-
-    public String testService() {
-        try {
-            Thread.sleep(2 * 1000);
-            System.out.println("2 sec");
-            Thread.sleep(2 * 1000);
-            System.out.println("4 sec");
-            Thread.sleep(2 * 1000);
-            System.out.println("6 sec");
-            Thread.sleep(2 * 1000);
-            System.out.println("8 sec");
-            Thread.sleep(2 * 1000);
-            System.out.println("10 sec");
-        } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
-        }
-        return "This is response!";
     }
 }
