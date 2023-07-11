@@ -44,51 +44,20 @@
         <span class="font-light px-2 bg-white">채팅</span>
       </div>
       <div id="chats" class="h-full px-2.5 flex flex-col space-y-3 overflow-y-scroll">
-        <div class="user flex space-x-3">
-          <img class="w-7 h-7 rounded-lg" src="/icons/black.png">
-          <div class="w-full p-5 bg-pink-100 rounded-lg flex items-center justify-between">
-            <span class="userChat" style="white-space: pre-wrap;">나는 마케팅 경영 학과를 전공했어. 전공을 살려서 취업하고 싶은데 내 전공에 맞는 회사가 있을까?</span>
-            <div class="text-gray-400 flex">
-              <button class="copyButton flex rounded-md p-1 hover:bg-gray-100 hover:text-gray-700">
-                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                </svg>
-              </button>
-              <button class="deleteButton flex rounded-md p-1 hover:bg-gray-100 hover:text-gray-700">
-                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-              </button>
+        <div id="examples" th:if="${name == null}" class="assistant flex space-x-3">
+          <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
+          <div class="w-full p-5 bg-violet-100 rounded-lg">
+            <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요! (비로그인 사용자는 미리 저장된 답변이 제공됩니다)</span>
+            <div class="example-list">
+              <!--              <a class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100"></a>-->
             </div>
           </div>
         </div>
-
-<!--        <div id="examples" th:if="${name == null}" class="assistant flex space-x-3">-->
-<!--          <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">-->
-<!--          <div class="w-full p-5 bg-violet-100 rounded-lg">-->
-<!--            <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요! (비로그인 사용자는 미리 저장된 답변이 제공됩니다)</span>-->
-<!--            <div class="example-list"></div>-->
-<!--            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">-->
-<!--              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>-->
-<!--              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>-->
-<!--            </svg>-->
-<!--          </div>-->
-<!--        </div>-->
         <div id="example-chat" th:if="${chats.size() == 0 && name != null && prev_data != null}" class="assistant flex space-x-3">
           <img class="w-7 h-7 rounded-lg" src="/images/logo-rev.png">
           <div class="w-full p-5 bg-violet-100 rounded-lg">
-            <div class="flex items-center justify-between">
-              <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요!</span>
-              <div class="inline-block text-gray-400">
-                <button class="copyButton flex rounded-md p-1 hover:bg-gray-100 hover:text-gray-700">
-                  <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                  </svg>
-                </button>
-              </div>
-            </div>
+            <span style="white-space: pre-wrap;">아래와 같이 질문할 수 있어요!</span>
             <div class="question-field" th:each="question : ${questions}">
-              <a th:text="${question}" class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100"></a>
               <a th:text="${question}" class="w-fit bg-white text-violet-600 px-4 py-2 rounded-full border border-violet-300 flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-stone-100"></a>
             </div>
           </div>
@@ -101,7 +70,7 @@
         <!--        </a>-->
         <!--      </div>-->
         <!--      사전정보가 없을시-->
-        <div th:if="${prev_data == null && name != null}" class="w-full h-full flex flex-col items-center justify-center">
+        <div th:if="${prev_data == null && name != null && chats.size() == 0}" class="w-full h-full flex flex-col items-center justify-center">
           <span class="text-lg font-bold">더 정확한 분석 결과를 위해 사전정보를 입력해주세요.</span>
           <a data-modal-target="informationModal" data-modal-toggle="informationModal" class="modalOpenButton bg-violet-100 text-violet-500 border border-violet-300 px-5 py-2 rounded-full w-fit flex items-center justify-center mt-3 cursor-pointer transition-colors hover:bg-violet-100/50">
             사전정보 입력하기
