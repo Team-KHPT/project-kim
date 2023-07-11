@@ -32,6 +32,8 @@ dependencies {
     implementation 'org.springframework.session:spring-session-jdbc'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
+    implementation 'org.springframework.mobile:spring-mobile-device:1.1.5.RELEASE'
+
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: '2.4.3'
     implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.46'
     implementation group: 'org.webjars', name: 'js-cookie', version: '2.1.0'
