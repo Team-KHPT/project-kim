@@ -207,6 +207,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const regionArr = selectedValues.region.map(item => item.value).join()
         const educationArr = selectedValues.education.map(item => item.value).join()
 
+        if (!(workTypeArr > 0 && categoryArr > 0 && regionArr > 0 && educationArr > 0)) {
+            const isOk = confirm("모두 입력하지 않았습니다. 계속하시겠습니까?")
+            if (!isOk) return
+        }
+
         const object = `{"workType":"${workTypeArr}","category":"${categoryArr}","region":"${regionArr}","education":"${educationArr}"}`
         const result = JSON.parse(object);
 
