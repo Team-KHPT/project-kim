@@ -13,6 +13,7 @@ public class ApiRequest {
     @Getter
     public static class JobData {
         @JsonPropertyDescription("The keyword to search for job posting information, e.g. 백엔드")
+        @JsonProperty(required = true)
         public String keyword;
 
         @JsonPropertyDescription("pd:sort by date of publication, rc:sort by hits, ac:sort by number of applicants")
