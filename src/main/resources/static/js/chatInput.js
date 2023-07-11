@@ -169,17 +169,17 @@ function makeUserChatItem(chat) {
     }
 
     const userChatItem = document.createElement('div')
-    userChatItem.classList.add('user', 'flex', 'space-x-3')
+    userChatItem.className = "user flex md:space-x-3 lg:space-x-3"
 
     const userImg = document.createElement('img')
-    userImg.classList.add('w-7', 'h-7', 'rounded-lg')
+    userImg.className = "w-7 h-7 rounded-lg hidden md:block lg:block"
     userImg.src = getUserImage()
 
     const userText = document.createElement("div");
     userText.className = "w-full p-5 bg-pink-100 rounded-lg items-center justify-between relative"
 
     const chatText = document.createElement("span");
-    chatText.className = "userChat w-full"
+    chatText.className = "userChat w-full text-sm md:text-base lg:text-base"
     chatText.style.whiteSpace = "pre-wrap";
     chatText.textContent = chat;
 
@@ -231,10 +231,10 @@ function makeUserChatItem(chat) {
 
 function makeAssistantChatItem(chat, safe=true) {
     const assistantChatItem = document.createElement('div')
-    assistantChatItem.classList.add('assistant', 'flex', 'space-x-3')
+    assistantChatItem.className = "assistant flex md:space-x-3 lg:space-x-3"
 
     const assistantImg = document.createElement('img')
-    assistantImg.classList.add('w-7', 'h-7', 'rounded-lg')
+    assistantImg.className = "w-7 h-7 rounded-lg hidden md:block lg:block"
     assistantImg.src = "/images/logo-rev.png"
 
     //조심띠
@@ -242,7 +242,7 @@ function makeAssistantChatItem(chat, safe=true) {
     assistantText.className = "w-full p-5 bg-violet-100 rounded-lg flex items-start justify-between relative"
 
     const chatText = document.createElement("span")
-    chatText.classList.add("assistantChat")
+    chatText.className = "assistantChat text-sm md:text-base lg:text-base"
     chatText.style.whiteSpace = "pre-wrap"
     if (safe) {
         chatText.textContent = chat
