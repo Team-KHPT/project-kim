@@ -36,7 +36,7 @@ public class ChatService {
         extractListFromUserDto.setResults(user.getResults());
         test += user.getChats().size();
         extractListFromUserDto.setChats(user.getChats());
-        System.out.println("total size " + test);
+        log.debug("total size {}", test);
 
         return extractListFromUserDto;
     }

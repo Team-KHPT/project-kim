@@ -1,8 +1,11 @@
 package com.khpt.projectkim.csv;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+@Slf4j
 public class CsvReader {
     public static String getDetailedJobCode(String job_mid_code) {
         String csvFile = "src/main/java/com/khpt/projectkim/csv/job_cd.csv";
@@ -21,17 +24,22 @@ public class CsvReader {
             int keywordIndex = -1;
 
             for (int i = 0; i < headers.length; i++) {
-                if (headers[i].equals("job_mid_cd")) {
-                    jobMidCdIndex = i;
-                } else if (headers[i].equals("code")) {
-                    codeIndex = i;
-                } else if (headers[i].equals("keyword")) {
-                    keywordIndex = i;
+                switch (headers[i]) {
+                    case "job_mid_cd":
+                        jobMidCdIndex = i;
+                        break;
+                    case "code":
+                        codeIndex = i;
+                        break;
+                    case "keyword":
+                        keywordIndex = i;
+                        break;
                 }
             }
 
             // Print the extracted rows
-            System.out.println(extractedRowsString);
+            log.debug("extracted row {}", extractedRowsString);
+
 
             extractedRowsString.append("code,keyword\n");
 
