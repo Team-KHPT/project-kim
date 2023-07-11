@@ -161,6 +161,10 @@ function sendMessage(inputValue) {
 }
 
 function makeUserChatItem(chat) {
+    const delBtn = document.querySelector('.deleteButton');
+    console.log(delBtn);
+    delBtn.remove();
+
     const userChatItem = document.createElement('div')
     userChatItem.classList.add('user', 'flex', 'space-x-3')
 
@@ -168,10 +172,51 @@ function makeUserChatItem(chat) {
     userImg.classList.add('w-7', 'h-7', 'rounded-lg')
     userImg.src = getUserImage()
 
-    const userText = document.createElement('span')
-    userText.classList.add('w-full', 'p-5', 'bg-pink-100', 'rounded-lg')
-    userText.style.whiteSpace = "pre-wrap"
-    userText.textContent = chat
+    const userText = document.createElement("div");
+    userText.classList.add("w-full", "p-5", "bg-pink-100", "rounded-lg", "flex", "items-center", "justify-between");
+
+    const chatText = document.createElement("span");
+    chatText.classList.add("userChat");
+    chatText.style.whiteSpace = "pre-wrap";
+    chatText.textContent = chat;
+
+    const copyButtonContainer = document.createElement("div");
+    copyButtonContainer.classList.add("inline-block", "text-gray-400");
+
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('deleteButton', 'flex', 'rounded-md', 'p-1', 'hover:bg-gray-100', 'hover:text-gray-700');
+    deleteButton.innerHTML = '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>';
+
+    const copyButton = document.createElement("button");
+    copyButton.classList.add("copyButton", "flex", "rounded-md", "p-1", "hover:bg-gray-100", "hover:text-gray-700");
+
+    const copyButtonIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    copyButtonIcon.setAttribute("stroke", "currentColor");
+    copyButtonIcon.setAttribute("fill", "none");
+    copyButtonIcon.setAttribute("stroke-width", "2");
+    copyButtonIcon.setAttribute("viewBox", "0 0 24 24");
+    copyButtonIcon.setAttribute("stroke-linecap", "round");
+    copyButtonIcon.setAttribute("stroke-linejoin", "round");
+    copyButtonIcon.classList.add("h-4", "w-4");
+
+    const copyButtonPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    copyButtonPath1.setAttribute("d", "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2");
+    const copyButtonPath2 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    copyButtonPath2.setAttribute("x", "8");
+    copyButtonPath2.setAttribute("y", "2");
+    copyButtonPath2.setAttribute("width", "8");
+    copyButtonPath2.setAttribute("height", "4");
+    copyButtonPath2.setAttribute("rx", "1");
+    copyButtonPath2.setAttribute("ry", "1");
+
+    copyButtonIcon.appendChild(copyButtonPath1);
+    copyButtonIcon.appendChild(copyButtonPath2);
+    copyButton.appendChild(copyButtonIcon);
+    copyButtonContainer.appendChild(copyButton);
+    copyButtonContainer.appendChild(deleteButton);
+
+    userText.appendChild(chatText);
+    userText.appendChild(copyButtonContainer);
 
     userChatItem.appendChild(userImg)
     userChatItem.appendChild(userText)
@@ -187,14 +232,51 @@ function makeAssistantChatItem(chat, safe=true) {
     assistantImg.classList.add('w-7', 'h-7', 'rounded-lg')
     assistantImg.src = "/images/logo-rev.png"
 
-    const assistantText = document.createElement('span')
-    assistantText.classList.add('w-full', 'p-5', 'bg-violet-100', 'rounded-lg')
-    assistantText.style.whiteSpace = 'pre-wrap'
+    //조심띠
+    const assistantText = document.createElement("div");
+    assistantText.classList.add("w-full", "p-5", "bg-violet-100", "rounded-lg", "flex", "items-center", "justify-between");
+
+    const chatText = document.createElement("span");
+    chatText.classList.add("userChat");
+    chatText.style.whiteSpace = "pre-wrap";
     if (safe) {
         assistantText.textContent = chat
     } else {
         assistantText.innerHTML = chat
     }
+
+    const copyButtonContainer = document.createElement("div");
+    copyButtonContainer.classList.add("inline-block", "text-gray-400");
+
+    const copyButton = document.createElement("button");
+    copyButton.classList.add("copyButton", "flex", "rounded-md", "p-1", "hover:bg-gray-100", "hover:text-gray-700");
+
+    const copyButtonIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    copyButtonIcon.setAttribute("stroke", "currentColor");
+    copyButtonIcon.setAttribute("fill", "none");
+    copyButtonIcon.setAttribute("stroke-width", "2");
+    copyButtonIcon.setAttribute("viewBox", "0 0 24 24");
+    copyButtonIcon.setAttribute("stroke-linecap", "round");
+    copyButtonIcon.setAttribute("stroke-linejoin", "round");
+    copyButtonIcon.classList.add("h-4", "w-4");
+
+    const copyButtonPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    copyButtonPath1.setAttribute("d", "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2");
+    const copyButtonPath2 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    copyButtonPath2.setAttribute("x", "8");
+    copyButtonPath2.setAttribute("y", "2");
+    copyButtonPath2.setAttribute("width", "8");
+    copyButtonPath2.setAttribute("height", "4");
+    copyButtonPath2.setAttribute("rx", "1");
+    copyButtonPath2.setAttribute("ry", "1");
+
+    copyButtonIcon.appendChild(copyButtonPath1);
+    copyButtonIcon.appendChild(copyButtonPath2);
+    copyButton.appendChild(copyButtonIcon);
+    copyButtonContainer.appendChild(copyButton);
+
+    assistantText.appendChild(chatText);
+    assistantText.appendChild(copyButtonContainer);
 
     assistantChatItem.appendChild(assistantImg)
     assistantChatItem.appendChild(assistantText)
