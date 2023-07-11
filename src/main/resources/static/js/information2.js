@@ -112,9 +112,10 @@ function savePrevData() {
 
 function addSelectedItemElement(select, selectedItem) {
     const displayArea = document.createElement("div")
-    displayArea.className = "info-div font-noto bg-stone-200 my-2 mr-2 p-2 flex items-center justify-between rounded-lg space-x-6 text-gray-600"
+    displayArea.className = "info-div font-noto bg-stone-200 mb-1 md:mb-2 lg:mb-2 mr-1 md:mr-2 lg:mr-2 p-1 md:p-2 lg:p-2 flex items-center justify-between rounded-lg space-x-2 text-gray-600"
 
     const textElem = document.createElement("span")
+    textElem.className = "text-sm md:text-base lg:text-base"
     textElem.textContent = selectedItem.label
     displayArea.appendChild(textElem)
 
@@ -197,6 +198,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     modalButton.forEach(function (button){
         button.addEventListener("click", async function () {
             await updatePrevData()
+            updateAllSelectedItem()
         })
     })
 
@@ -207,7 +209,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const regionArr = selectedValues.region.map(item => item.value).join()
         const educationArr = selectedValues.education.map(item => item.value).join()
 
-        if (!(workTypeArr > 0 && categoryArr > 0 && regionArr > 0 && educationArr > 0)) {
+        console.log(workTypeArr)
+        console.log(categoryArr)
+        console.log(regionArr)
+        console.log(educationArr)
+
+        if (!(workTypeArr.length > 0 && categoryArr.length > 0 && regionArr.length > 0 && educationArr.length > 0)) {
             const isOk = confirm("모두 입력하지 않았습니다. 계속하시겠습니까?")
             if (!isOk) return
         }
