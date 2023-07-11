@@ -1,11 +1,16 @@
 package com.khpt.projectkim.service;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 
+@Slf4j
 public class DiscordWebhook {
 
     private final String url;
@@ -132,6 +138,21 @@ public class DiscordWebhook {
             json.put("embeds", embedObjects.toArray());
         }
 
+//        URL url = new URL(this.url);
+//        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+//        connection.addRequestProperty("Content-Type", "application/json");
+//        connection.addRequestProperty("User-Agent", "Java-DiscordWebhook-BY-Gelox_");
+//        connection.setDoOutput(true);
+//        connection.setRequestMethod("POST");
+//
+//        OutputStream stream = connection.getOutputStream();
+//        stream.write(json.toString().getBytes(StandardCharsets.UTF_8));
+//        stream.flush();
+//        stream.close();
+//
+//        connection.getInputStream().close(); //I'm not sure why but it doesn't work without getting the InputStream
+//        connection.disconnect();
+
         URL url = new URL(this.url);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.addRequestProperty("Content-Type", "application/json");
@@ -140,11 +161,28 @@ public class DiscordWebhook {
         connection.setRequestMethod("POST");
 
         OutputStream stream = connection.getOutputStream();
-        stream.write(json.toString().getBytes());
+        stream.write(json.toString().getBytes(StandardCharsets.UTF_8));
         stream.flush();
         stream.close();
 
-        connection.getInputStream().close(); //I'm not sure why but it doesn't work without getting the InputStream
+        int responseCode = connection.getResponseCode();
+        log.debug("Response Code : {}", responseCode);
+
+        BufferedReader in;
+        if (200 <= connection.getResponseCode() && connection.getResponseCode() <= 299) {
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        } else {
+            in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+        }
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        log.debug("Response Body : {}", response);
+
         connection.disconnect();
     }
 
@@ -153,7 +191,6 @@ public class DiscordWebhook {
         private String description;
         private String url;
         private Color color;
-
         private Footer footer;
         private Thumbnail thumbnail;
         private Image image;
@@ -373,7 +410,7 @@ public class DiscordWebhook {
                 builder.append(++i == entrySet.size() ? "}" : ",");
             }
 
-            return builder.toString();
+            return builder.toString().replace("\n","\\n");
         }
 
         private String quote(String string) {
