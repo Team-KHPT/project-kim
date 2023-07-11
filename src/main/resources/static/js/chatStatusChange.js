@@ -14,3 +14,15 @@ copyBtns.forEach(btn => {
         window.getSelection().removeAllRanges();
     })
 })
+
+const deleteBtns = document.querySelectorAll(".deleteButton")
+deleteBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        if (confirm('해당 채팅을 삭제하시겠습니까?')) {
+            const parentDiv = btn.parentElement.parentElement.parentElement
+            const nextSibling = btn.parentElement.parentElement.parentElement.nextElementSibling;
+            parentDiv.remove();
+            nextSibling.remove();
+        }
+    })
+})
