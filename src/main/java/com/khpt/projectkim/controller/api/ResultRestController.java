@@ -22,7 +22,7 @@ public class ResultRestController {
     @GetMapping("/result")
     public List<ResultDto> getResult(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
-            log.info("Result: Get result failed. No session");
+            log.debug("Result: Get result failed. No session");
             response.sendRedirect("/");
             return null;
         }

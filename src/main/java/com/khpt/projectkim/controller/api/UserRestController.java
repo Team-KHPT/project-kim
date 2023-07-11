@@ -23,7 +23,7 @@ public class UserRestController {
     @PostMapping("/prev")
     public ResponseEntity<Void> setPrevData(HttpSession session, @RequestBody UserPrevData userPrevData) {
         if (session.getAttribute("user") == null) {
-            log.info("User prev: Set prev data failed. No session");
+            log.debug("User prev: Set prev data failed. No session");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         String userId = session.getAttribute("user").toString();
@@ -40,7 +40,7 @@ public class UserRestController {
     @GetMapping("/prev")
     public UserPrevData getPrevData(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
-            log.info("User prev: Get prev data failed. No session");
+            log.debug("User prev: Get prev data failed. No session");
             response.sendRedirect("/");
             return null;
         }
