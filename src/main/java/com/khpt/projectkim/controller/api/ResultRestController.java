@@ -3,6 +3,7 @@ package com.khpt.projectkim.controller.api;
 import com.khpt.projectkim.dto.ResultDto;
 import com.khpt.projectkim.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ResultRestController {
 
     private final UserService userService;
@@ -20,7 +22,7 @@ public class ResultRestController {
     @GetMapping("/result")
     public List<ResultDto> getResult(HttpSession session, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
-            System.out.println("Get result failed. No session");
+            log.info("Result: Get result failed. No session");
             response.sendRedirect("/");
             return null;
         }
