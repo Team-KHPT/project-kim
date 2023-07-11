@@ -1,9 +1,11 @@
 function addIconsToChat() {
+
     const copyBtns = document.querySelectorAll(".copyButton")
 
     copyBtns.forEach(btn => {
         btn.addEventListener("click", () => {
             const text = btn.parentNode.parentNode.children[0]
+            console.log(text)
             const range = document.createRange();
             range.selectNode(text);
             window.getSelection().removeAllRanges();
