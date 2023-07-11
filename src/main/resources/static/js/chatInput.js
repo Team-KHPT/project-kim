@@ -163,7 +163,9 @@ function sendMessage(inputValue) {
 function makeUserChatItem(chat) {
     const delBtn = document.querySelector('.deleteButton');
     console.log(delBtn);
-    delBtn.remove();
+    if (delBtn != null) {
+        delBtn.remove();
+    }
 
     const userChatItem = document.createElement('div')
     userChatItem.classList.add('user', 'flex', 'space-x-3')
@@ -173,15 +175,15 @@ function makeUserChatItem(chat) {
     userImg.src = getUserImage()
 
     const userText = document.createElement("div");
-    userText.classList.add("w-full", "p-5", "bg-pink-100", "rounded-lg", "flex", "items-center", "justify-between");
+    userText.className = "w-full p-5 bg-pink-100 rounded-lg items-center justify-between relative"
 
     const chatText = document.createElement("span");
-    chatText.classList.add("userChat");
+    chatText.className = "userChat w-full"
     chatText.style.whiteSpace = "pre-wrap";
     chatText.textContent = chat;
 
     const copyButtonContainer = document.createElement("div");
-    copyButtonContainer.classList.add("inline-block", "text-gray-400");
+    copyButtonContainer.className = "flex text-gray-400 absolute top-0 right-0"
 
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('deleteButton', 'flex', 'rounded-md', 'p-1', 'hover:bg-gray-100', 'hover:text-gray-700');
@@ -233,12 +235,12 @@ function makeAssistantChatItem(chat, safe=true) {
     assistantImg.src = "/images/logo-rev.png"
 
     //조심띠
-    const assistantText = document.createElement("div");
-    assistantText.classList.add("w-full", "p-5", "bg-violet-100", "rounded-lg", "flex", "items-center", "justify-between");
+    const assistantText = document.createElement("div")
+    assistantText.className = "w-full p-5 bg-violet-100 rounded-lg flex items-start justify-between relative"
 
-    const chatText = document.createElement("span");
-    chatText.classList.add("userChat");
-    chatText.style.whiteSpace = "pre-wrap";
+    const chatText = document.createElement("span")
+    chatText.classList.add("userChat")
+    chatText.style.whiteSpace = "pre-wrap"
     if (safe) {
         assistantText.textContent = chat
     } else {
@@ -246,7 +248,7 @@ function makeAssistantChatItem(chat, safe=true) {
     }
 
     const copyButtonContainer = document.createElement("div");
-    copyButtonContainer.classList.add("inline-block", "text-gray-400");
+    copyButtonContainer.className = "inline-block text-gray-400 absolute top-0 right-0"
 
     const copyButton = document.createElement("button");
     copyButton.classList.add("copyButton", "flex", "rounded-md", "p-1", "hover:bg-gray-100", "hover:text-gray-700");
@@ -301,4 +303,6 @@ window.addEventListener("load", async () => {
         }
     }
     await refreshData(true)
+
+    addIconsToChat()
 })
