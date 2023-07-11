@@ -223,6 +223,8 @@ function makeUserChatItem(chat) {
     userChatItem.appendChild(userImg)
     userChatItem.appendChild(userText)
 
+    addIconsToChat()
+
     return userChatItem
 }
 
@@ -239,12 +241,12 @@ function makeAssistantChatItem(chat, safe=true) {
     assistantText.className = "w-full p-5 bg-violet-100 rounded-lg flex items-start justify-between relative"
 
     const chatText = document.createElement("span")
-    chatText.classList.add("userChat")
+    chatText.classList.add("assistantChat")
     chatText.style.whiteSpace = "pre-wrap"
     if (safe) {
-        assistantText.textContent = chat
+        chatText.textContent = chat
     } else {
-        assistantText.innerHTML = chat
+        chatText.innerHTML = chat
     }
 
     const copyButtonContainer = document.createElement("div");
@@ -283,6 +285,8 @@ function makeAssistantChatItem(chat, safe=true) {
     assistantChatItem.appendChild(assistantImg)
     assistantChatItem.appendChild(assistantText)
 
+    addIconsToChat()
+
     return assistantChatItem
 }
 
@@ -302,7 +306,7 @@ window.addEventListener("load", async () => {
             document.getElementById('chats').appendChild(makeAssistantChatItem(chat.content))
         }
     }
+    addIconsToChat()
     await refreshData(true)
 
-    addIconsToChat()
 })
