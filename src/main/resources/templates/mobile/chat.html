@@ -8,13 +8,13 @@
   <title>Chat</title>
 </head>
 <body>
-<div class="flex flex-col h-screen font-noto">
+<div class="chatMainPage flex flex-col h-screen font-noto">
 
   <!--Appbar-->
   <div class="flex flex-col px-6 py-3 space-y-6">
     <div class="flex justify-between items-center">
       <div class="relative">
-        <a href="/m/result" class="text-stone-500 px-2">분석결과</a>
+        <button id="resultPageBtn" class="text-stone-500 px-2 cursor-pointer">분석결과</button>
         <span id="result-ping" class="hidden absolute h-2 w-2 top-0 right-0 -mt-1 -mr-1">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-50"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500 opacity-40"></span>
@@ -26,7 +26,7 @@
     </div>
 <!--    th:if="${!(prev_data == null && name != null && chats.size() == 0)}"-->
     <div class="flex justify-around">
-      <a th:if="${name != null}" id="info-modal" class="modalOpenButton bg-violet-100 text-violet-500 border border-violet-300 px-3 py-1 rounded-full cursor-pointer" data-modal-target="informationModal" data-modal-toggle="informationModal">사전 정보 수정</a>
+      <a th:classappend="${name == null}?hidden" id="info-modal" class="modalOpenButton bg-violet-100 text-violet-500 border border-violet-300 px-3 py-1 rounded-full cursor-pointer" data-modal-target="informationModal" data-modal-toggle="informationModal">사전 정보 수정</a>
       <a th:if="${name != null}" href="/chat/new" class="bg-violet-100 text-violet-500 border border-violet-300 px-5 py-1 rounded-full cursor-pointer">새로운 채팅</a>
     </div>
   </div>
@@ -73,7 +73,7 @@
       <form class="stretch flex flex-row">
         <div class="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
           <div class="flex flex-col w-full flex-grow py-2.5 pl-2 relative border border-black/10 bg-stone-50 rounded-lg shadow-md">
-            <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="text-sm m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: hidden"></textarea>
+            <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="text-sm m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: scroll"></textarea>
             <button id="chat-btn" class="absolute p-1 rounded-md bottom-1.5 right-1 disabled:text-gray-400 enabled:bg-violet-500 text-white transition-colors disabled:opacity-40" disabled="">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
                 <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
@@ -218,6 +218,102 @@
     </div>
   </div>
 </div>
+
+<div class="chatResultPage hidden flex-col h-screen font-noto">
+
+  <!--Appbar-->
+  <div class="flex flex-col px-6 py-3 space-y-6">
+    <div class="flex justify-between items-center">
+      <a></a>
+      <a href="/m/result" class="font-bold">분석결과</a>
+      <button id="chatPageBtn" class="text-stone-500 cursor-pointer">홈</button>
+    </div>
+  </div>
+  <!--Appbar-->
+
+  <div id="result-list" data-modal-toggle="defaultModal" data-modal-target="defaultModal" class="h-full px-2.5 pb-6 md:pb-0 lg:pb-0 flex flex-col space-y-2 overflow-y-scroll ">
+    <div class="w-full h-full flex items-center justify-center">
+      <span th:if="${results == null}" class="">분석 결과가 없습니다.</span>
+
+    </div>
+  </div>
+
+</div>
+<div id="defaultModal" tabindex="-1" aria-hidden="true" class="font-noto absolute top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative w-full max-w-5xl max-h-full shadow-md">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between px-4 py-1 border-b rounded-t dark:border-gray-300 bg-stone-100">
+        <div class="flex space-x-2">
+          <div class="w-3.5 h-3.5 bg-red-500 rounded-3xl cursor-pointer hover:border hover:border-red-600" data-modal-hide="defaultModal"></div>
+          <div class="w-3.5 h-3.5 bg-amber-500 rounded-3xl"></div>
+          <div class="w-3.5 h-3.5 bg-green-500 rounded-3xl"></div>
+        </div>
+        <button type="button" class="text-gray-400 bg-transparent hover:text-gray-600 rounded-lg text-xs p-1.5 ml-auto inline-flex items-center" data-modal-hide="defaultModal">
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-6 space-x-2 flex items-center justify-between">
+        <div class="flex flex-col space-y-2">
+          <p id="modal-company" class="text-lg text-stone-500"></p>
+          <p id="modal-title" class="text-xl font-bold"></p>
+        </div>
+        <a id="modal-url" target="_blank" class="cursor-pointer block bg-violet-200 text-violet-500 p-2 rounded-lg text-base hover:bg-violet-100">
+          보러가기
+        </a>
+      </div>
+      <!-- Modal footer -->
+      <div class="flex items-center p-6 text-lg border-gray-200 rounded-b dark:border-gray-600">
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold flex items-center justify-start space-x-3">
+            <img loading="lazy" class="w-4 h-4" src="/icons/location.png" alt="loc">
+            <span>위치</span>
+          </div>
+          <span id="modal-region" class="w-full text-base truncate text-ellipsis"></span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold flex items-center justify-start space-x-3">
+            <img loading="lazy" class="w-4 h-4" src="/icons/profit.png" alt="loc">
+            <span>연봉</span>
+          </div>
+          <span id="modal-salary" class="w-full text-base truncate text-ellipsis"></span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold flex items-center justify-start space-x-3">
+            <img loading="lazy" class="w-4 h-4" src="/icons/sales.png" alt="loc">
+            <span>근무형태</span>
+          </div>
+          <span id="modal-type" class="w-full text-base truncate text-ellipsis"></span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold flex items-center justify-start space-x-3">
+            <img loading="lazy" class="w-4 h-4" src="/icons/profile.png" alt="loc">
+            <span>학력</span>
+          </div>
+          <span id="modal-education" class="w-full text-base truncate text-ellipsis"></span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold flex items-center justify-start space-x-3">
+            <img loading="lazy" class="w-4 h-4" src="/icons/approval.png" alt="loc">
+            <span>경력</span>
+          </div>
+          <span id="modal-career" class="w-full text-base truncate text-ellipsis"></span>
+        </div>
+        <div class="w-1/6 flex flex-col justify-start px-1.5">
+          <div class="font-bold flex items-center justify-start space-x-3">
+            <img loading="lazy" class="w-4 h-4" src="/icons/time.png" alt="time">
+            <span>근무시간</span>
+          </div>
+          <span id="modal-time" class="w-full text-base truncate text-ellipsis"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 <script th:inline="javascript">
     function getUserImage() {
@@ -234,4 +330,50 @@
 <script src="/js/information2.js"></script>
 <script src="/js/flowbite.min.js"></script>
 <script src="/js/chatStatusChange.js"></script>
+<script>
+    const resultPageBtn = document.getElementById("resultPageBtn")
+    resultPageBtn.addEventListener("click", () => {
+        showResultPage()
+    })
+
+    const chatPageBtn = document.getElementById("chatPageBtn")
+    chatPageBtn.addEventListener("click", () => {
+        hideResultPage()
+    })
+
+    function showResultPage() {
+        const mainPages = document.querySelectorAll(".chatMainPage")
+        mainPages.forEach(mainPage => {
+            mainPage.classList.remove("flex")
+            mainPage.classList.add("hidden")
+        })
+
+        const resultPages = document.querySelectorAll(".chatResultPage")
+        resultPages.forEach(resultPage => {
+            resultPage.classList.remove("hidden")
+            resultPage.classList.add("flex")
+        })
+    }
+
+    function hideResultPage() {
+        const resultPages = document.querySelectorAll(".chatResultPage")
+        resultPages.forEach(resultPage => {
+            resultPage.classList.remove("flex")
+            resultPage.classList.add("hidden")
+        })
+
+        const mainPages = document.querySelectorAll(".chatMainPage")
+        mainPages.forEach(mainPage => {
+            mainPage.classList.remove("hidden")
+            mainPage.classList.add("flex")
+        })
+
+        const resultPing = document.getElementById("result-ping")
+        if (resultPing !== null) {
+            resultPing.classList.remove("flex")
+            resultPing.classList.add("hidden")
+        }
+    }
+
+</script>
 </html>
