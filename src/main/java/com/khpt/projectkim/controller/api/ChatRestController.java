@@ -133,6 +133,8 @@ public class ChatRestController {
 
         new Thread(() -> {
             try {
+                discordWebhookService.queueChatLog(userId, user.getLogin(), chat);
+
                 emitter.send(SseEmitter.event().name("info").data("Processing ChatGPT request..."));
 
                 final List<ChatFunction> functions = Collections.singletonList(ChatFunction.builder()
@@ -164,6 +166,8 @@ public class ChatRestController {
 
                                 Map<String, List<Map<String, Object>>> simplifiedJobs2 = simplifyJobs2(root, user.getCareer(), 15);
                                 userService.setUserResults(userId, simplifiedJobs2);
+
+                                discordWebhookService.queueResultLog(userId, user.getLogin(), "Returned result count: " + simplifiedJobs2.get("jobs").size());
 
                                 return mapper.writeValueAsString(simplifiedJobs);
                             } catch (IOException e) {
@@ -384,6 +388,9 @@ public class ChatRestController {
             log.info("Chat: No session");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        if (chatMessage.getContent().length() > 500) {
+            return ResponseEntity.badRequest().build();
         }
 
         String userId = session.getAttribute("user").toString();
