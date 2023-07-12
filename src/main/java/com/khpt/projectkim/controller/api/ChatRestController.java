@@ -65,6 +65,7 @@ public class ChatRestController {
     @PostConstruct
     public void init() {
         this.openAiService = new OpenAiService(token);
+        discordWebhookService.queueStatusLog("Server start up");
     }
 
     @PostMapping("/example")
@@ -274,10 +275,10 @@ public class ChatRestController {
                                             ChatMessageRole.SYSTEM.value(),
                                             "Below is job_code_table."
                                     ));
-                                    chatMessages.add(new ChatMessage(
-                                            ChatMessageRole.SYSTEM.value(),
-                                            CsvReader.getDetailedJobCode(user.getCategory())
-                                    ));
+//                                    chatMessages.add(new ChatMessage(
+//                                            ChatMessageRole.SYSTEM.value(),
+//                                            CsvReader.getDetailedJobCode(user.getCategory())
+//                                    ));
 
                                     chatMessages.add(accumulatedMessage);
                                     chatMessages.add(callResponse);
