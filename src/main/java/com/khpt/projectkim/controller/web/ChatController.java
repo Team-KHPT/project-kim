@@ -85,11 +85,7 @@ public class ChatController {
             model.addAttribute("questions", questionService.getRandomQuestions());
         }
 
-        if (device.isMobile()) {
-            return "mobile/chat";
-        } else {
-            return "chat";
-        }
+        return "chat";
     }
 
     @GetMapping("/m/chat")
@@ -123,10 +119,11 @@ public class ChatController {
     }
 
     @GetMapping("/m/profile")
-    public String profileMobile(Device device, HttpSession session, Model model) {
+    public String profileMobile(Device device, HttpSession session, Model model, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
             log.info("M Profile: without login");
-            return "mobile/chat";
+            response.sendRedirect("/");
+            return null;
         }
         String userid = session.getAttribute("user").toString();
 
@@ -139,10 +136,11 @@ public class ChatController {
     }
 
     @GetMapping("/m/result")
-    public String resultMobile(Device device, HttpSession session, Model model) {
+    public String resultMobile(Device device, HttpSession session, Model model, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
             log.info("M Result: without login");
-            return "mobile/chat";
+            response.sendRedirect("/");
+            return null;
         }
         String userid = session.getAttribute("user").toString();
 
