@@ -18,6 +18,8 @@ import java.util.List;
 @Slf4j
 public class DiscordWebhookService {
 
+    @Value("${discord.webhook.root.url}")
+    private String webhookRootUrl;
     @Value("${discord.webhook.login.url}")
     private String webhookLoginUrl;
     @Value("${discord.webhook.error.url}")
@@ -33,6 +35,7 @@ public class DiscordWebhookService {
     private final Queue<DiscordWebhook.EmbedObject> errorLogQueue = new LinkedList<>();
     private final Queue<DiscordWebhook.EmbedObject> chatLogQueue = new LinkedList<>();
     private final Queue<DiscordWebhook.EmbedObject> resultLogQueue = new LinkedList<>();
+    private final Queue<DiscordWebhook.EmbedObject> allLogQueue = new LinkedList<>();
 
 
     public void queueLoginLog(String userId, String userName) {
@@ -107,60 +110,82 @@ public class DiscordWebhookService {
         resultLogQueue.add(embed);
     }
 
+    private void queueAllLog(DiscordWebhook.EmbedObject embed) {
+        allLogQueue.add(embed);
+    }
+
     @Scheduled(fixedRate = 5000)
     public void sendNextWebhook() {
         final int MAX_EMBED_CNT = 10;
 
-        List<DiscordWebhook.EmbedObject> embedList = new ArrayList<>();
+        List<DiscordWebhook.EmbedObject> embedList1 = new ArrayList<>();
         for (int i = 0; i < MAX_EMBED_CNT; i++) {
             DiscordWebhook.EmbedObject nextEmbed = loginLogQueue.poll();
             if (nextEmbed != null) {
-                embedList.add(nextEmbed);
+                embedList1.add(nextEmbed);
+                queueAllLog(nextEmbed);
             } else {
                 break;
             }
         }
-        if (!embedList.isEmpty()) {
-            sendLogWithDiscordWebhook(webhookLoginUrl, embedList);
+        if (!embedList1.isEmpty()) {
+            sendLogWithDiscordWebhook(webhookLoginUrl, embedList1);
         }
 
-        embedList = new ArrayList<>();
+        List<DiscordWebhook.EmbedObject> embedList2 = new ArrayList<>();
         for (int i = 0; i < MAX_EMBED_CNT; i++) {
             DiscordWebhook.EmbedObject nextEmbed = errorLogQueue.poll();
             if (nextEmbed != null) {
-                embedList.add(nextEmbed);
+                embedList2.add(nextEmbed);
+                queueAllLog(nextEmbed);
             } else {
                 break;
             }
         }
-        if (!embedList.isEmpty()) {
-            sendLogWithDiscordWebhook(webhookErrorUrl, embedList);
+        if (!embedList2.isEmpty()) {
+            sendLogWithDiscordWebhook(webhookErrorUrl, embedList2);
         }
 
-        embedList = new ArrayList<>();
+        List<DiscordWebhook.EmbedObject> embedList3 = new ArrayList<>();
         for (int i = 0; i < MAX_EMBED_CNT; i++) {
             DiscordWebhook.EmbedObject nextEmbed = chatLogQueue.poll();
             if (nextEmbed != null) {
-                embedList.add(nextEmbed);
+                embedList3.add(nextEmbed);
+                queueAllLog(nextEmbed);
             } else {
                 break;
             }
         }
-        if (!embedList.isEmpty()) {
-            sendLogWithDiscordWebhook(webhookChatUrl, embedList);
+        if (!embedList3.isEmpty()) {
+            sendLogWithDiscordWebhook(webhookChatUrl, embedList3);
         }
 
-        embedList = new ArrayList<>();
+        List<DiscordWebhook.EmbedObject> embedList4 = new ArrayList<>();
         for (int i = 0; i < MAX_EMBED_CNT; i++) {
             DiscordWebhook.EmbedObject nextEmbed = resultLogQueue.poll();
             if (nextEmbed != null) {
-                embedList.add(nextEmbed);
+                embedList4.add(nextEmbed);
+                queueAllLog(nextEmbed);
             } else {
                 break;
             }
         }
-        if (!embedList.isEmpty()) {
-            sendLogWithDiscordWebhook(webhookResultUrl, embedList);
+        if (!embedList4.isEmpty()) {
+            sendLogWithDiscordWebhook(webhookResultUrl, embedList4);
+        }
+
+
+        List<DiscordWebhook.EmbedObject> embedList5 = new ArrayList<>();
+        for (int i = 0; i < MAX_EMBED_CNT; i++) {
+            DiscordWebhook.EmbedObject nextEmbed = allLogQueue.poll();
+            if (nextEmbed != null) {
+                embedList5.add(nextEmbed);
+            } else {
+                break;
+            }
+        }
+        if (!embedList5.isEmpty()) {
+            sendLogWithDiscordWebhook(webhookRootUrl, embedList5);
         }
     }
 
@@ -174,6 +199,7 @@ public class DiscordWebhookService {
             webhook.execute();
         } catch (IOException e) {
             log.error("Webhook: send fail");
+            queueStatusLog("Webhook: Error sending webhook");
             e.printStackTrace();
         }
     }
