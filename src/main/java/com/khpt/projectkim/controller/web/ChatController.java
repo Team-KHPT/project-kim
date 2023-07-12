@@ -89,7 +89,7 @@ public class ChatController {
     }
 
     @GetMapping("/m/chat")
-    public String chatMobile(Device device, HttpSession session, Model model) {
+    public String chatMobile(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
             log.info("Chat: without login");
             return "mobile/chat";
@@ -119,7 +119,7 @@ public class ChatController {
     }
 
     @GetMapping("/m/profile")
-    public String profileMobile(Device device, HttpSession session, Model model, HttpServletResponse response) throws IOException {
+    public String profileMobile(HttpSession session, Model model, HttpServletResponse response) throws IOException {
         if (session.getAttribute("user") == null) {
             log.info("M Profile: without login");
             response.sendRedirect("/");
@@ -135,23 +135,23 @@ public class ChatController {
         return "mobile/profile";
     }
 
-    @GetMapping("/m/result")
-    public String resultMobile(Device device, HttpSession session, Model model, HttpServletResponse response) throws IOException {
-        if (session.getAttribute("user") == null) {
-            log.info("M Result: without login");
-            response.sendRedirect("/");
-            return null;
-        }
-        String userid = session.getAttribute("user").toString();
-
-        ExtractListFromUserDto filledDto = chatService.getListFromUser(userid);
-
-        User user = filledDto.getUser();
-
-        model.addAttribute("name", user.getLogin());
-        model.addAttribute("image", user.getPicture());
-        model.addAttribute("results", filledDto.getResults());
-
-        return "mobile/result";
-    }
+//    @GetMapping("/m/result")
+//    public String resultMobile(Device device, HttpSession session, Model model, HttpServletResponse response) throws IOException {
+//        if (session.getAttribute("user") == null) {
+//            log.info("M Result: without login");
+//            response.sendRedirect("/");
+//            return null;
+//        }
+//        String userid = session.getAttribute("user").toString();
+//
+//        ExtractListFromUserDto filledDto = chatService.getListFromUser(userid);
+//
+//        User user = filledDto.getUser();
+//
+//        model.addAttribute("name", user.getLogin());
+//        model.addAttribute("image", user.getPicture());
+//        model.addAttribute("results", filledDto.getResults());
+//
+//        return "mobile/result";
+//    }
 }
