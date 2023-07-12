@@ -41,7 +41,7 @@ const updateData = () => {
         div.setAttribute("data-modal-toggle","defaultModal")
         div.className = "p-2 flex flex-col border rounded-lg space-y-2 text-stone-600 cursor-pointer hover:bg-stone-100 hover:shadow-inner"
         div.addEventListener("click", () => {
-            console.log(item)
+            // console.log(item)
             const modalCompany = document.getElementById("modal-company")
             const modalTitle = document.getElementById("modal-title")
             const modalUrl = document.getElementById("modal-url")

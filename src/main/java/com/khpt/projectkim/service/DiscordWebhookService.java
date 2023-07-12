@@ -18,20 +18,24 @@ import java.util.List;
 @Slf4j
 public class DiscordWebhookService {
 
-    @Value("${discord.webhook.url}")
-    private String webhookUrl;
+    @Value("${discord.webhook.login.url}")
+    private String webhookLoginUrl;
+    @Value("${discord.webhook.error.url}")
+    private String webhookErrorUrl;
+    @Value("${discord.webhook.chat.url}")
+    private String webhookChatUrl;
+    @Value("${discord.webhook.result.url}")
+    private String webhookResultUrl;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-    private final Queue<DiscordWebhook.EmbedObject> embedQueue = new LinkedList<>();
-    private final Queue<String> userQueue = new LinkedList<>();
+    private final Queue<DiscordWebhook.EmbedObject> loginLogQueue = new LinkedList<>();
+    private final Queue<DiscordWebhook.EmbedObject> errorLogQueue = new LinkedList<>();
+    private final Queue<DiscordWebhook.EmbedObject> chatLogQueue = new LinkedList<>();
+    private final Queue<DiscordWebhook.EmbedObject> resultLogQueue = new LinkedList<>();
 
 
     public void queueLoginLog(String userId, String userName) {
-        if (userQueue.contains(userId)) {
-            return;
-        }
-
         DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
                 .setTitle("침입 경보")
                 .setDescription("")
@@ -40,15 +44,10 @@ public class DiscordWebhookService {
                 .addField("name", userName, true)
                 .setFooter(sdf.format(new Date()), "");
 
-        embedQueue.add(embed);
-        userQueue.add(userId);
+        loginLogQueue.add(embed);
     }
 
     public void queueErrorLog(String userId, String message, Throwable e) {
-        if (userQueue.contains(userId)) {
-            return;
-        }
-
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
 
@@ -66,31 +65,97 @@ public class DiscordWebhookService {
                 .addField("error", error, false)
                 .setFooter(sdf.format(new Date()), "");
 
-        embedQueue.add(embed);
-        userQueue.add(userId);
+        errorLogQueue.add(embed);
     }
 
-    @Scheduled(fixedRate = 3000)
-    public void sendNextWebhook() {
-        List<DiscordWebhook.EmbedObject> embedList = new ArrayList<>();
+    public void queueChatLog(String userId, String userName, String message) {
+        if (message.length() > 300) {
+            message = message.substring(0, 300);
+            message += "...";
+        }
 
-        for (int i = 0; i < 10; i++) {
-            DiscordWebhook.EmbedObject nextEmbed = embedQueue.poll();
-            userQueue.poll();
+        DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
+                .setTitle("채팅 입력 발생")
+                .setColor(Color.LIGHT_GRAY)
+                .addField("id", userId, true)
+                .addField("name", userName, true)
+                .addField("message", message, false)
+                .setFooter(sdf.format(new Date()), "");
+
+        chatLogQueue.add(embed);
+    }
+
+    public void queueResultLog(String userId, String userName, String message) {
+        DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
+                .setTitle("분석결과 출력")
+                .setColor(Color.LIGHT_GRAY)
+                .addField("id", userId, true)
+                .addField("name", userName, true)
+                .addField("message", message, false)
+                .setFooter(sdf.format(new Date()), "");
+
+        resultLogQueue.add(embed);
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void sendNextWebhook() {
+        final int MAX_EMBED_CNT = 10;
+
+        List<DiscordWebhook.EmbedObject> embedList = new ArrayList<>();
+        for (int i = 0; i < MAX_EMBED_CNT; i++) {
+            DiscordWebhook.EmbedObject nextEmbed = loginLogQueue.poll();
             if (nextEmbed != null) {
                 embedList.add(nextEmbed);
             } else {
                 break;
             }
         }
-
         if (!embedList.isEmpty()) {
-            sendLoginLogWithDiscordWebhook(embedList);
+            sendLogWithDiscordWebhook(webhookLoginUrl, embedList);
+        }
+
+        embedList = new ArrayList<>();
+        for (int i = 0; i < MAX_EMBED_CNT; i++) {
+            DiscordWebhook.EmbedObject nextEmbed = errorLogQueue.poll();
+            if (nextEmbed != null) {
+                embedList.add(nextEmbed);
+            } else {
+                break;
+            }
+        }
+        if (!embedList.isEmpty()) {
+            sendLogWithDiscordWebhook(webhookErrorUrl, embedList);
+        }
+
+        embedList = new ArrayList<>();
+        for (int i = 0; i < MAX_EMBED_CNT; i++) {
+            DiscordWebhook.EmbedObject nextEmbed = chatLogQueue.poll();
+            if (nextEmbed != null) {
+                embedList.add(nextEmbed);
+            } else {
+                break;
+            }
+        }
+        if (!embedList.isEmpty()) {
+            sendLogWithDiscordWebhook(webhookChatUrl, embedList);
+        }
+
+        embedList = new ArrayList<>();
+        for (int i = 0; i < MAX_EMBED_CNT; i++) {
+            DiscordWebhook.EmbedObject nextEmbed = resultLogQueue.poll();
+            if (nextEmbed != null) {
+                embedList.add(nextEmbed);
+            } else {
+                break;
+            }
+        }
+        if (!embedList.isEmpty()) {
+            sendLogWithDiscordWebhook(webhookResultUrl, embedList);
         }
     }
 
     @Async("webhookTaskExecutor")
-    public void sendLoginLogWithDiscordWebhook(List<DiscordWebhook.EmbedObject> embedList) {
+    public void sendLogWithDiscordWebhook(String webhookUrl, List<DiscordWebhook.EmbedObject> embedList) {
         DiscordWebhook webhook = new DiscordWebhook(webhookUrl);
         for (DiscordWebhook.EmbedObject embed : embedList) {
             webhook.addEmbed(embed);

@@ -20,8 +20,8 @@
           <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500 opacity-40"></span>
         </span>
       </div>
-      <a href="/" class="font-bold px-2">홈</a>
-      <a th:if="${name != null}" href="/m/profile" class="text-stone-500 px-2">프로필</a>
+      <a href="/" class="font-bold px-2">김비서</a>
+      <a th:if="${name != null}" href="/m/profile" class="text-stone-500 px-3.5">프로필</a>
       <a id="login-button" th:if="${name == null}" href="/login" class="text-stone-500 px-2">로그인</a>
     </div>
 <!--    th:if="${!(prev_data == null && name != null && chats.size() == 0)}"-->
@@ -68,12 +68,12 @@
     </div>
   </div>
 
-  <div class="h-24 flex items-center justify-center fixed bottom-0 w-full">
+  <div th:classappend="${name == null}?hidden" class="h-24 flex items-center justify-center fixed bottom-0 w-full">
     <div class="absolute bottom-0 left-0 w-full bg-white px-2 pb-7">
       <form class="stretch flex flex-row">
         <div class="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
           <div class="flex flex-col w-full flex-grow py-2.5 pl-2 relative border border-black/10 bg-stone-50 rounded-lg shadow-md">
-            <textarea id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="text-sm m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: scroll"></textarea>
+            <textarea maxlength="400" id="chat-input" tabindex="0" rows="1" placeholder="Send a message" class="text-sm m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: scroll"></textarea>
             <button id="chat-btn" class="absolute p-1 rounded-md bottom-1.5 right-1 disabled:text-gray-400 enabled:bg-violet-500 text-white transition-colors disabled:opacity-40" disabled="">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4 m-1 md:m-0" stroke-width="2">
                 <path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path>
