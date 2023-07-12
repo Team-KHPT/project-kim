@@ -4,7 +4,7 @@ questionField.forEach(function (question) {
     question.addEventListener('click', function (event) {
         console.log(event.target.text);
         inputField.value = event.target.text;
-        inputHandler(inputField);
+        inputHandler();
     })
 });
 
