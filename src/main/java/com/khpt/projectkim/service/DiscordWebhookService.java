@@ -68,6 +68,16 @@ public class DiscordWebhookService {
         errorLogQueue.add(embed);
     }
 
+    public void queueStatusLog(String message) {
+        DiscordWebhook.EmbedObject embed = new DiscordWebhook.EmbedObject()
+                .setTitle("김비서 상태")
+                .setColor(Color.LIGHT_GRAY)
+                .addField("message", message, false)
+                .setFooter(sdf.format(new Date()), "");
+
+        errorLogQueue.add(embed);
+    }
+
     public void queueChatLog(String userId, String userName, String message) {
         if (message.length() > 300) {
             message = message.substring(0, 300);
