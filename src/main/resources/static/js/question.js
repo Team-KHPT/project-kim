@@ -67,6 +67,12 @@ async function getExamples() {
 
                         await setData(JSON.parse(data.result))
                         updateData()
+
+                        const resultPing = document.getElementById("result-ping")
+                        if (resultPing !== null) {
+                            resultPing.classList.remove("hidden")
+                            resultPing.classList.add("flex")
+                        }
                     })
             })
 
