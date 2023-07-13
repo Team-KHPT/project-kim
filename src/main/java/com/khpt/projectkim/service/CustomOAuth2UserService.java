@@ -62,7 +62,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .orElse(attributes.toEntity());
 
         log.debug("Oauth: before webhook service");
-        discordWebhookService.queueLoginLog(user.getId().toString(), user.getLogin());
+        discordWebhookService.queueLoginLog("", user.getLogin());
         log.debug("Oauth: after webhook service");
 
         return userRepository.save(user);
